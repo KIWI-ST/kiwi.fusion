@@ -37,11 +37,13 @@ class RenderNode extends Event {
         super();
     }
     /**
-     * 
+     * 默认构建一个渲染node类型的主对象
      */
-    add(){
-
+    _prepareRender(){
+        
     }
+
+    
 
 }
 

@@ -10459,7 +10459,7 @@ var RenderNode = function (_Event) {
     return _this;
   }
   /**
-   * 
+   * 默认构建一个渲染node类型的主对象
    */
 
   /**
@@ -10472,8 +10472,8 @@ var RenderNode = function (_Event) {
 
 
   createClass(RenderNode, [{
-    key: 'add',
-    value: function add() {}
+    key: '_prepareRender',
+    value: function _prepareRender() {}
   }]);
   return RenderNode;
 }(Event);

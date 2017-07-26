@@ -254,10 +254,10 @@ class Context {
      *  加载shaders
      */
     _includeShaders() {
-        const gl = this._gl,
-            names = shadersName,
+        // const gl = this._gl,
+            // names = shadersName,
             //limits=this._glLimits,
-            extension = this._glExtension;
+            // extension = this._glExtension;
 
         // for (let i = 0, len = names.length; i < len; i++) {
         //     const name = names[i];
@@ -269,20 +269,19 @@ class Context {
      * 加载prgorams
      */
     _includePrograms() {
-        const gl = this._gl,
-            limits = this._glLimits,
-            names = shadersName,
-            extension = this._glExtension,
-            shaderCache = this._shaderCache;
+        // const gl = this._gl,
+        //     limits = this._glLimits,
+        //     names = shadersName,
+        //     extension = this._glExtension,
+        //     shaderCache = this._shaderCache;
 
-        for (let i = 0, len = names.length; i < len; i++) {
-            const name = names[i];
-            const shaders = shaderCache[name];
-            const program = new GLProgram(gl, shaders[0], shaders[1], extension, limits);
-            this._programCache[name] = program;
-            gl.linkProgram(program.handle);
-        }
-
+        // for (let i = 0, len = names.length; i < len; i++) {
+        //     const name = names[i];
+        //     const shaders = shaderCache[name];
+        //     const program = new GLProgram(gl, shaders[0], shaders[1], extension, limits);
+        //     this._programCache[name] = program;
+        //     gl.linkProgram(program.handle);
+        // }
     }
     /**
      * 清理颜色缓冲

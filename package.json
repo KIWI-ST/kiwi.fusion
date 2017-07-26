@@ -1,10 +1,14 @@
 {
   "name": "kiwi.gl",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "a container for popular webgl liberary.",
   "main": "src/init.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "report-coverage": "codecov",
+    "compile": "rollup -c",
+    "prepublish": "npm run compile",
+    "test": "karma start karma.conf.js --single-run",
+    "start": "karma start"
   },
   "repository": {
     "type": "git",
@@ -17,7 +21,7 @@
   },
   "homepage": "https://github.com/axmand/kiwi.gl#readme",
   "devDependencies": {
-     "babel": "^6.23.0",
+    "babel": "^6.23.0",
     "babel-cli": "^6.24.1",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -43,5 +47,8 @@
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-buble": "^0.15.0",
     "rollup-plugin-node-resolve": "^3.0.0"
+  },
+  "dependencies": {
+    "three": "^0.86.0"
   }
 }
