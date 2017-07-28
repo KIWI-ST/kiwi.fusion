@@ -1,4 +1,4 @@
-const GLBuffer = require('./gl/buffer/GLBuffer'),
+const GLBuffer = require('./gl/GLBuffer'),
     GLIndexBuffer=require('./gl/buffer/GLIndexBuffer'),
     GLVertexBuffer=require('./gl/buffer/GLVertexBuffer');
 

@@ -4,8 +4,8 @@
  * -vertexbuffer对应draw
  * -indexbuffer对应element draw
  */
-const Dispose = require('./../../utils/Dispose'),
-    GLConstants = require('./../GLConstants');
+const Dispose = require('./../utils/Dispose'),
+    GLConstants = require('./GLConstants');
 
 const EMPTY_BUFFER = new ArrayBuffer(0);
 

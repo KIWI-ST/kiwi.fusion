@@ -1,7 +1,7 @@
 /**
  * @class
  */
-const GLBuffer = require('./GLBuffer');
+const GLBuffer = require('./../GLBuffer');
 
 class GLVertexbuffer extends GLBuffer {
     /**

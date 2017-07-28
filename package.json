@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/axmand/kiwi.gl/issues"
   },
-  "homepage": "https://github.com/axmand/kiwi.gl#readme"
+  "homepage": "https://github.com/axmand/kiwi.gl#readme",
+  "devDependencies": {
+    "kiwi.matrix": "^0.2.4"
+  }
 }
