@@ -169,4 +169,4 @@ class GLVertexArrayObject extends Dispose {
     }
 }
 
-export default GLVertexArrayObject;
+module.exports =  GLVertexArrayObject;
