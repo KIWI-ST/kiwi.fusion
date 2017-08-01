@@ -3,13 +3,6 @@
   "version": "0.1.2",
   "description": "a container for popular webgl liberary.",
   "main": "src/init.js",
-  "scripts": {
-    "report-coverage": "codecov",
-    "compile": "rollup -c",
-    "prepublish": "npm run compile",
-    "test": "karma start karma.conf.js --single-run",
-    "start": "karma start"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/axmand/kiwi.gl.git"
@@ -21,6 +14,8 @@
   },
   "homepage": "https://github.com/axmand/kiwi.gl#readme",
   "devDependencies": {
+    "electron": "^1.6.11",
+    "gl": "^4.0.4",
     "kiwi.matrix": "^0.2.4"
   }
 }
