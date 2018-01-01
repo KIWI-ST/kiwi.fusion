@@ -34,10 +34,9 @@ class GLCanvas extends Dispose{
 
     getContext(renderType = 'webgl', options = {}){
         const canvasId = this._canvasId,
-            id = this.id,
-            glContextOptions = this._getContextAttributes(options);
+            id = this.id;
         if(!CACHE_GLCONTEXT[canvasId]){
-            CACHE_GLCONTEXT[canvasId] = new GLContext(id,renderType,glContextOptions);
+            CACHE_GLCONTEXT[canvasId] = new GLContext(id,renderType,options);
         }
         return CACHE_GLCONTEXT[canvasId];
     }

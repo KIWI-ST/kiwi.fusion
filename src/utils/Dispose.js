@@ -17,7 +17,7 @@ class Dispose {
      * 构建一个可被销毁的资源对象,id链
      */
     constructor(id = null) {
-        this._id = id ? id + stamp(this) : stamp(this);
+        this._id = id ? id +'-'+stamp(this) : stamp(this);
     }
     /**
      * 获取资源id

@@ -1,5 +1,6 @@
 
-const Dispose = require('./../utils/Dispose');
+const Dispose = require('./../utils/Dispose'),
+    GLConstants = require('./GLConstants');
 /**
  * @class
  */
@@ -20,8 +21,24 @@ class GLContext extends Dispose{
          * @type {Object}
          */
         this._options = this._getContextAttributes(options);
-        //this._limits = 
+        //this._limits =
+        /**
+         * map funciont
+         */ 
+        this._map();
     }
+
+    _map(){
+        //1.map constants
+        for (const key in GLConstants) {
+            if (!this.hasOwnProperty(key)) {
+                const target = GLConstants[key];
+                if (!this[key] && !!target)
+                    this[key] = target;
+            }
+        }
+    }
+
     /**
      * get context attributes
      * include webgl2 attributes
@@ -39,6 +56,11 @@ class GLContext extends Dispose{
             failIfMajorPerformanceCaveat: options.failIfMajorPerformanceCaveat || false,
         }
     }
+
+    createShader(type){
+
+    }
+
 
 }
 

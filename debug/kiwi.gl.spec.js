@@ -40,3 +40,5 @@ const glCanvas = new kiwi.gl.GLCanvas(htmlCavnasElementId);
 
 const glContext = glCanvas.getContext('webgl');
 
+const glShader1 = glContext.createShader(glContext.VERTEX_SHADER);
+

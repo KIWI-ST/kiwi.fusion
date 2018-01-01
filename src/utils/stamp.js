@@ -6,7 +6,7 @@
 const isObject = require('./isObject'),
     isString = require('./isString');
 
-const prefix = '_fusion_',
+const prefix = '_kiwi.gl_',
     prefixId = prefix + 'id_';
 
 let i = 1;
@@ -16,7 +16,7 @@ const getId = () => {
 };
 
 const setId = (obj, id) => {
-    isObject(obj)&&isString(id)?obj._fusion_id_=id:null;
+    isObject(obj)&&isString(id)?obj._kiwi_gl_id_=id:null;
 }
 
 /**
@@ -27,8 +27,8 @@ const setId = (obj, id) => {
  */
 const stamp = (obj) => {
     if (isObject(obj)) {
-        obj._fusion_id_ = obj._fusion_id_ || getId();
-        return obj._fusion_id_
+        obj._kiwi_gl_id_ = obj._kiwi_gl_id_ || getId();
+        return obj._kiwi_gl_id_
     }
     else if (isString(obj)) {
         return prefix + obj;
