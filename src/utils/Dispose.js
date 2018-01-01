@@ -14,10 +14,16 @@ const stamp = require('./stamp').stamp;
  */
 class Dispose {
     /**
-     * 构建一个可被销毁的资源对象
+     * 构建一个可被销毁的资源对象,id链
      */
-    constructor() {
-        this._id = stamp(this);
+    constructor(id = null) {
+        this._id = id ? id + stamp(this) : stamp(this);
+    }
+    /**
+     * 获取资源id
+     */
+    get id() {
+        return this._id;
     }
     /**
      * 资源销毁方法，执行完一段后，统一调用
@@ -26,22 +32,6 @@ class Dispose {
      */
     dispose() {
         throw new Error(`no implementation of function dispose`);
-    }
-    /**
-     * 获取资源核心对象
-     * @readonly
-     * @member
-     */
-    get handle(){
-        return this._handle;
-    }
-    /**
-     * 创建资源
-     * @abstract
-     */
-    _createHandle() {
-        // arguments.callee.toString();
-        throw new Error(`no implementation of function _createHandle`);
     }
 }
 

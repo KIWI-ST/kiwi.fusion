@@ -1,6 +1,6 @@
 /**
- * @author yellow date 2017/6/15
  * management of GLExtension
+ * @author yellow date 2017/6/15
  */
 const GL_STANDEXTENSIONS = {
     standardDerivatives: ['OES_standard_derivatives'],
@@ -16,60 +16,51 @@ const GL_STANDEXTENSIONS = {
     vertexArrayObject:['OES_vertex_array_object','MOZ_OES_vertex_array_object','WEBKIT_OES_vertex_array_object'],
     angleInstancedArrays:['ANGLE_instanced_arrays']
 };
-/**
- * 
- * @class
- * @example
- *  let extension = new GLExtension(gl);
- *  let standardDerivatives = extension['standardDerivatives']; 
- *  //or
- *  let standardDerivatives = extension.standardDerivatives; 
- */
-class GLExtension {
-    /**
-     * 
-     * @param {WebGLRenderingContext} gl 
-     * @param {Array} [names] the arry of extension names
-     */
-    constructor(gl) {
-        this._gl = gl;
-        this._extensions = {};
-        this._includeExtension(gl);
-        this._map();
-    };
 
-    _includeExtension(gl) {
+/**
+ * @class
+ */
+class GLExtension{
+    
+    constructor(glContext){
+        this._glContext = glContext;
+    }
+
+    _include(){
         for (var key in GL_STANDEXTENSIONS) {
             if (GL_STANDEXTENSIONS.hasOwnProperty(key)) {
                 let extensionName = GL_STANDEXTENSIONS[key],
-                    extension = this._getExtension(gl, extensionName);
+                    extension = this.getExtension(extensionName);
                 if (!!extension)
-                    this._extensions[key] = extension;
+                    this._options[key] = extension;
             }
         }
-    };
-
-    _getExtension(gl, names) {
-        for (let i = 0, len = names.length; i < len; ++i) {
-            let extension = gl.getExtension(names[i]);
+    }
+     /**
+     * 
+     * @param {String[]} extNames 
+     */
+    getExtension(...extNames) {
+        const gl = this._glContext.gl,
+            names = [].concat(...extNames),
+            len = names.length;
+        for (let i = 0; i < len; ++i) {
+            const name = names[i];
+            let extension = gl.getExtension(name);
             if (extension)
                 return extension;
         }
-        return undefined;
-    };
-    /**
-     * map gl.extension to GLContext instance
-     */
+        return null;
+    }
+
     _map() {
         for (var key in this._extensions) {
-            if (this._extensions.hasOwnProperty(key)) {
-                let target = this._extensions[key];
+            if (this._options.hasOwnProperty(key)) {
+                let target = this._options[key];
                 if (!this[key] && !!target)
                     this[key] = target;
             }
         }
-    };
+    }
 
 }
-
-module.exports = GLExtension;

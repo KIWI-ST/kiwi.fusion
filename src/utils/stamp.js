@@ -6,7 +6,7 @@
 const isObject = require('./isObject'),
     isString = require('./isString');
 
-const prefix = '_kiwi_',
+const prefix = '_fusion_',
     prefixId = prefix + 'id_';
 
 let i = 1;
@@ -14,6 +14,10 @@ let i = 1;
 const getId = () => {
     return prefixId + (i++);
 };
+
+const setId = (obj, id) => {
+    isObject(obj)&&isString(id)?obj._fusion_id_=id:null;
+}
 
 /**
  * get the unique id
@@ -32,4 +36,6 @@ const stamp = (obj) => {
         return null;
 };
 
-module.exports = { stamp, prefix, getId }
+
+
+module.exports = { stamp, prefix, getId, setId }

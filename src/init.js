@@ -1,9 +1,9 @@
-const GLBuffer = require('./gl/GLBuffer'),
-    GLIndexBuffer = require('./gl/buffer/GLIndexBuffer'),
-    GLVertexBuffer = require('./gl/buffer/GLVertexBuffer');
-
+const GLCanvas = require('./gl/GLCanvas');
+const GLContext = require('./gl/GLContext');
 
 module.exports = {
-    GLIndexBuffer,
-    GLVertexBuffer
+    gl: {
+        GLCanvas,
+        GLContext
+    }
 }
