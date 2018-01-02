@@ -8,19 +8,19 @@ const Dispose = require('./../utils/Dispose'),
     mergre = require('./../utils/merge'),
     GLContext = require('./GLContext');
 
-const CACHE_GLCONTEXT={};
+const CACHE_GLCONTEXT = {};
 
 /**
  * @class
  */
-class GLCanvas extends Dispose{
+class GLCanvas extends Dispose {
 
     /**
      * 
      * @param {String} id the real htmlCanvasElement id 
      * @param {Object} options 
      */
-    constructor(id,options={}){
+    constructor(id, options = {}) {
         super(id);
         /**
          * @type {String}
@@ -29,14 +29,14 @@ class GLCanvas extends Dispose{
         /**
          * @type {Object}
          */
-        this._options = mergre({},options);
+        this._options = mergre({}, options);
     }
 
-    getContext(renderType = 'webgl', options = {}){
+    getContext(renderType = 'webgl', options = {}) {
         const canvasId = this._canvasId,
             id = this.id;
-        if(!CACHE_GLCONTEXT[canvasId]){
-            CACHE_GLCONTEXT[canvasId] = new GLContext(id,renderType,options);
+        if (!CACHE_GLCONTEXT[canvasId]) {
+            CACHE_GLCONTEXT[canvasId] = new GLContext(id, renderType, options);
         }
         return CACHE_GLCONTEXT[canvasId];
     }
