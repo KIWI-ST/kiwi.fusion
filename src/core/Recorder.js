@@ -24,7 +24,7 @@ class Recorder{
     increase(record){
         this._records.push(record);
     }
-
+    
 }
 /**
  * 
