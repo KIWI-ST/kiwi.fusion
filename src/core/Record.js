@@ -5,7 +5,6 @@
 class Record{
 
     constructor(opName, ...rest) {
-        super();
         /**
          * 
          */

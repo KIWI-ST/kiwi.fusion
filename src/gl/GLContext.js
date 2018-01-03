@@ -166,6 +166,69 @@ class GLContext extends Dispose {
         const record = new Record('getAttribLocation', target, buffer.id);
         this._recorder.increase(record);
     }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bufferData
+     */
+    bufferData(target, srcData, usage){
+        const record = new Record('bufferData',target,srcData,usage);
+        this._recorder.increase(record);
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/viewport
+     * @param {*} x 
+     * @param {*} y 
+     * @param {*} width 
+     * @param {*} height 
+     */
+    viewport(x, y, width, height){
+        const record = new Record('viewport',x, y, width, height);
+        this._recorder.increase(record);
+    }
+    /**
+     * 
+     * @param {GLProgram} program 
+     */
+    useProgram(program){
+        const record = new Record('useProgram',program.id);
+        this._recorder.increase(record);
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray
+     * @param {GLuint} index 
+     */
+    enableVertexAttribArray(index){
+        const record = new Record('enableVertexAttribArray',index);
+        this._recorder.increase(record);
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
+     */
+    vertexAttribPointer(index, size, type, normalized, stride, offset){
+        const record = new Record('enableVertexAttribArray',index, size, type, normalized, stride, offset);
+        this._recorder.increase(record);
+    }
+    /**
+     * 特别的方法
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawArrays
+     * @param {*} mode 
+     * @param {*} first 
+     * @param {*} count 
+     */
+    drawArrays(mode, first, count){
+
+    }
+    /**
+     * 特别的方法
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawElements
+     * @param {*} mode 
+     * @param {*} count 
+     * @param {*} type 
+     * @param {*} offset 
+     */
+    drawElements(mode, count, type, offset){
+
+    }
+
 
 }
 

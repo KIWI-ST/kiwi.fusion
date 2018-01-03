@@ -81,8 +81,16 @@ const Encrypt_VOID = {
     'uniform4i': true,
     'uniform4iv': true,
 }
-
+/**
+ * 执行此类操作时，要将record丢入下一帧
+ */
 const Encrypt_TICK={
     'drawElements': true,
     'drawArrays': true
+}
+
+module.exports = {
+    Encrypt_OVERALL,
+    Encrypt_VOID,
+    Encrypt_TICK,
 }

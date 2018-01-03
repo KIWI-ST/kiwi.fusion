@@ -56,7 +56,7 @@ glContext.linkProgram(glProgram);
 const positionAttributeLocation = glContext.getAttribLocation(glProgram,"a_position");
 const positionBuffer = glContext.createBuffer();
 //7
-glContext.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+glContext.bindBuffer(glContext.ARRAY_BUFFER, positionBuffer);
 //
 const positions = [
   0, 0,
@@ -66,22 +66,22 @@ const positions = [
 //
 glContext.bufferData(glContext.ARRAY_BUFFER, new Float32Array(positions), glContext.STATIC_DRAW);
 //
-gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-gl.clearColor(0, 0, 0, 0);
-gl.clear(gl.COLOR_BUFFER_BIT);
-gl.useProgram(program);
+glContext.viewport(0, 0, 800,600);
+// gl.clearColor(0, 0, 0, 0);
+// gl.clear(gl.COLOR_BUFFER_BIT);
+glContext.useProgram(glProgram);
 //
-gl.enableVertexAttribArray(positionAttributeLocation);
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+glContext.enableVertexAttribArray(positionAttributeLocation);
+glContext.bindBuffer(glContext.ARRAY_BUFFER, positionBuffer);
 //
 var size = 2;         
-var type = gl.FLOAT;   
+var type = glContext.FLOAT;   
 var normalize = false; 
 var stride = 0;       
 var offset = 0;      
-gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
+glContext.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
 // draw
-var primitiveType = gl.TRIANGLES;
+var primitiveType = glContext.TRIANGLES;
 var offset = 0;
 var count = 3;
-gl.drawArrays(primitiveType, offset, count);
+glContext.drawArrays(primitiveType, offset, count);

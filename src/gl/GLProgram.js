@@ -6,21 +6,21 @@ const Dispose = require('./../utils/Dispose');
  * get new index for glProgram attribute index
  * @function
  */
-const seed = function(){
-    const sd = 1;
-    return function(){
-        return (sd++)*256;
+const seed = function () {
+    let sd = 1;
+    return function () {
+        return (sd++) * 256;
     }
 }();
 /**
  * @class
  */
-class GLProgram extends Dispose{
+class GLProgram extends Dispose {
     /**
      * 
      * @param {GLContext} glContext 
      */
-    constructor(glContext){
+    constructor(glContext) {
         super(glContext.id);
         /**
          * 种子id
@@ -33,7 +33,7 @@ class GLProgram extends Dispose{
         this._uniforms = {};
     }
 
-    getAttribLocation(name){
+    getAttribLocation(name) {
         this._attributes[name] = this._attributes[name] || this._seed++;
         return this._attributes[name];
     }
