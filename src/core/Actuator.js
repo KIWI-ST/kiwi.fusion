@@ -7,5 +7,16 @@
   * @class
   */
  class Actuator{
+    
+    constructor(){
+
+    }
 
  }
+
+ const actuator = new Actuator();
+
+ module.exports = {
+    Actuator,
+    actuator
+ };

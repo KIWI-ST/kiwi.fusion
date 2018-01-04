@@ -1,9 +1,16 @@
-
+/**
+ * 操作记单元
+ * @author yellow date 2018/1/4
+ */
 /**
  * @class
  */
 class Record{
-
+    /**
+     * 
+     * @param {*} opName 
+     * @param {*} rest 
+     */
     constructor(opName, ...rest) {
         /**
          * 

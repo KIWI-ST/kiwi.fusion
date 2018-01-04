@@ -11,7 +11,10 @@ const Dispose = require('./../utils/Dispose'),
 const GLShader = require('./GLShader'),
     GLBuffer = require('./GLBuffer'),
     GLProgram = require('./GLProgram');
-
+/**
+ * singleton
+ */
+const actuator = require('./../core/Actuator').actuator;
 /**
  * @class
  */
