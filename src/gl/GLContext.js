@@ -218,7 +218,9 @@ class GLContext extends Dispose {
      * @param {*} count 
      */
     drawArrays(mode, first, count){
-
+        const record = new Record('drawArrays',mode, first, count);
+        this._recorder.increase(record);
+        actuator.play(this._recorder.toInstruction());
     }
     /**
      * 特别的方法
@@ -229,9 +231,10 @@ class GLContext extends Dispose {
      * @param {*} offset 
      */
     drawElements(mode, count, type, offset){
-
+        const record = new Record('drawElements',mode, count, type, offset);
+        this._recorder.increase(record);
+        actuator.play(this._recorder.toInstruction());
     }
-
 
 }
 

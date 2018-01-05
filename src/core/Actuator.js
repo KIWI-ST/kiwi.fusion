@@ -9,12 +9,32 @@
  class Actuator{
     
     constructor(){
-
+        /**
+         * 
+         */
+        this._records = [];
+        /**
+         * 
+         */
+        this._realCanvas = null;
+    }
+    /**
+     * 
+     * @param {Array} records 
+     */
+    play(records){
+        if(!this._realCanvas)
+            this._records  = this._records.concat(records);
+        //
     }
 
  }
 
  const actuator = new Actuator();
+
+ const globalCanvasElement = function(htmlCanvasElement){
+    
+ }
 
  module.exports = {
     Actuator,
