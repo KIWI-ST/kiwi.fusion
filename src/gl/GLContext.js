@@ -8,7 +8,9 @@ const Dispose = require('./../utils/Dispose'),
 /**
  * bridge object
  */
-const GLShader = require('./GLShader'),
+const GLLimits = require('./GLLimits'),
+    GLExtension = require('./GLExtension'),
+    GLShader = require('./GLShader'),
     GLBuffer = require('./GLBuffer'),
     GLProgram = require('./GLProgram');
 /**
@@ -39,6 +41,14 @@ class GLContext extends Dispose {
          * @type {Recorder}
          */
         this._recorder = new Recorder(this);
+        /**
+         * @type {GLLimits}
+         */
+        this._glLimits = new GLLimits(this);
+        /**
+         * @type {GLExtension}
+         */
+        this._glExtension = new GLExtension(this);
         /**
          * map funciont
          */
@@ -123,9 +133,9 @@ class GLContext extends Dispose {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createProgram
      */
-    createBuffer(){
+    createBuffer() {
         const glBuffer = new GLBuffer(),
-            record =new Record('createBuffer');
+            record = new Record('createBuffer');
         record.returnId = glBuffer.id;
         this._recorder.increase(record);
         return glBuffer;
@@ -159,21 +169,20 @@ class GLContext extends Dispose {
         this._recorder.increase(record);
         return program.getAttribLocation(name);
     }
-
     /**
      * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/bindBuffer
      * @param {GLenum} target  gl.ARRAY_BUFFER | gl.ELEMENT_ARRAY_BUFFER |等
      * @param {GLBuffer} buffer 
      */
-    bindBuffer(target,buffer){
+    bindBuffer(target, buffer) {
         const record = new Record('getAttribLocation', target, buffer.id);
         this._recorder.increase(record);
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bufferData
      */
-    bufferData(target, srcData, usage){
-        const record = new Record('bufferData',target,srcData,usage);
+    bufferData(target, srcData, usage) {
+        const record = new Record('bufferData', target, srcData, usage);
         this._recorder.increase(record);
     }
     /**
@@ -183,32 +192,45 @@ class GLContext extends Dispose {
      * @param {*} width 
      * @param {*} height 
      */
-    viewport(x, y, width, height){
-        const record = new Record('viewport',x, y, width, height);
+    viewport(x, y, width, height) {
+        const record = new Record('viewport', x, y, width, height);
         this._recorder.increase(record);
     }
     /**
      * 
      * @param {GLProgram} program 
      */
-    useProgram(program){
-        const record = new Record('useProgram',program.id);
+    useProgram(program) {
+        const record = new Record('useProgram', program.id);
         this._recorder.increase(record);
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray
      * @param {GLuint} index 
      */
-    enableVertexAttribArray(index){
-        const record = new Record('enableVertexAttribArray',index);
+    enableVertexAttribArray(index) {
+        const record = new Record('enableVertexAttribArray', index);
         this._recorder.increase(record);
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
      */
-    vertexAttribPointer(index, size, type, normalized, stride, offset){
-        const record = new Record('enableVertexAttribArray',index, size, type, normalized, stride, offset);
+    vertexAttribPointer(index, size, type, normalized, stride, offset) {
+        const record = new Record('enableVertexAttribArray', index, size, type, normalized, stride, offset);
         this._recorder.increase(record);
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getExtension
+     * @param {*} name 
+     */
+    getExtension(name) {
+        const glExtension = this._glExtension;
+        return glExtension[name];
+    }
+
+    getParameter(pname) {
+        const glLimits = this._glLimits;
+        return glLimits[pname] || 0;
     }
     /**
      * 特别的方法
@@ -217,8 +239,8 @@ class GLContext extends Dispose {
      * @param {*} first 
      * @param {*} count 
      */
-    drawArrays(mode, first, count){
-        const record = new Record('drawArrays',mode, first, count);
+    drawArrays(mode, first, count) {
+        const record = new Record('drawArrays', mode, first, count);
         this._recorder.increase(record);
         actuator.play(this._recorder.toInstruction());
     }
@@ -230,8 +252,8 @@ class GLContext extends Dispose {
      * @param {*} type 
      * @param {*} offset 
      */
-    drawElements(mode, count, type, offset){
-        const record = new Record('drawElements',mode, count, type, offset);
+    drawElements(mode, count, type, offset) {
+        const record = new Record('drawElements', mode, count, type, offset);
         this._recorder.increase(record);
         actuator.play(this._recorder.toInstruction());
     }

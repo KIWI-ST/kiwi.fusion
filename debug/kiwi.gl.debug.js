@@ -75,7 +75,7 @@ glContext.enableVertexAttribArray(positionAttributeLocation);
 glContext.bindBuffer(glContext.ARRAY_BUFFER, positionBuffer);
 //
 var size = 2;         
-var type = glContext.FLOAT;   
+var type = glContext.FLOAT;
 var normalize = false; 
 var stride = 0;       
 var offset = 0;      

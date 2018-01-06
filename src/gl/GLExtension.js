@@ -64,3 +64,5 @@ class GLExtension{
     }
 
 }
+
+module.exports = GLExtension;

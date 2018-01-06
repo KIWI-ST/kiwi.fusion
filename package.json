@@ -16,6 +16,7 @@
   "devDependencies": {
     "electron": "^1.6.11",
     "gl": "^4.0.4",
-    "kiwi.matrix": "^0.2.4"
+    "kiwi.matrix": "^0.2.4",
+    "three": "^0.89.0"
   }
 }

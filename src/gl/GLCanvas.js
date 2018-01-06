@@ -31,7 +31,11 @@ class GLCanvas extends Dispose {
          */
         this._options = mergre({}, options);
     }
-
+    /**
+     * 
+     * @param {*} renderType 
+     * @param {*} options 
+     */
     getContext(renderType = 'webgl', options = {}) {
         const canvasId = this._canvasId,
             id = this.id;
@@ -39,6 +43,15 @@ class GLCanvas extends Dispose {
             CACHE_GLCONTEXT[canvasId] = new GLContext(id, renderType, options);
         }
         return CACHE_GLCONTEXT[canvasId];
+    }
+    /**
+     * https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener
+     * @param {*} type 
+     * @param {*} listener 
+     * @param {*} options 
+     */
+    addEventListener(type,listener,options){
+
     }
 
 }

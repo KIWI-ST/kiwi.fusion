@@ -1,5 +1,14 @@
 
-const merge = require('./../utils/merge');
+const merge = require('./../utils/merge'),
+    GLConstants = require('./GLConstants');
+
+/**
+ * @author yellow date 2018/1/7
+ */
+const GL_LIMITS_ = [
+    GLConstants.VERSION
+]
+
 /**
  * default hardware paramter
  */
