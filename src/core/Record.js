@@ -26,6 +26,18 @@ class Record{
         this._returnId = null;
     }
     /**
+     * operation name
+     */
+    get opName(){
+        return this._opName;
+    }
+    /**
+     * arguments of record
+     */
+    get args(){
+        return this._rest;
+    }
+    /**
      * 设置返回的id
      */
     set returnId(v){

@@ -1,5 +1,6 @@
 
 const merge = require('./../utils/merge'),
+    isNode = require('./../utils/isNode'),
     GLConstants = require('./GLConstants');
 
 /**
@@ -50,7 +51,7 @@ class GLLimits {
     }
 
     _include(){
-        const gl = glContext.gl;
+        const gl = this._glContext.gl;
         this._options.hardwareConcurrency = isNode?2:(window.navigator.hardwareConcurrency||2);
         this._options.maximumCombinedTextureImageUnits = gl.getParameter(GLConstants.MAX_COMBINED_TEXTURE_IMAGE_UNITS); // min: 8
         this._options.maximumCubeMapSize = gl.getParameter(GLConstants.MAX_CUBE_MAP_TEXTURE_SIZE); // min: 16

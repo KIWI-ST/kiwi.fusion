@@ -24,6 +24,11 @@ class GLExtension{
     
     constructor(glContext){
         this._glContext = glContext;
+        /**
+         * store key and value of extension
+         * @type {Object}
+         */
+        this._options = {};
     }
 
     _include(){

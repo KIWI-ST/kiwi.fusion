@@ -1,5 +1,15 @@
 
 /**
+ * 具有返回对象的操作
+ */
+const Encrypt_Object = {
+    'createTexture':{ code:1,return:1},
+    'createShader':{code:2,return:1},
+    'createProgram':{code:3,return:1},
+    'createBuffer':{code:4,return:1},
+    'createFramebuffer':{code:5,return:1}
+}
+/**
  * 全局设置操作
  */
 const Encrypt_OVERALL = {
@@ -93,4 +103,5 @@ module.exports = {
     Encrypt_OVERALL,
     Encrypt_VOID,
     Encrypt_TICK,
+    Encrypt_Object
 }

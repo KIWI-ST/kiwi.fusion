@@ -2,7 +2,6 @@
  * 命名空间导入
  */
 const kiwi = require('./../src/init');
-const gl = require('gl')(400,100);
 //webgl2 Fundamentals 测试
 var vertexShaderSource = `#version 300 es
  
@@ -86,4 +85,4 @@ var offset = 0;
 var count = 3;
 glContext.drawArrays(primitiveType, offset, count);
 //link
-glCanvas.linkToWebGLRenderingContext(gl);
+glCanvas.linkToWebGLRenderingContext(require('gl')(400,100));

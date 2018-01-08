@@ -16,7 +16,7 @@ const GLLimits = require('./GLLimits'),
 /**
  * singleton
  */
-const actuator = require('./../core/Actuator').actuator;
+const actuator = require('./../core/Actuator');
 /**
  * @class
  */
@@ -98,6 +98,15 @@ class GLContext extends Dispose {
         this._gl = gl;
         this._glLimits._include();
         this._glExtension._include();
+        //替换绘制实体
+        actuator.setGl(gl);
+    }
+    /**
+     * 
+     * @returns {WebGLRenderingContext}
+     */
+    get gl(){
+        return this._gl;
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createShader
