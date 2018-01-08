@@ -50,6 +50,11 @@ class GLContext extends Dispose {
          */
         this._glExtension = new GLExtension(this);
         /**
+         * real WebGLRenderingContext
+         * @type {WebGLRenderingContext}
+         */
+        this._gl = null;
+        /**
          * map funciont
          */
         this._map();
@@ -84,6 +89,15 @@ class GLContext extends Dispose {
             preserveDrawingBuffer: options.preserveDrawingBuffer || false,
             failIfMajorPerformanceCaveat: options.failIfMajorPerformanceCaveat || false,
         }
+    }
+    /*
+     * private ,only used in GLCanvas.link[Cnavas/GL] funcitons
+     * @param {WebGLRenderingContext} gl 
+     */
+    _setgl(gl){
+        this._gl = gl;
+        this._glLimits._include();
+        this._glExtension._include();
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createShader
@@ -230,7 +244,7 @@ class GLContext extends Dispose {
 
     getParameter(pname) {
         const glLimits = this._glLimits;
-        return glLimits[pname] || 0;
+        return glLimits[pname];
     }
     /**
      * 特别的方法

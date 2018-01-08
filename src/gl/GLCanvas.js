@@ -3,13 +3,13 @@
  * @author yellow date 2018/1/1
  *  
  */
-
 const Dispose = require('./../utils/Dispose'),
     mergre = require('./../utils/merge'),
     GLContext = require('./GLContext');
-
+/**
+ * store glContext cache
+ */
 const CACHE_GLCONTEXT = {};
-
 /**
  * @class
  */
@@ -30,11 +30,17 @@ class GLCanvas extends Dispose {
          * @type {Object}
          */
         this._options = mergre({}, options);
+        /**
+         * real html canvas element
+         * @type {HtmlCanvasElement}
+         */
+        this._canvas = null;
     }
     /**
      * 
      * @param {*} renderType 
      * @param {*} options 
+     * @returns {GLContext}
      */
     getContext(renderType = 'webgl', options = {}) {
         const canvasId = this._canvasId,
@@ -50,8 +56,25 @@ class GLCanvas extends Dispose {
      * @param {*} listener 
      * @param {*} options 
      */
-    addEventListener(type,listener,options){
+    addEventListener(type, listener, options) {
 
+    }
+    /**
+     * link virtual rendering context to real htmlCanvas
+     * @param {HtmlCanvasElement} canvas 
+     */
+    linkToCanvas(canvas){
+        this._canvas = canvas;
+    }
+    /**
+     * link virtual rendering context to real htmlCanvas
+     * @param {WebGLRenderingContext} gl 
+     */
+    linkToWebGLRenderingContext(gl){
+        if(this._canvas)
+            throw new Error('exist htmlcanvaselement');
+        const glContext = this.getContext('webgl');
+        glContext._setgl(gl);
     }
 
 }
