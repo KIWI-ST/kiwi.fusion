@@ -116,7 +116,7 @@ class GLContext extends Dispose {
         const glShader = new GLShader(type, this),
             record = new Record('createShader', type);
         //createShader 操作必需返回值
-        record.returnId = glShader.id;
+        record.setReturnId(glShader.id);
         this._recorder.increase(record);
         return glShader;
     }
@@ -149,7 +149,7 @@ class GLContext extends Dispose {
     createProgram() {
         const glProgram = new GLProgram(this),
             record = new Record('createProgram');
-        record.returnId = glProgram.id;
+        record.setReturnId(glProgram.id);
         this._recorder.increase(record);
         return glProgram;
     }
@@ -159,7 +159,7 @@ class GLContext extends Dispose {
     createBuffer() {
         const glBuffer = new GLBuffer(),
             record = new Record('createBuffer');
-        record.returnId = glBuffer.id;
+        record.setReturnId(glBuffer.id);
         this._recorder.increase(record);
         return glBuffer;
     }
@@ -188,7 +188,7 @@ class GLContext extends Dispose {
     getAttribLocation(program, name) {
         const returnId = program.getAttribLocation(name),
             record = new Record('getAttribLocation', program.id, name);
-        record.returnId = returnId;
+        record.setReturnId(returnId);
         this._recorder.increase(record);
         return program.getAttribLocation(name);
     }

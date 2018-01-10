@@ -4,38 +4,41 @@
  */
 
 const isObject = require('./isObject'),
-    isString = require('./isString');
-
-const prefix = '_kiwi.gl_',
-    prefixId = prefix + 'id_';
-
+    isString = require('./isString'),
+    _prefix = '_kiwi.gl_',
+    _prefixId = _prefix + 'id_';
+/**
+ * the seed of id
+ */
 let i = 1;
-
-const getId = () => {
-    return prefixId + (i++);
+/**
+ * get uniqueId and count++
+ * @param {String} prefix 
+ */
+const getId = (prefix) => {
+    return prefix || _prefixId + (i++);
 };
-
+/**
+ * 
+ * @param {Object} obj 
+ * @param {String} id 
+ */
 const setId = (obj, id) => {
-    isObject(obj)&&isString(id)?obj._kiwi_gl_id_=id:null;
+    if(isObject(obj) && isString(id)){
+        obj._kiwi_gl_id_ = id;
+        return id;
+    }
+    return null;
 }
-
 /**
  * get the unique id
  * @method stamp
  * @param {Object} obj 
  * @return {String} error if returned 'null'
  */
-const stamp = (obj) => {
-    if (isObject(obj)) {
-        obj._kiwi_gl_id_ = obj._kiwi_gl_id_ || getId();
-        return obj._kiwi_gl_id_
-    }
-    else if (isString(obj)) {
-        return prefix + obj;
-    } else
-        return null;
+const stamp = (obj, prefix = _prefix) => {
+    const id = getId(prefix);
+    return setId(obj, id);
 };
 
-
-
-module.exports = { stamp, prefix, getId, setId }
+module.exports = stamp;

@@ -16,7 +16,6 @@ const GL_STANDEXTENSIONS = {
     vertexArrayObject:['OES_vertex_array_object','MOZ_OES_vertex_array_object','WEBKIT_OES_vertex_array_object'],
     angleInstancedArrays:['ANGLE_instanced_arrays']
 };
-
 /**
  * @class
  */

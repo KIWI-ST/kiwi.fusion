@@ -24,6 +24,11 @@ class Record{
          * 
          */
         this._returnId = null;
+        /**
+         * index to Cache,use  'SHADER','PROGRAM','TEXTURE','BUFFER','FRAMEBUFFER'
+         * @type {String}
+         */
+        this._returnType = {};
     }
     /**
      * operation name
@@ -38,10 +43,17 @@ class Record{
         return this._rest;
     }
     /**
-     * 设置返回的id
+     * @returns {String}
      */
-    set returnId(v){
-        this._returnId = v;
+    get returnId(){
+        return this._returnId;
+    }
+    /**
+     * the value is one of 'SHADER','PROGRAM','TEXTURE','BUFFER','FRAMEBUFFER'
+     * @returns {String}
+     */
+    get returnType(){
+        return this._returnType;
     }
     /**
      * @private
@@ -64,7 +76,19 @@ class Record{
     exactIndex(ptIndex, ptName) {
         this._rest[ptIndex] = ptName;
     }
-    
+    /**
+     * 
+     * @param {String} v 'SHADER','PROGRAM','TEXTURE','BUFFER','FRAMEBUFFER'
+     */
+    setReturnType(v){
+        this._returnType = v;
+    }
+    /**
+     * 设置返回的id
+     */
+    setReturnId(v){
+        this._returnId = v;
+    }
 }
 
 module.exports = Record;

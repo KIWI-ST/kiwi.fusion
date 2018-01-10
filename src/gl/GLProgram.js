@@ -2,16 +2,9 @@
  * @author yellow
  */
 const Dispose = require('./../utils/Dispose');
-/**
- * get new index for glProgram attribute index
- * @function
- */
-const seed = function () {
-    let sd = 1;
-    return function () {
-        return (sd++) * 256;
-    }
-}();
+
+const prefix = 'PROGRAM';
+
 /**
  * @class
  */
@@ -23,13 +16,12 @@ class GLProgram extends Dispose {
     constructor(glContext) {
         super(glContext.id);
         /**
-         * 种子id
-         */
-        this._seed = seed();
-        /**
          * 映射attribute 和返回值
          */
         this._attributes = {};
+        /**
+         * 映射uniforms
+         */
         this._uniforms = {};
     }
 

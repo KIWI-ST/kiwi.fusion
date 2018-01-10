@@ -5,6 +5,8 @@
 const Dispose = require('./../utils/Dispose'),
     GLConstants = require('./GLConstants');
 
+const prefix = 'SHADER';
+
 /**
  * @class
  */

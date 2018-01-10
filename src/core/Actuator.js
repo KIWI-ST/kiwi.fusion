@@ -4,6 +4,23 @@
  */
 const Encrypt = require('./Encrypt').Encrypt_Object;
 /**
+ * Cahce store
+ */
+const CHACHE = {
+    /**
+     * use id to store program
+     */
+    PROGRAM: {},
+    /**
+    * use id to store shader
+    */
+    SHADER: {},
+    /**
+    * use id to store texture
+    */
+    TEXTURE: {}
+}
+/**
  * @class
  */
 class Actuator {
@@ -36,11 +53,11 @@ class Actuator {
             const record = this._records.shift();
             while (record) {
                 const opName = record.opName,
-                    encrypt = Encrypt[onpagehide]||{};
-                
-                //2.void
-                
-
+                    encrypt = Encrypt[onpagehide] || {};
+                //1.有返回对象的操作
+                if (encrypt.return) {
+                    
+                }
             }
         }
     }
