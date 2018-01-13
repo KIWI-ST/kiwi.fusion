@@ -1,13 +1,16 @@
 
 /**
  * 具有返回对象的操作
+ * -code 操作代码
+ * -return 具有返回值的操作
+ * -replace 需要使用新对象代替引用的操作
  */
 const Encrypt_Object = {
-    'createTexture':{ code:1,return:1},
-    'createShader':{code:2,return:1},
-    'createProgram':{code:3,return:1},
-    'createBuffer':{code:4,return:1},
-    'createFramebuffer':{code:5,return:1}
+    'createTexture': { code: 1, return: 1, replace: 0 },
+    'createShader': { code: 2, return: 1, replace: 0 },
+    'createProgram': { code: 3, return: 1, replace: 0 },
+    'createBuffer': { code: 4, return: 1, replace: 0 },
+    'createFramebuffer': { code: 5, return: 1, replace: 0 }
 }
 /**
  * 全局设置操作
@@ -53,19 +56,19 @@ const Encrypt_OVERALL = {
 const Encrypt_VOID = {
     'bindTexture': true,
     'bindBuffer': true,
-    'bindFramebuffer':true,
+    'bindFramebuffer': true,
     'bufferData': true,
     'bufferSubData': true,
     //
-    'disableVertexAttribArray':true,
-    'enableVertexAttribArray':true,
+    'disableVertexAttribArray': true,
+    'enableVertexAttribArray': true,
     //delete
     'deleteBuffer': true,
     'deleteShader': true,
     'deleteProgram': true,
     'deleteFramebuffer': true,
     'deleteRenderbuffer': true,
-    'deleteTexture':true,
+    'deleteTexture': true,
     //uniformMatrix[]fv
     'uniformMatrix2fv': true,
     'uniformMatrix3fv': true,
@@ -94,7 +97,7 @@ const Encrypt_VOID = {
 /**
  * 执行此类操作时，要将record丢入下一帧
  */
-const Encrypt_TICK={
+const Encrypt_TICK = {
     'drawElements': true,
     'drawArrays': true
 }

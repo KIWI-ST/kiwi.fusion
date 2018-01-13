@@ -18,6 +18,10 @@ const GLLimits = require('./GLLimits'),
  */
 const actuator = require('./../core/Actuator');
 /**
+ * the prefix of GLContext
+ */
+const prefix = "WEBGLRENDERGINGCONTEXT"
+/**
  * @class
  */
 class GLContext extends Dispose {
@@ -25,10 +29,10 @@ class GLContext extends Dispose {
      * 
      * @param {String} id parentId,just as the glCanvas'id
      * @param {String} renderType support 'webgl' or 'webgl2'
-     * @param {Object} options 
+     * @param {Object} [options] 
      */
     constructor(id, renderType, options = {}) {
-        super(id);
+        super(prefix);
         /**
          * @type {String}
          */

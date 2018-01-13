@@ -7,17 +7,17 @@
  * -dispose
  */
 
-const stamp = require('./stamp').stamp;
+const stamp = require('./stamp');
 
 /**
  * @class
  */
 class Dispose {
     /**
-     * 构建一个可被销毁的资源对象,id链
+     * 构建一个可被销毁的资源对象,提供prefix
      */
-    constructor(id = null) {
-        this._id = id ? id +'-'+stamp(this) : stamp(this);
+    constructor(prefix = null) {
+        this._id = stamp(this, prefix);
     }
     /**
      * 获取资源id

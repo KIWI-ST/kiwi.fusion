@@ -11,17 +11,20 @@ const Dispose = require('./../utils/Dispose'),
  */
 const CACHE_GLCONTEXT = {};
 /**
+ * the prefix of GLCanvas
+ */
+const prefix = 'CANVASELEMENT';
+/**
  * @class
  */
 class GLCanvas extends Dispose {
-
     /**
      * 
      * @param {String} id the real htmlCanvasElement id 
      * @param {Object} options 
      */
     constructor(id, options = {}) {
-        super(id);
+        super(prefix);
         /**
          * @type {String}
          */

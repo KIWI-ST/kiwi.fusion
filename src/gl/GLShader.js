@@ -4,21 +4,21 @@
  */
 const Dispose = require('./../utils/Dispose'),
     GLConstants = require('./GLConstants');
-
+/**
+ * the prefix of Shader type
+ */
 const prefix = 'SHADER';
-
 /**
  * @class
  */
 class GLShader extends Dispose{
-
     /**
      * 
      * @param {String} type Either gl.VERTEX_SHADER or gl.FRAGMENT_SHADER
      * @param {GLContext} glContext 
      */
     constructor(type, glContext) {
-        super(glContext.id);
+        super(prefix);
         /**
          * @type {String}
          */

@@ -16,7 +16,7 @@ let i = 1;
  * @param {String} prefix 
  */
 const getId = (prefix) => {
-    return prefix || _prefixId + (i++);
+    return (prefix || _prefixId) + '_' + (i++);
 };
 /**
  * 

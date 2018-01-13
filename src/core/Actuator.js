@@ -49,18 +49,29 @@ class Actuator {
      */
     play(records = []) {
         this._records = this._records.concat(records);
-        if (this._gl) {
+        const gl = this._gl;
+        if (gl) {
             const record = this._records.shift();
             while (record) {
                 const opName = record.opName,
-                    encrypt = Encrypt[onpagehide] || {};
+                    encrypt = Encrypt[opName] || {};
                 //1.有返回对象的操作
                 if (encrypt.return) {
-                    
+                    const returnId = record.returnId,
+                        cacheName = returnId.split('_')[0];
+                    CHACHE[cacheName][returnId] = gl[opName].apply(gl,record.args);
                 }
+                //2.需要替换对象的操作
+      
+
             }
         }
     }
+
+    _executeReturn(){
+
+    }
+
 
 }
 /**

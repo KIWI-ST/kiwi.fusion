@@ -20,8 +20,14 @@ const GL_STANDEXTENSIONS = {
  * @class
  */
 class GLExtension{
-    
+    /**
+     * 
+     * @param {GLContext} glContext 
+     */
     constructor(glContext){
+        /**
+         * quote of GLContext instance
+         */
         this._glContext = glContext;
         /**
          * store key and value of extension

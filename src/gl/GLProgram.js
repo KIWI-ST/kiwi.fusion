@@ -1,10 +1,11 @@
 /**
  * @author yellow
  */
-const Dispose = require('./../utils/Dispose');
+const Dispose = require('./../utils/Dispose'),
+    stamp = require('./../utils/stamp');
 
-const prefix = 'PROGRAM';
-
+const prefixProgram = 'PROGRAM',
+    prefixAttribute = 'ATTRIBUTE';
 /**
  * @class
  */
@@ -14,7 +15,11 @@ class GLProgram extends Dispose {
      * @param {GLContext} glContext 
      */
     constructor(glContext) {
-        super(glContext.id);
+        super(prefixProgram);
+        /**
+         * 索引glContext对象
+         */
+        this._glContext = glContext;
         /**
          * 映射attribute 和返回值
          */
@@ -26,7 +31,7 @@ class GLProgram extends Dispose {
     }
 
     getAttribLocation(name) {
-        this._attributes[name] = this._attributes[name] || this._seed++;
+        this._attributes[name] = this._attributes[name] || stamp({},prefixAttribute);
         return this._attributes[name];
     }
 
