@@ -62,7 +62,7 @@ class Actuator {
                     CHACHE[cacheName][returnId] = gl[opName].apply(gl,record.args);
                 }
                 //2.需要替换对象的操作
-      
+                
 
             }
         }

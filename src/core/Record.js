@@ -13,22 +13,28 @@ class Record{
      */
     constructor(opName, ...rest) {
         /**
-         * 
+         * webgl operation name
          */
         this._opName = opName;
         /**
-         * 
+         * args
          */
-        this._rest = this._exact(rest)
+        this._rest = this._exact(rest);
         /**
-         * 
+         * use prfix instead of value in args
+         * @type {Int}
          */
-        this._returnId = null;
+        this._ptIndex = -1;
         /**
-         * index to Cache,use  'SHADER','PROGRAM','TEXTURE','BUFFER','FRAMEBUFFER'
+         * the prefix Name of args in ptIndex
          * @type {String}
          */
-        this._returnType = {};
+        this._ptName = null;
+        /**
+         * indicate this record needs to return value
+         * @type {String}
+         */
+        this._returnId = null;
     }
     /**
      * operation name
@@ -74,14 +80,9 @@ class Record{
      * @param {String} ptName always represents shaderId/porgramId/
      */
     exactIndex(ptIndex, ptName) {
+        this._ptIndex = ptIndex;
+        this._ptName = ptName;
         this._rest[ptIndex] = ptName;
-    }
-    /**
-     * 
-     * @param {String} v 'SHADER','PROGRAM','TEXTURE','BUFFER','FRAMEBUFFER'
-     */
-    setReturnType(v){
-        this._returnType = v;
     }
     /**
      * 设置返回的id
