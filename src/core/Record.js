@@ -90,6 +90,14 @@ class Record{
         this._rest[ptIndex] = ptName;
     }
     /**
+     * 
+     * @param {Object} ref 
+     */
+    replace(ref){
+        const ptIndex = this._ptIndex;
+        this._rest[ptIndex] = ref;
+    }
+    /**
      * 设置返回的id
      */
     setReturnId(v){

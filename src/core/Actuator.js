@@ -63,11 +63,16 @@ class Actuator {
                 }
                 //2.need to replace
                 else if(encrypt.replace){
-                    const ptIndex = record.
+                    const ptIndex = record.ptIndex,
+                        ptName = record.ptName,
+                        cacheName = ptName.split('_')[0];
+                    const refObject = CHACHE[cacheName][ptName];
+                    record.replace(refObject);
+                    gl[opName].apply(gl,record.args);
                 }
                 //3.execute directly(void)
                 else{
-
+                    gl[opName].apply(gl,record.args);
                 }
             }
         }
