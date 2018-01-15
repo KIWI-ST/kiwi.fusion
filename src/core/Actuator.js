@@ -55,15 +55,20 @@ class Actuator {
             while (record) {
                 const opName = record.opName,
                     encrypt = Encrypt[opName] || {};
-                //1.有返回对象的操作
+                //1.need to create
                 if (encrypt.return) {
                     const returnId = record.returnId,
                         cacheName = returnId.split('_')[0];
                     CHACHE[cacheName][returnId] = gl[opName].apply(gl,record.args);
                 }
-                //2.需要替换对象的操作
-                
+                //2.need to replace
+                else if(encrypt.replace){
+                    const ptIndex = record.
+                }
+                //3.execute directly(void)
+                else{
 
+                }
             }
         }
     }

@@ -55,11 +55,16 @@ class Record{
         return this._returnId;
     }
     /**
-     * the value is one of 'SHADER','PROGRAM','TEXTURE','BUFFER','FRAMEBUFFER'
-     * @returns {String}
+     * @type {Int}
      */
-    get returnType(){
-        return this._returnType;
+    get ptIndex(){
+        return this._ptIndex;
+    }
+    /**
+     * 
+     */
+    get ptName(){
+        return this._ptName;
     }
     /**
      * @private

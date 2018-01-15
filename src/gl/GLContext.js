@@ -20,7 +20,7 @@ const actuator = require('./../core/Actuator');
 /**
  * the prefix of GLContext
  */
-const prefix = "WEBGLRENDERGINGCONTEXT"
+const prefix = "WEBGLRENDERGINGCONTEXT";
 /**
  * @class
  */
