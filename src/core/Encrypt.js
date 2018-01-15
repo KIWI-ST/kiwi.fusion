@@ -1,110 +1,135 @@
 
 /**
+ * reference:
+ * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext
+ * 
  * 具有返回对象的操作
  * -code 操作代码
  * -return 具有返回值的操作
  * -replace 需要使用新对象代替引用的操作
  */
 const Encrypt_Object = {
-    'createTexture': { code: 1, return: 1, replace: 0 },
-    'createShader': { code: 2, return: 1, replace: 0 },
-    'createProgram': { code: 3, return: 1, replace: 0 },
-    'createBuffer': { code: 4, return: 1, replace: 0 },
-    'createFramebuffer': { code: 5, return: 1, replace: 0 }
-}
-/**
- * 全局设置操作
- */
-const Encrypt_OVERALL = {
-    'enable': true,
-    'disable': true,
+    //-----------------------The WebGL context--------------------------------------
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/canvas
+     * @property
+     */
+    'canvas': { code: 0, return: 1, replace: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/commit
+     */
+    'commit': { code: 0, return: 0, replace: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawingBufferWidth
+     * @property
+     */
+    'drawingBufferWidth':{code: 0, return: 1, replace: 0},
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawingBufferHeight
+     * @property
+     */
+    'drawingBufferHeight':{code: 0, return: 1, replace: 0},
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getContextAttributes
+     */
+    'getContextAttributes':{code: 0, return: 1, replace: 0},
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/isContextLost
+     */
+    'isContextLost':{code: 0, return: 1, replace: 0},
+    //-----------------------Viewing and clipping-----------------------------------
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/scissor
+     */
+    'scissor':{code: 0, return: 0, replace: 0},
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/viewport
+     */
+    'viewport':{code: 0, return: 0, replace: 0},
+    //-----------------------State information--------------------------------------
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/activeTexture
+     */
+    'activeTexture':{code: 0, return: 0, replace: 1},
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/blendColor
+     */
+    'blendColor':{code: 0, return: 0, replace: 1},
+    //-----------------------Buffers------------------------------------------------
+    //-----------------------Framebuffers-------------------------------------------
+    //-----------------------Renderbuffers------------------------------------------
+    //-----------------------Textures-----------------------------------------------
+    //-----------------------Programs and shaders-----------------------------------
+    //-----------------------Uniforms and attributes--------------------------------
+    //-----------------------Drawing buffers----------------------------------------
+    //-----------------------Working with extensions--------------------------------
+    'createTexture': { code: 0, return: 1, replace: 0 },
+    'createShader': { code: 0, return: 1, replace: 0 },
+    'createProgram': { code: 0, return: 1, replace: 0 },
+    'createBuffer': { code: 0, return: 1, replace: 0 },
+    'createFramebuffer': { code: 0, return: 1, replace: 0 },
+    //void
+    'enable': { code: 0, return: 0, replace: 0 },
+    'disable': { code: 0, return: 0, replace: 0 },
+    'texParameterf': { code: 0, return: 1, replace: 0 },
+    'texParameteri': { code: 0, return: 1, replace: 0 },
+    'texImage2D': { code: 0, return: 1, replace: 0 },
+    'texSubImage2D': { code: 0, return: 1, replace: 0 },
+    'blendFuncSeparate': { code: 0, return: 1, replace: 0 },
+    'blendEquation': { code: 0, return: 0, replace: 0 },
+    'blendFunc': { code: 0, return: 0, replace: 0 },
+    'blendEquationSeparate': { code: 0, return: 0, replace: 0 },
+    'compressedTexImage2D': { code: 0, return: 0, replace: 0 },
+    'compressedTexSubImage2D': { code: 0, return: 0, replace: 0 },
+    'viewport': { code: 0, return: 0, replace: 0 },
+    'scissor': { code: 0, return: 0, replace: 0 },
+    'depthFunc': { code: 0, return: 0, replace: 0 },
+    'depthMask': { code: 0, return: 0, replace: 0 },
+    'colorMask': { code: 0, return: 0, replace: 0 },
+    'frontFace': { code: 0, return: 0, replace: 0 },
+    'cullFace': { code: 0, return: 0, replace: 0 },
+    'pixelStorei': { code: 0, return: 0, replace: 0 },
+    'generateMipmap': { code: 0, return: 0, replace: 0 },
+    'activeTexture': { code: 0, return: 0, replace: 0 },
+    'stencilOp': { code: 0, return: 0, replace: 0 },
+    'stencilFunc': { code: 0, return: 0, replace: 0 },
+    'stencilMask': { code: 0, return: 0, replace: 0 },
+    'hint': { code: 0, return: 0, replace: 0 },
+    'bindTexture': { code: 0, return: 0, replace: 0 },
+    'bindBuffer': { code: 0, return: 0, replace: 0 },
+    'bindFramebuffer': { code: 0, return: 0, replace: 0 },
+    'bufferData': { code: 0, return: 0, replace: 0 },
+    'bufferSubData': { code: 0, return: 0, replace: 0 },
+    'disableVertexAttribArray': { code: 0, return: 0, replace: 0 },
+    'enableVertexAttribArray': { code: 0, return: 0, replace: 0 },
+    'deleteBuffer': { code: 0, return: 0, replace: 0 },
+    'deleteShader': { code: 0, return: 0, replace: 0 },
+    'deleteProgram': { code: 0, return: 0, replace: 0 },
+    'deleteFramebuffer': { code: 0, return: 0, replace: 0 },
+    'deleteRenderbuffer': { code: 0, return: 0, replace: 0 },
+    'deleteTexture': { code: 0, return: 0, replace: 0 },
+    'uniformMatrix2fv': { code: 0, return: 0, replace: 0 },
+    'uniformMatrix3fv': { code: 0, return: 0, replace: 0 },
+    'uniformMatrix4fv': { code: 0, return: 0, replace: 0 },
+    'uniform1f': { code: 0, return: 0, replace: 0 },
+    'uniform1fv': { code: 0, return: 0, replace: 0 },
+    'uniform1i': { code: 0, return: 0, replace: 0 },
+    'uniform1iv': { code: 0, return: 0, replace: 0 },
+    'uniform2f': { code: 0, return: 0, replace: 0 },
+    'uniform2fv': { code: 0, return: 0, replace: 0 },
+    'uniform2i': { code: 0, return: 0, replace: 0 },
+    'uniform2iv': { code: 0, return: 0, replace: 0 },
+    'uniform3f': { code: 0, return: 0, replace: 0 },
+    'uniform3fv': { code: 0, return: 0, replace: 0 },
+    'uniform3i': { code: 0, return: 0, replace: 0 },
+    'uniform3iv': { code: 0, return: 0, replace: 0 },
+    'uniform4f': { code: 0, return: 0, replace: 0 },
+    'uniform4fv': { code: 0, return: 0, replace: 0 },
+    'uniform4i': { code: 0, return: 0, replace: 0 },
+    'uniform4iv': { code: 0, return: 0, replace: 0 },
     //
-    'texParameterf': true,
-    'texParameteri': true,
-    'texImage2D': true,
-    'texSubImage2D': true,
-    //
-    'blendFuncSeparate': true,
-    'blendEquation': true,
-    'blendFunc': true,
-    'blendEquationSeparate': true,
-    //
-    'compressedTexImage2D': true,
-    'compressedTexSubImage2D': true,
-    'viewport': true,
-    'scissor': true,
-    //
-    'depthFunc': true,
-    'depthMask': true,
-    'colorMask': true,
-    'frontFace': true,
-    'cullFace': true,
-    //
-    'pixelStorei': true,
-    'generateMipmap': true,
-    'activeTexture': true,
-    //
-    'stencilOp': true,
-    'stencilFunc': true,
-    'stencilMask': true,
-    //
-    'hint': true
-}
-/**
- * 无返回类型的操作
- */
-const Encrypt_VOID = {
-    'bindTexture': true,
-    'bindBuffer': true,
-    'bindFramebuffer': true,
-    'bufferData': true,
-    'bufferSubData': true,
-    //
-    'disableVertexAttribArray': true,
-    'enableVertexAttribArray': true,
-    //delete
-    'deleteBuffer': true,
-    'deleteShader': true,
-    'deleteProgram': true,
-    'deleteFramebuffer': true,
-    'deleteRenderbuffer': true,
-    'deleteTexture': true,
-    //uniformMatrix[]fv
-    'uniformMatrix2fv': true,
-    'uniformMatrix3fv': true,
-    'uniformMatrix4fv': true,
-    //uniform1[f][i][v]
-    'uniform1f': true,
-    'uniform1fv': true,
-    'uniform1i': true,
-    'uniform1iv': true,
-    //uniform2[f][i][v]
-    'uniform2f': true,
-    'uniform2fv': true,
-    'uniform2i': true,
-    'uniform2iv': true,
-    //uniform3[f][i][v]
-    'uniform3f': true,
-    'uniform3fv': true,
-    'uniform3i': true,
-    'uniform3iv': true,
-    //uniform4[f][i][v]
-    'uniform4f': true,
-    'uniform4fv': true,
-    'uniform4i': true,
-    'uniform4iv': true,
-}
-/**
- * 执行此类操作时，要将record丢入下一帧
- */
-const Encrypt_TICK = {
-    'drawElements': true,
-    'drawArrays': true
+    'drawElements': { code: 0, return: 0, replace: 0 },
+    'drawArrays': { code: 0, return: 0, replace: 0 }
 }
 
-module.exports = {
-    Encrypt_OVERALL,
-    Encrypt_VOID,
-    Encrypt_TICK,
-    Encrypt_Object
-}
+module.exports = Encrypt_Object;
