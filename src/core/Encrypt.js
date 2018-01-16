@@ -12,7 +12,6 @@
 
 const merge = require('./../utils/merge');
 
-
 const Encrypt_WebGLContext = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/canvas
