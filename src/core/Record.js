@@ -2,10 +2,13 @@
  * 操作记单元
  * @author yellow date 2018/1/4
  */
+
+const isArray = require('./../utils/isArray');
+
 /**
  * @class
  */
-class Record{
+class Record {
     /**
      * 
      * @param {*} opName 
@@ -39,31 +42,31 @@ class Record{
     /**
      * operation name
      */
-    get opName(){
+    get opName() {
         return this._opName;
     }
     /**
      * arguments of record
      */
-    get args(){
+    get args() {
         return this._rest;
     }
     /**
      * @returns {String}
      */
-    get returnId(){
+    get returnId() {
         return this._returnId;
     }
     /**
      * @type {Int}
      */
-    get ptIndex(){
+    get ptIndex() {
         return this._ptIndex;
     }
     /**
      * 
      */
-    get ptName(){
+    get ptName() {
         return this._ptName;
     }
     /**
@@ -81,26 +84,38 @@ class Record{
     }
     /**
      * 修改某处指令的值
-     * @param {int} ptIndex 
-     * @param {String} ptName always represents shaderId/porgramId/
+     * @param {int|Array} ptIndex 
+     * @param {String|Array} ptName always represents shaderId/porgramId/
      */
     exactIndex(ptIndex, ptName) {
         this._ptIndex = ptIndex;
         this._ptName = ptName;
-        this._rest[ptIndex] = ptName;
+        if (!isArray(ptIndex)) {
+            this._rest[ptIndex] = ptName;
+        } else {
+            for (let i = 0, len = ptIndex.length; i < len; i++) {
+                this._rest[ptIndex[i]] = ptName[i];
+            }
+        }
     }
     /**
      * 
-     * @param {Object} ref 
+     * @param {Object|Array} ref 
      */
-    replace(ref){
+    replace(ref) {
         const ptIndex = this._ptIndex;
-        this._rest[ptIndex] = ref;
+        if (!isArray(ptIndex)) {
+            this._rest[ptIndex] = ref;
+        }else {
+            for (let i = 0, len = ptIndex.length; i < len; i++) {
+                this._rest[ptIndex[i]] = ref[i];
+            }
+        }
     }
     /**
      * 设置返回的id
      */
-    setReturnId(v){
+    setReturnId(v) {
         this._returnId = v;
     }
 }

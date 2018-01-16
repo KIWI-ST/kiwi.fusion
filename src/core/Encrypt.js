@@ -9,8 +9,11 @@
  * -replace 需要使用新对象代替引用的操作
  * -ptIndex 替换参数的位置索引
  */
-const Encrypt_Object = {
-    //-----------------------The WebGL context--------------------------------------
+
+const merge = require('./../utils/merge');
+
+
+const Encrypt_WebGLContext = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/canvas
      * @property
@@ -38,7 +41,9 @@ const Encrypt_Object = {
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/isContextLost
      */
     'isContextLost': { code: 0, return: 1, replace: 0 },
-    //-----------------------Viewing and clipping-----------------------------------
+}
+
+const Encrypt_Viewing_And_Clipping = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/scissor
      */
@@ -47,7 +52,9 @@ const Encrypt_Object = {
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/viewport
      */
     'viewport': { code: 0, return: 0, replace: 0 },
-    //-----------------------State information--------------------------------------
+};
+
+const Encrypt_State_Information = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/activeTexture
      */
@@ -174,7 +181,9 @@ const Encrypt_Object = {
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/stencilOpSeparate
      */
     'stencilOpSeparate': { code: 0, return: 0, replace: 0 },
-    //-----------------------Buffers------------------------------------------------
+};
+
+const Encrypt_Buffers = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bindBuffer
      */
@@ -203,7 +212,9 @@ const Encrypt_Object = {
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/isBuffer
      */
     'isBuffer': { code: 0, return: 1, replace: 0 },
-    //-----------------------Framebuffers-------------------------------------------
+};
+
+const Encrypt_Framebuffers = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bindFramebuffer
      */
@@ -240,7 +251,9 @@ const Encrypt_Object = {
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/readPixels
      */
     'readPixels': { code: 0, return: 0, replace: 0 },
-    //-----------------------Renderbuffers------------------------------------------
+};
+
+const Encrypt_Renderbuffers = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bindRenderbuffer
      */
@@ -265,8 +278,10 @@ const Encrypt_Object = {
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/renderbufferStorage
      */
     'renderbufferStorage': { code: 0, return: 0, replace: 0 },
-    //-----------------------Textures-----------------------------------------------
-    /**
+};
+
+const Encrypt_Textures = {
+        /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bindTexture
      */
     'bindTexture': { code: 0, return: 0, replace: 1, ptIndex: 1 },
@@ -293,102 +308,236 @@ const Encrypt_Object = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/generateMipmap
      */
-    'generateMipmap':{ code: 0, return: 0, replace: 0 },
+    'generateMipmap': { code: 0, return: 0, replace: 0 },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getTexParameter
      */
-    'getTexParameter':{ code: 0, return: 1, replace: 0 },
+    'getTexParameter': { code: 0, return: 1, replace: 0 },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/isTexture
      */
-    'isTexture':{code: 0, return: 1, replace: 1,ptIndex:0},
+    'isTexture': { code: 0, return: 1, replace: 1, ptIndex: 0 },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D
      */
-    'texImage2D':{ code: 0, return: 0, replace: 0 },
+    'texImage2D': { code: 0, return: 0, replace: 0 },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texSubImage2D
      */
-    'texSubImage2D':{ code: 0, return: 0, replace: 0 },
+    'texSubImage2D': { code: 0, return: 0, replace: 0 },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texParameter
      */
-    'texParameterf':{ code: 0, return: 0, replace: 0 },
+    'texParameterf': { code: 0, return: 0, replace: 0 },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texParameter
      */
-    'texParameteri':{ code: 0, return: 0, replace: 0 },
-    //-----------------------Programs and shaders-----------------------------------
-    //-----------------------Uniforms and attributes--------------------------------
-    //-----------------------Drawing buffers----------------------------------------
-    //-----------------------Working with extensions--------------------------------
-    'createTexture': { code: 0, return: 1, replace: 0 },
-    'createShader': { code: 0, return: 1, replace: 0 },
+    'texParameteri': { code: 0, return: 0, replace: 0 },
+};
+
+const Encrypt_Programs_And_Shaders = {
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/attachShader
+     * @augments
+     */
+    'attachShader': { code: 0, return: 0, replace: 2, ptIndex: [0, 1] },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bindAttribLocation
+     * @augments
+     */
+    'bindAttribLocation': { code: 0, return: 0, replace: 2, ptIndex: [0, 1] },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/compileShader
+     */
+    'compileShader': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createProgram
+     */
     'createProgram': { code: 0, return: 1, replace: 0 },
-    'createBuffer': { code: 0, return: 1, replace: 0 },
-    'createFramebuffer': { code: 0, return: 1, replace: 0 },
-    //void
-    'enable': { code: 0, return: 0, replace: 0 },
-    'disable': { code: 0, return: 0, replace: 0 },
-    'texParameterf': { code: 0, return: 1, replace: 0 },
-    'texParameteri': { code: 0, return: 1, replace: 0 },
-    'texImage2D': { code: 0, return: 1, replace: 0 },
-    'texSubImage2D': { code: 0, return: 1, replace: 0 },
-    'blendFuncSeparate': { code: 0, return: 1, replace: 0 },
-    'blendEquation': { code: 0, return: 0, replace: 0 },
-    'blendFunc': { code: 0, return: 0, replace: 0 },
-    'blendEquationSeparate': { code: 0, return: 0, replace: 0 },
-    'compressedTexImage2D': { code: 0, return: 0, replace: 0 },
-    'compressedTexSubImage2D': { code: 0, return: 0, replace: 0 },
-    'viewport': { code: 0, return: 0, replace: 0 },
-    'scissor': { code: 0, return: 0, replace: 0 },
-    'depthFunc': { code: 0, return: 0, replace: 0 },
-    'depthMask': { code: 0, return: 0, replace: 0 },
-    'colorMask': { code: 0, return: 0, replace: 0 },
-    'frontFace': { code: 0, return: 0, replace: 0 },
-    'cullFace': { code: 0, return: 0, replace: 0 },
-    'pixelStorei': { code: 0, return: 0, replace: 0 },
-    'generateMipmap': { code: 0, return: 0, replace: 0 },
-    'activeTexture': { code: 0, return: 0, replace: 0 },
-    'stencilOp': { code: 0, return: 0, replace: 0 },
-    'stencilFunc': { code: 0, return: 0, replace: 0 },
-    'stencilMask': { code: 0, return: 0, replace: 0 },
-    'hint': { code: 0, return: 0, replace: 0 },
-    'bindTexture': { code: 0, return: 0, replace: 0 },
-    'bindBuffer': { code: 0, return: 0, replace: 0 },
-    'bindFramebuffer': { code: 0, return: 0, replace: 0 },
-    'bufferData': { code: 0, return: 0, replace: 0 },
-    'bufferSubData': { code: 0, return: 0, replace: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createShader
+     */
+    'createShader': { code: 0, return: 1, replace: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/deleteProgram
+     */
+    'deleteProgram': { code: 0, return: 0, replace: 1, ptIndex },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/deleteShader
+     */
+    'deleteShader': { code: 0, return: 0, replace: 1, ptIndex },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/detachShader
+     */
+    'detachShader': { code: 0, return: 0, replace: 2, ptIndex: [0, 1] },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getAttachedShaders
+     */
+    'getAttachedShaders': { code: 0, return: 1, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getProgramParameter
+     */
+    'getProgramParameter': { code: 0, return: 1, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getProgramInfoLog
+     */
+    'getProgramInfoLog': { code: 0, return: 1, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getShaderParameter
+     */
+    'getShaderParameter': { code: 0, return: 1, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getShaderPrecisionFormat
+     */
+    'getShaderPrecisionFormat': { code: 0, return: 1, replace: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getShaderInfoLog
+     */
+    'getShaderInfoLog': { code: 0, return: 1, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getShaderSource
+     */
+    'getShaderSource': { code: 0, return: 1, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/isProgram
+     */
+    'isProgram': { code: 0, return: 1, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/isShader
+     */
+    'isShader': { code: 0, return: 1, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/linkProgram
+     */
+    'linkProgram': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/shaderSource
+     */
+    'shaderSource': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/useProgram
+     */
+    'useProgram': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/validateProgram
+     */
+    'validateProgram': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+};
+
+const Encrypt_Uniforms_And_Attributes = {
+ /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/disableVertexAttribArray
+     */
     'disableVertexAttribArray': { code: 0, return: 0, replace: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray
+     */
     'enableVertexAttribArray': { code: 0, return: 0, replace: 0 },
-    'deleteBuffer': { code: 0, return: 0, replace: 0 },
-    'deleteShader': { code: 0, return: 0, replace: 0 },
-    'deleteProgram': { code: 0, return: 0, replace: 0 },
-    'deleteFramebuffer': { code: 0, return: 0, replace: 0 },
-    'deleteRenderbuffer': { code: 0, return: 0, replace: 0 },
-    'deleteTexture': { code: 0, return: 0, replace: 0 },
-    'uniformMatrix2fv': { code: 0, return: 0, replace: 0 },
-    'uniformMatrix3fv': { code: 0, return: 0, replace: 0 },
-    'uniformMatrix4fv': { code: 0, return: 0, replace: 0 },
-    'uniform1f': { code: 0, return: 0, replace: 0 },
-    'uniform1fv': { code: 0, return: 0, replace: 0 },
-    'uniform1i': { code: 0, return: 0, replace: 0 },
-    'uniform1iv': { code: 0, return: 0, replace: 0 },
-    'uniform2f': { code: 0, return: 0, replace: 0 },
-    'uniform2fv': { code: 0, return: 0, replace: 0 },
-    'uniform2i': { code: 0, return: 0, replace: 0 },
-    'uniform2iv': { code: 0, return: 0, replace: 0 },
-    'uniform3f': { code: 0, return: 0, replace: 0 },
-    'uniform3fv': { code: 0, return: 0, replace: 0 },
-    'uniform3i': { code: 0, return: 0, replace: 0 },
-    'uniform3iv': { code: 0, return: 0, replace: 0 },
-    'uniform4f': { code: 0, return: 0, replace: 0 },
-    'uniform4fv': { code: 0, return: 0, replace: 0 },
-    'uniform4i': { code: 0, return: 0, replace: 0 },
-    'uniform4iv': { code: 0, return: 0, replace: 0 },
-    //
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveAttrib
+     */
+    'getActiveAttrib': { code: 0, return: 1, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveUniform
+     */
+    'getActiveUniform': { code: 0, return: 1, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getAttribLocation
+     */
+    'getAttribLocation': { code: 0, return: 1, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getVertexAttrib
+     */
+    'getVertexAttrib': { code: 0, return: 1, replace: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getVertexAttribOffset
+     */
+    'getVertexAttribOffset': { code: 0, return: 1, replace: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
+     */
+    'vertexAttribPointer': { code: 0, return: 0, replace: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniformMatrix
+     */
+    'uniformMatrix2fv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniformMatrix3fv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniformMatrix4fv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniform
+     */
+    'uniform1f': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform1fv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform1i': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform1iv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform2f': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform2fv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform2i': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform2iv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform3f': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform3fv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform3i': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform3iv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform4f': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform4fv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform4i': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'uniform4iv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttrib
+     */
+    'vertexAttrib1f': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'vertexAttrib2f': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'vertexAttrib3f': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'vertexAttrib4f': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'vertexAttrib1fv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'vertexAttrib2fv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'vertexAttrib3fv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+    'vertexAttrib4fv': { code: 0, return: 0, replace: 1, ptIndex: 0 },
+};
+
+const Encrypt_Drawing_Buffers = {
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clear
+     */
+    'clear': { code: 0, return: 0, replace: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawArrays
+     */
+    'drawArrays': { code: 0, return: 0, replace: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawElements
+     */
     'drawElements': { code: 0, return: 0, replace: 0 },
-    'drawArrays': { code: 0, return: 0, replace: 0 }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/finish
+     */
+    'finish': { code: 0, return: 0, replace: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/flush
+     */
+    'flush': { code: 0, return: 0, replace: 0 },
+};
+
+const Encrypt_Working_With_Extensions = {
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getSupportedExtensions
+     */
+    'getSupportedExtensions': { code: 0, return: 1, replace: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getExtension
+     */
+    'getExtension': { code: 0, return: 1, replace: 0 },
 }
 
-module.exports = Encrypt_Object;
+module.exports = merge({},
+    Encrypt_Buffers,
+    Encrypt_Drawing_Buffers,
+    Encrypt_Framebuffers,
+    Encrypt_Programs_And_Shaders,
+    Encrypt_Renderbuffers,
+    Encrypt_State_Information,
+    Encrypt_Textures,
+    Encrypt_Uniforms_And_Attributes,
+    Encrypt_Viewing_And_Clipping,
+    Encrypt_WebGLContext,
+    Encrypt_Working_With_Extensions);
