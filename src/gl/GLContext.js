@@ -4,7 +4,7 @@
 const Dispose = require('./../utils/Dispose'),
     Record = require('./../core/Record'),
     Recorder = require('./../core/Recorder'),
-    Encrypt = require('./../core/Encrypt');
+    Encrypt = require('./../core/Encrypt'),
     GLConstants = require('./GLConstants');
 /**
  * bridge object
@@ -76,7 +76,21 @@ class GLContext extends Dispose {
                     this[key] = target;
             }
         }
-        //2.map void function
+        //2.map void function(include replace and no replace)
+        for (const key in Encrypt) {
+            if (!this.hasOwnProperty(key)) {
+                const target = GLConstants[key];
+                //2.1 void and no replace
+                if (!target.return && !target.replace) {
+
+                }
+                //2.2 void and replace 
+                else if (!target.return && target.replace) {
+
+                }
+                //2.3 return(make birdge to origin,should not to be implemented)
+            }
+        }
     }
     /**
      * get context attributes
@@ -99,7 +113,7 @@ class GLContext extends Dispose {
      * private ,only used in GLCanvas.link[Cnavas/GL] funcitons
      * @param {WebGLRenderingContext} gl 
      */
-    _setgl(gl){
+    _setgl(gl) {
         this._gl = gl;
         this._glLimits._include();
         this._glExtension._include();
@@ -110,7 +124,7 @@ class GLContext extends Dispose {
      * 
      * @returns {WebGLRenderingContext}
      */
-    get gl(){
+    get gl() {
         return this._gl;
     }
     /**

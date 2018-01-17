@@ -54,35 +54,38 @@ class Actuator {
             const record = this._records.shift();
             while (record) {
                 const opName = record.opName,
+                    cacheIndexName = null,
                     encrypt = Encrypt[opName] || {};
-                //1.need to create
-                if (encrypt.return) {
-                    const returnId = record.returnId,
-                        cacheName = returnId.split('_')[0];
-                    CHACHE[cacheName][returnId] = gl[opName].apply(gl,record.args);
-                }
-                //2.need to replace
-                else if(encrypt.replace){
+                //replace the reference object
+                if (encrypt.replace == 1) {
                     const ptIndex = record.ptIndex,
                         ptName = record.ptName,
                         cacheName = ptName.split('_')[0];
                     const refObject = CHACHE[cacheName][ptName];
+                    cacheIndexName = cacheName;
                     record.replace(refObject);
-                    gl[opName].apply(gl,record.args);
+                } else if (encrypt.replace == 2) {
+                    const ptIndexs = record.ptIndex,
+                        ptNames = record.ptName,
+                        len = 2,
+                        refObjects = [];
+                    for (let i = 0; i < len; i++) {
+                        const pName = ptNames[i],
+                            cacheName = ptName.split('_')[0];
+                        const refObject = CHACHE[cacheName][ptName];
+                        refObjects.push(refObject);
+                    }
+                    record.replace(refObjects);
                 }
-                //3.execute directly(void)
-                else{
-                    gl[opName].apply(gl,record.args);
-                }
+                //if need to return and cache
+                if (encrypt.return) {
+                    const returnId = record.returnId;
+                    CHACHE[cacheIndexName][returnId] = gl[opName].apply(gl, record.args);
+                } else
+                    gl[opName].apply(gl, record.args);
             }
         }
     }
-
-    _executeReturn(){
-
-    }
-
-
 }
 /**
  * instance of Actuator

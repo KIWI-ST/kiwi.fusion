@@ -360,11 +360,11 @@ const Encrypt_Programs_And_Shaders = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/deleteProgram
      */
-    'deleteProgram': { code: 0, return: 0, replace: 1, ptIndex },
+    'deleteProgram': { code: 0, return: 0, replace: 1, ptIndex:0 },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/deleteShader
      */
-    'deleteShader': { code: 0, return: 0, replace: 1, ptIndex },
+    'deleteShader': { code: 0, return: 0, replace: 1, ptIndex:0 },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/detachShader
      */
