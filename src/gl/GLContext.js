@@ -4,6 +4,7 @@
 const Dispose = require('./../utils/Dispose'),
     Record = require('./../core/Record'),
     Recorder = require('./../core/Recorder'),
+    Encrypt = require('./../core/Encrypt');
     GLConstants = require('./GLConstants');
 /**
  * bridge object
