@@ -201,7 +201,9 @@ class GLContext extends Dispose {
      * @param {GLShader} shader 
      */
     attachShader(program, shader) {
-        const record = new Record('attachShader', program.id, shader.id);
+        const record = new Record('attachShader', program, shader);
+        record.exactIndexByValue(0,program.id);
+        record.exactIndexByValue(1,shader.id);
         this._recorder.increase(record);
     }
     /**
@@ -209,7 +211,8 @@ class GLContext extends Dispose {
      * @param {GLProgram} program 
      */
     linkProgram(program) {
-        const record = new Record('linkProgram', program.id);
+        const record = new Record('linkProgram', program);
+        record.exactIndexByValue(0,program.id);
         this._recorder.increase(record);
     }
     /**
@@ -219,7 +222,8 @@ class GLContext extends Dispose {
      */
     getAttribLocation(program, name) {
         const returnId = program.getAttribLocation(name),
-            record = new Record('getAttribLocation', program.id, name);
+            record = new Record('getAttribLocation', program, name);
+        record.exactIndexByValue(0,program.id);
         record.setReturnId(returnId);
         this._recorder.increase(record);
         return program.getAttribLocation(name);
@@ -230,7 +234,8 @@ class GLContext extends Dispose {
      * @param {GLBuffer} buffer 
      */
     bindBuffer(target, buffer) {
-        const record = new Record('getAttribLocation', target, buffer.id);
+        const record = new Record('getAttribLocation', target, buffer);
+        record.exactIndexByValue(1,buffer.id);
         this._recorder.increase(record);
     }
     /**

@@ -18,7 +18,15 @@ const CHACHE = {
     /**
     * use id to store texture
     */
-    TEXTURE: {}
+    TEXTURE: {},
+    /**
+     * use id to store attribute location
+     */
+    ATTRIBUTE:{},
+    /**
+     * use id to store BUFFER
+     */
+    BUFFER:{},
 }
 /**
  * @class
@@ -57,14 +65,14 @@ class Actuator {
                     encrypt = Encrypt[opName] || {};
                 //replace the reference object
                 if (encrypt.replace > 0) {
-                    const refObjects = [];
+                    const refObjects ={};
                     for (const key in record.ptMapIndex) {
                         const target = record.ptMapIndex[key],
                             ptIndex = target.index,
                             ptName = target.id,
                             cacheName = target.prefix,
                             refObject = CHACHE[cacheName][ptName];
-                        refObjects.push(refObject);
+                        refObjects[ptIndex] = refObject;
                     }
                     record.replace(refObjects);
                 }

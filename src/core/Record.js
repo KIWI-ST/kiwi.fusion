@@ -57,7 +57,7 @@ class Record {
     /**
      * @returns {String}
      */
-    get returanIdPrefix(){
+    get returanIdPrefix() {
         return this._returanIdPrefix;
     }
     /**
@@ -108,17 +108,11 @@ class Record {
     }
     /**
      * 
-     * @param {Object|Array} ref 
+     * @param {Array} refs 
      */
-    replace(ref) {
-        const ptIndex = this._ptMapIndex;
-        if (!isArray(ptIndex)) {
-            this._rest[ptIndex] = ref;
-        } else {
-            for (let i = 0, len = ptIndex.length; i < len; i++) {
-                this._rest[ptIndex[i]] = ref[i];
-            }
-        }
+    replace(refs) {
+        for (const key in refs)
+            this._rest[key] = refs[key];
     }
     /**
      * 设置返回的id
@@ -131,7 +125,7 @@ class Record {
      * 
      * @param {String} v 
      */
-    _analysisReturnId(v){
+    _analysisReturnId(v) {
         const arr = v.split('_');
         //map to _ptIndex
         this._returanIdPrefix = arr[0];
