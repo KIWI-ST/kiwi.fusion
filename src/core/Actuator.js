@@ -2,7 +2,7 @@
  * 执行器，用于执行Record操作，全局自带一个Actuator
  * @author yellow date 2018/1/3
  */
-const Encrypt = require('./Encrypt').Encrypt_Object;
+const Encrypt = require('./Encrypt');
 /**
  * Cahce store
  */
@@ -51,38 +51,32 @@ class Actuator {
         this._records = this._records.concat(records);
         const gl = this._gl;
         if (gl) {
-            const record = this._records.shift();
+            let record = this._records.shift();
             while (record) {
                 const opName = record.opName,
-                    cacheIndexName = null,
                     encrypt = Encrypt[opName] || {};
                 //replace the reference object
-                if (encrypt.replace == 1) {
-                    const ptIndex = record.ptIndex,
-                        ptName = record.ptName,
-                        cacheName = ptName.split('_')[0];
-                    const refObject = CHACHE[cacheName][ptName];
-                    cacheIndexName = cacheName;
-                    record.replace(refObject);
-                } else if (encrypt.replace == 2) {
-                    const ptIndexs = record.ptIndex,
-                        ptNames = record.ptName,
-                        len = 2,
-                        refObjects = [];
-                    for (let i = 0; i < len; i++) {
-                        const pName = ptNames[i],
-                            cacheName = ptName.split('_')[0];
-                        const refObject = CHACHE[cacheName][ptName];
+                if (encrypt.replace > 0) {
+                    const refObjects = [];
+                    for (const key in record.ptMapIndex) {
+                        const target = record.ptMapIndex[key],
+                            ptIndex = target.index,
+                            ptName = target.id,
+                            cacheName = target.prefix,
+                            refObject = CHACHE[cacheName][ptName];
                         refObjects.push(refObject);
                     }
                     record.replace(refObjects);
                 }
                 //if need to return and cache
                 if (encrypt.return) {
-                    const returnId = record.returnId;
-                    CHACHE[cacheIndexName][returnId] = gl[opName].apply(gl, record.args);
+                    const returnId = record.returnId,
+                        returanIdPrefix = record.returanIdPrefix;
+                    CHACHE[returanIdPrefix][returnId] = gl[opName].apply(gl, record.args);
                 } else
                     gl[opName].apply(gl, record.args);
+                //next record
+                record = this._records.shift();
             }
         }
     }

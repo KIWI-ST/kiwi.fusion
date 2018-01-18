@@ -2,9 +2,11 @@
  * 操作记单元
  * @author yellow date 2018/1/4
  */
-
-const isArray = require('./../utils/isArray');
-
+const isArray = require('./../utils/isArray'),
+    /**
+    * use stamp to get reference object Id
+    */
+    stamp = require('./../utils/stamp');
 /**
  * @class
  */
@@ -27,12 +29,7 @@ class Record {
          * use prfix instead of value in args
          * @type {Int}
          */
-        this._ptIndex = -1;
-        /**
-         * the prefix Name of args in ptIndex
-         * @type {String}
-         */
-        this._ptName = null;
+        this._ptMapIndex = {};
         /**
          * indicate this record needs to return value
          * @type {String}
@@ -58,16 +55,16 @@ class Record {
         return this._returnId;
     }
     /**
-     * @type {Int}
+     * @returns {String}
      */
-    get ptIndex() {
-        return this._ptIndex;
+    get returanIdPrefix(){
+        return this._returanIdPrefix;
     }
     /**
-     * 
+     * @type {Int}
      */
-    get ptName() {
-        return this._ptName;
+    get ptMapIndex() {
+        return this._ptMapIndex;
     }
     /**
      * @private
@@ -84,18 +81,29 @@ class Record {
     }
     /**
      * 修改某处指令的值
-     * @param {int|Array} ptIndex 
-     * @param {String|Array} ptName always represents shaderId/porgramId/
+     * @param {int} ptIndex 
+     * @param {String} ptName always represents shaderId/porgramId/
      */
-    exactIndex(ptIndex, ptName) {
-        this._ptIndex = ptIndex;
-        this._ptName = ptName;
-        if (!isArray(ptIndex)) {
-            this._rest[ptIndex] = ptName;
-        } else {
-            for (let i = 0, len = ptIndex.length; i < len; i++) {
-                this._rest[ptIndex[i]] = ptName[i];
-            }
+    exactIndexByValue(ptIndex, ptName) {
+        const arr = ptName.split('_');
+        //map to _ptIndex
+        this._ptMapIndex[ptIndex] = {
+            prefix: arr[0],
+            index: ptIndex,
+            id: ptName
+        };
+        //replace value
+        this._rest[ptIndex] = ptName;
+    }
+    /**
+     * 
+     * @param {Array} ptIndex 
+     */
+    exactIndexByObject(ptIndexs) {
+        for (let i = 0, len = ptIndexs.length; i < len; i++) {
+            const ptIndex = ptIndexs[i],
+                ptName = stamp(this._rest[ptIndex]);
+            this.exactIndexByValue(ptIndex, ptName);
         }
     }
     /**
@@ -103,10 +111,10 @@ class Record {
      * @param {Object|Array} ref 
      */
     replace(ref) {
-        const ptIndex = this._ptIndex;
+        const ptIndex = this._ptMapIndex;
         if (!isArray(ptIndex)) {
             this._rest[ptIndex] = ref;
-        }else {
+        } else {
             for (let i = 0, len = ptIndex.length; i < len; i++) {
                 this._rest[ptIndex[i]] = ref[i];
             }
@@ -117,7 +125,18 @@ class Record {
      */
     setReturnId(v) {
         this._returnId = v;
+        this._analysisReturnId(v);
     }
+    /**
+     * 
+     * @param {String} v 
+     */
+    _analysisReturnId(v){
+        const arr = v.split('_');
+        //map to _ptIndex
+        this._returanIdPrefix = arr[0];
+    }
+
 }
 
 module.exports = Record;

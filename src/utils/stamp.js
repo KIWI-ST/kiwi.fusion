@@ -24,7 +24,7 @@ const getId = (prefix) => {
  * @param {String} id 
  */
 const setId = (obj, id) => {
-    if(isObject(obj) && isString(id)){
+    if (isObject(obj) && isString(id)) {
         obj._kiwi_gl_id_ = id;
         return id;
     }
@@ -37,8 +37,12 @@ const setId = (obj, id) => {
  * @return {String} error if returned 'null'
  */
 const stamp = (obj, prefix = _prefix) => {
-    const id = getId(prefix);
-    return setId(obj, id);
+    if (!obj._kiwi_gl_id_) {
+        const id = getId(prefix);
+        return setId(obj, id);
+    } else {
+        return obj._kiwi_gl_id_;
+    }
 };
 
 module.exports = stamp;

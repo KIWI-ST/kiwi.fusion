@@ -68,6 +68,7 @@ class GLContext extends Dispose {
      * map function and constants to Class
      */
     _map() {
+        const recorder =  this._recorder;
         //1.map constants
         for (const key in GLConstants) {
             if (!this.hasOwnProperty(key)) {
@@ -79,14 +80,26 @@ class GLContext extends Dispose {
         //2.map void function(include replace and no replace)
         for (const key in Encrypt) {
             if (!this.hasOwnProperty(key)) {
-                const target = GLConstants[key];
+                const target = Encrypt[key];
                 //2.1 void and no replace
                 if (!target.return && !target.replace) {
-
+                    if(!this[key]&&!!target){
+                        this[key] = (...rest) =>{
+                            const record = new Record(key,...rest);
+                            recorder.increase(record);
+                        }
+                    }
                 }
                 //2.2 void and replace 
                 else if (!target.return && target.replace) {
-
+                    if(!this[key]&&!!target){
+                        this[key] = (...rest) =>{
+                            const record = new Record(key,...rest),
+                                index = target.ptIndex;
+                            record.exactIndexByValue(index);
+                            recorder.increase(record);
+                        }
+                    }
                 }
                 //2.3 return(make birdge to origin,should not to be implemented)
             }
@@ -148,7 +161,7 @@ class GLContext extends Dispose {
         shader.source = source;
         const returnId = shader.id,
             record = new Record('shaderSource', shader, source);
-        record.exactIndex(0, returnId);
+        record.exactIndexByValue(0, returnId);
         this._recorder.increase(record);
     }
     /**
@@ -158,7 +171,7 @@ class GLContext extends Dispose {
     compileShader(shader) {
         const returnId = shader.id,
             record = new Record('compileShader', shader);
-        record.exactIndex(0, returnId);
+        record.exactIndexByValue(0, returnId);
         this._recorder.increase(record);
     }
     /**
