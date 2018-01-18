@@ -2803,7 +2803,9 @@ var Actuator = function () {
                         var returnId = record.returnId,
                             returanIdPrefix = record.returanIdPrefix;
                         CHACHE[returanIdPrefix][returnId] = gl[opName].apply(gl, record.args);
-                    } else gl[opName].apply(gl, record.args);
+                    } else {
+                        gl[opName].apply(gl, record.args);
+                    }
                     //next record
                     record = this._records.shift();
                 }
@@ -2902,7 +2904,7 @@ var GLContext = function (_Dispose) {
             for (var key in GLConstants_1) {
                 if (!this.hasOwnProperty(key)) {
                     var target = GLConstants_1[key];
-                    if (!this[key] && !!target) this[key] = target;
+                    if (!this[key]) this[key] = target;
                 }
             }
             //2.map void function(include replace and no replace)

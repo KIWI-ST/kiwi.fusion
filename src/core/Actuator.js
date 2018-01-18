@@ -81,8 +81,9 @@ class Actuator {
                     const returnId = record.returnId,
                         returanIdPrefix = record.returanIdPrefix;
                     CHACHE[returanIdPrefix][returnId] = gl[opName].apply(gl, record.args);
-                } else
+                } else{
                     gl[opName].apply(gl, record.args);
+                }
                 //next record
                 record = this._records.shift();
             }

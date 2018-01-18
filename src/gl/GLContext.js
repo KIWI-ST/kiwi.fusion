@@ -73,7 +73,7 @@ class GLContext extends Dispose {
         for (const key in GLConstants) {
             if (!this.hasOwnProperty(key)) {
                 const target = GLConstants[key];
-                if (!this[key] && !!target)
+                if (!this[key])
                     this[key] = target;
             }
         }
@@ -254,7 +254,7 @@ class GLContext extends Dispose {
      */
     enableVertexAttribArray(index) {
         const record = new Record('enableVertexAttribArray', index);
-        record.exactIndexByValue(0,index);
+        record.exactIndexByValue(0, index);
         this._recorder.increase(record);
     }
     /**
@@ -262,7 +262,7 @@ class GLContext extends Dispose {
      */
     vertexAttribPointer(index, size, type, normalized, stride, offset) {
         const record = new Record('vertexAttribPointer', index, size, type, normalized, stride, offset);
-        record.exactIndexByValue(0,index);
+        record.exactIndexByValue(0, index);
         this._recorder.increase(record);
     }
     /**
