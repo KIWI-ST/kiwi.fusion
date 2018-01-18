@@ -41,7 +41,7 @@ class GLContext extends Dispose {
         /**
          * @type {Object}
          */
-        this._options = this._getContextAttributes(options);
+        this._options = options;
         /**
          * @type {Recorder}
          */
@@ -68,7 +68,7 @@ class GLContext extends Dispose {
      * map function and constants to Class
      */
     _map() {
-        const recorder =  this._recorder;
+        const recorder = this._recorder;
         //1.map constants
         for (const key in GLConstants) {
             if (!this.hasOwnProperty(key)) {
@@ -82,44 +82,27 @@ class GLContext extends Dispose {
             if (!this.hasOwnProperty(key)) {
                 const target = Encrypt[key];
                 //2.1 void and no replace
-                if (!target.return && !target.replace) {
-                    if(!this[key]&&!!target){
-                        this[key] = (...rest) =>{
-                            const record = new Record(key,...rest);
+                if (!target.return && target.replace === 0) {
+                    if (!this[key] && !!target) {
+                        this[key] = (...rest) => {
+                            const record = new Record(key, ...rest);
                             recorder.increase(record);
                         }
                     }
                 }
                 //2.2 void and replace 
-                else if (!target.return && target.replace) {
-                    if(!this[key]&&!!target){
-                        this[key] = (...rest) =>{
-                            const record = new Record(key,...rest),
+                else if (!target.return && target.replace > 0) {
+                    if (!this[key] && !!target) {
+                        this[key] = (...rest) => {
+                            const record = new Record(key, ...rest),
                                 index = target.ptIndex;
-                            record.exactIndexByValue(index);
+                            record.exactIndexByObject(index);
                             recorder.increase(record);
                         }
                     }
                 }
                 //2.3 return(make birdge to origin,should not to be implemented)
             }
-        }
-    }
-    /**
-     * get context attributes
-     * include webgl2 attributes
-     * reference https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
-     * @param {Object} [options] 
-     */
-    _getContextAttributes(options = {}) {
-        return {
-            alpha: options.alpha || false,
-            depth: options.depth || true,
-            stencil: options.stencil || true,
-            antialias: options.antialias || false,
-            premultipliedAlpha: options.premultipliedAlpha || true,
-            preserveDrawingBuffer: options.preserveDrawingBuffer || false,
-            failIfMajorPerformanceCaveat: options.failIfMajorPerformanceCaveat || false,
         }
     }
     /*
@@ -202,8 +185,8 @@ class GLContext extends Dispose {
      */
     attachShader(program, shader) {
         const record = new Record('attachShader', program, shader);
-        record.exactIndexByValue(0,program.id);
-        record.exactIndexByValue(1,shader.id);
+        record.exactIndexByValue(0, program.id);
+        record.exactIndexByValue(1, shader.id);
         this._recorder.increase(record);
     }
     /**
@@ -212,7 +195,7 @@ class GLContext extends Dispose {
      */
     linkProgram(program) {
         const record = new Record('linkProgram', program);
-        record.exactIndexByValue(0,program.id);
+        record.exactIndexByValue(0, program.id);
         this._recorder.increase(record);
     }
     /**
@@ -223,7 +206,7 @@ class GLContext extends Dispose {
     getAttribLocation(program, name) {
         const returnId = program.getAttribLocation(name),
             record = new Record('getAttribLocation', program, name);
-        record.exactIndexByValue(0,program.id);
+        record.exactIndexByValue(0, program.id);
         record.setReturnId(returnId);
         this._recorder.increase(record);
         return program.getAttribLocation(name);
@@ -234,8 +217,8 @@ class GLContext extends Dispose {
      * @param {GLBuffer} buffer 
      */
     bindBuffer(target, buffer) {
-        const record = new Record('getAttribLocation', target, buffer);
-        record.exactIndexByValue(1,buffer.id);
+        const record = new Record('bindBuffer', target, buffer);
+        record.exactIndexByValue(1, buffer.id);
         this._recorder.increase(record);
     }
     /**
@@ -261,7 +244,8 @@ class GLContext extends Dispose {
      * @param {GLProgram} program 
      */
     useProgram(program) {
-        const record = new Record('useProgram', program.id);
+        const record = new Record('useProgram', program);
+        record.exactIndexByValue(0, program.id);
         this._recorder.increase(record);
     }
     /**
@@ -270,13 +254,15 @@ class GLContext extends Dispose {
      */
     enableVertexAttribArray(index) {
         const record = new Record('enableVertexAttribArray', index);
+        record.exactIndexByValue(0,index);
         this._recorder.increase(record);
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
      */
     vertexAttribPointer(index, size, type, normalized, stride, offset) {
-        const record = new Record('enableVertexAttribArray', index, size, type, normalized, stride, offset);
+        const record = new Record('vertexAttribPointer', index, size, type, normalized, stride, offset);
+        record.exactIndexByValue(0,index);
         this._recorder.increase(record);
     }
     /**

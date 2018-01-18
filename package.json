@@ -14,9 +14,23 @@
   },
   "homepage": "https://github.com/axmand/kiwi.gl#readme",
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-plugin-transform-es2015-template-literals": "^6.22.0",
+    "babel-plugin-transform-es2015-typeof-symbol": "^6.23.0",
+    "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-preset-es2015": "^6.24.1",
+    "deepmerge": "^2.0.1",
     "electron": "^1.6.11",
     "gl": "^4.0.4",
     "kiwi.matrix": "^0.2.4",
+    "rollup": "^0.54.1",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-multidest": "^1.0.0",
+    "rollup-plugin-node-resolve": "^3.0.2",
     "three": "^0.89.0"
   }
 }

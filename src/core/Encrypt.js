@@ -431,7 +431,7 @@ const Encrypt_Uniforms_And_Attributes = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray
      */
-    'enableVertexAttribArray': { code: 0, return: 0, replace: 0 },
+    'enableVertexAttribArray': { code: 0, return: 0, replace: 1, ptIndex:[0] },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveAttrib
      */
@@ -455,7 +455,7 @@ const Encrypt_Uniforms_And_Attributes = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
      */
-    'vertexAttribPointer': { code: 0, return: 0, replace: 0 },
+    'vertexAttribPointer': { code: 0, return: 0, replace: 1,ptIndex:[0] },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniformMatrix
      */

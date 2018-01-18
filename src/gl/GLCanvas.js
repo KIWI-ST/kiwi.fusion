@@ -34,10 +34,36 @@ class GLCanvas extends Dispose {
          */
         this._options = mergre({}, options);
         /**
+         * 
+         */
+        this._glType = 'webgl';
+        /**
+         * store the 'getContext' options
+         * @type {Object}
+         */
+        this._contextOptions = {};
+        /**
          * real html canvas element
          * @type {HtmlCanvasElement}
          */
         this._canvas = null;
+    }
+    /**
+     * get context attributes
+     * include webgl2 attributes
+     * reference https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+     * @param {Object} [options] 
+     */
+    _getContextAttributes(options = {}) {
+        return {
+            alpha: options.alpha || false,
+            depth: options.depth || true,
+            stencil: options.stencil || true,
+            antialias: options.antialias || false,
+            premultipliedAlpha: options.premultipliedAlpha || true,
+            preserveDrawingBuffer: options.preserveDrawingBuffer || false,
+            failIfMajorPerformanceCaveat: options.failIfMajorPerformanceCaveat || false,
+        }
     }
     /**
      * 
@@ -48,8 +74,10 @@ class GLCanvas extends Dispose {
     getContext(renderType = 'webgl', options = {}) {
         const canvasId = this._canvasId,
             id = this.id;
+        this._glType = this._glType || renderType;
+        this._contextOptions = this._contextOptions || this._getContextAttributes(options);
         if (!CACHE_GLCONTEXT[canvasId]) {
-            CACHE_GLCONTEXT[canvasId] = new GLContext(id, renderType, options);
+            CACHE_GLCONTEXT[canvasId] = new GLContext(id, this._glType, this._contextOptions);
         }
         return CACHE_GLCONTEXT[canvasId];
     }
@@ -66,15 +94,18 @@ class GLCanvas extends Dispose {
      * link virtual rendering context to real htmlCanvas
      * @param {HtmlCanvasElement} canvas 
      */
-    linkToCanvas(canvas){
-        this._canvas = canvas;
+    linkToCanvas(canvas) {
+        this._canvasId = canvas.id;
+        const gl = canvas.getContext(this._glType, this._contextOptions) || canvas.getContext(`experimental-${this._glType}`, this._contextOptions);
+        const glContext = this.getContext('webgl');
+        glContext._setgl(gl);
     }
     /**
      * link virtual rendering context to real htmlCanvas
      * @param {WebGLRenderingContext} gl 
      */
-    linkToWebGLRenderingContext(gl){
-        if(this._canvas)
+    linkToWebGLRenderingContext(gl) {
+        if (this._canvas)
             throw new Error('exist htmlcanvaselement');
         const glContext = this.getContext('webgl');
         glContext._setgl(gl);
