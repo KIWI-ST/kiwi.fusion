@@ -7,28 +7,20 @@
 ### Install ###
 ```javascript
 npm install kiwi.gl 
-```
 or
-```javascript
 npm install kiwi.gl --save-dev
 ```
 ### Usage ###
 >It doesn't change anything:
 ```javascript
+//create GLCanvas
 const glCanvas = new kiwi.gl.GLCanvas('canvasId');
-```
-```javascript
+//get GLContext 
 const gl = glCanvas.getContext('webgl');
-```
->use virtual glContext to create shader
-```javascript
+//use virtual glContext to create shader
 const shader = gl.createShader(gl.VERTEX_SHADER);
-```
->use virtual glContext to create program
-```javascript
+//use virtual glContext to create program
 const program = gl.createProgram();
-```
->attach virtal program and shader
-```javascript
+//attach virtal program and shader
 gl.attachShader(program,shader);
 ```
