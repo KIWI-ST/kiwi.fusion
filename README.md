@@ -7,8 +7,6 @@
 ### Install ###
 ```javascript
 npm install kiwi.gl 
-or
-npm install kiwi.gl --save-dev
 ```
 ### Usage ###
 >It doesn't change anything:
