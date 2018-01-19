@@ -21,8 +21,15 @@ const glCanvas = new kiwi.gl.GLCanvas('canvasId');
 const gl = glCanvas.getContext('webgl');
 ```
 >with native webgl.It doesn't change anything.
+>use virtual glContext to create shader
 ```javascript
 const shader = gl.createShader(gl.VERTEX_SHADER);
+```
+>use virtual glContext to create program
+```javascript
 const program = gl.createProgram();
+```
+>attach virtal program and shader
+```javascript
 gl.attachShader(program,shader);
 ```
