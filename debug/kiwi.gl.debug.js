@@ -13,26 +13,26 @@ var fragmentShaderSource = 'precision mediump float;' +
 const htmlCavnasElementId = 'mapCanvas';
 //1
 const glCanvas = new kiwi.gl.GLCanvas(htmlCavnasElementId);
-const glContext = glCanvas.getContext('webgl');
+const gl = glCanvas.getContext('webgl');
 //2
-const glShader1 = glContext.createShader(glContext.VERTEX_SHADER);
-const glShader2 = glContext.createShader(glContext.FRAGMENT_SHADER);
+const glShader1 = gl.createShader(gl.VERTEX_SHADER);
+const glShader2 = gl.createShader(gl.FRAGMENT_SHADER);
 //3
-glContext.shaderSource(glShader1,vertexShaderSource);
-glContext.shaderSource(glShader2,fragmentShaderSource);
+gl.shaderSource(glShader1,vertexShaderSource);
+gl.shaderSource(glShader2,fragmentShaderSource);
 //4
-glContext.compileShader(glShader1);
-glContext.compileShader(glShader2);
+gl.compileShader(glShader1);
+gl.compileShader(glShader2);
 //5
-const glProgram = glContext.createProgram();
-glContext.attachShader(glProgram,glShader1);
-glContext.attachShader(glProgram,glShader2);
-glContext.linkProgram(glProgram);
+const glProgram = gl.createProgram();
+gl.attachShader(glProgram,glShader1);
+gl.attachShader(glProgram,glShader2);
+gl.linkProgram(glProgram);
 //6
-const positionAttributeLocation = glContext.getAttribLocation(glProgram,"a_position");
-const positionBuffer = glContext.createBuffer();
+const positionAttributeLocation = gl.getAttribLocation(glProgram,"a_position");
+const positionBuffer = gl.createBuffer();
 //7
-glContext.bindBuffer(glContext.ARRAY_BUFFER, positionBuffer);
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 //
 const positions = [
   0, 0,
@@ -40,26 +40,26 @@ const positions = [
   0.7, 0,
 ];
 //
-glContext.bufferData(glContext.ARRAY_BUFFER, new Float32Array(positions), glContext.STATIC_DRAW);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 //
-glContext.viewport(0, 0, 800,600);
+gl.viewport(0, 0, 800,600);
 // gl.clearColor(0, 0, 0, 0);
 // gl.clear(gl.COLOR_BUFFER_BIT);
-glContext.useProgram(glProgram);
+gl.useProgram(glProgram);
 //
-glContext.enableVertexAttribArray(positionAttributeLocation);
-glContext.bindBuffer(glContext.ARRAY_BUFFER, positionBuffer);
+gl.enableVertexAttribArray(positionAttributeLocation);
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 //
 var size = 2;         
-var type = glContext.FLOAT;
+var type = gl.FLOAT;
 var normalize = false; 
 var stride = 0;       
 var offset = 0;      
-glContext.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
+gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
 // draw
-var primitiveType = glContext.TRIANGLES;
+var primitiveType = gl.TRIANGLES;
 var offset = 0;
 var count = 3;
-glContext.drawArrays(primitiveType, offset, count);
+gl.drawArrays(primitiveType, offset, count);
 //link
 glCanvas.linkToWebGLRenderingContext(require('gl')(400,100));

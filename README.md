@@ -6,15 +6,23 @@
 >a virtual webgl running context which can mix thirdly webgl library gl commands togother,include three.js,qtek and so on
 
 ### Install ###
-```
+```javascript
 npm install kiwi.gl 
 ```
 or
-```
+```javascript
 npm install kiwi.gl 
 ```
 ### Usage ###
-```
+```javascript
 const glCanvas = new kiwi.gl.GLCanvas('canvasId');
-gl = glCanvas.getContext('webgl');
+```
+```javascript
+const gl = glCanvas.getContext('webgl');
+```
+>with native webgl.It doesn't change anything.
+```javascript
+const shader = gl.createShader(gl.VERTEX_SHADER);
+const program = gl.createProgram();
+gl.attachShader(program,shader);
 ```
