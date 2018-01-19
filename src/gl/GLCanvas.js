@@ -1,15 +1,22 @@
 /**
  * 虚拟htmlCanvas对象，用于记录webgl在htmlCanvas时的过程
  * @author yellow date 2018/1/1
- *  
  */
 const Dispose = require('./../utils/Dispose'),
     mergre = require('./../utils/merge'),
     GLContext = require('./GLContext');
 /**
+ * 
+ */
+const stamp = require('./../utils/stamp');
+/**
  * store glContext cache
  */
 const CACHE_GLCONTEXT = {};
+/**
+ * store WebGLRenderingContext
+ */
+const CACHE_GL = {};
 /**
  * the prefix of GLCanvas
  */
@@ -95,10 +102,11 @@ class GLCanvas extends Dispose {
      * @param {HtmlCanvasElement} canvas 
      */
     linkToCanvas(canvas) {
-        this._canvasId = canvas.id;
-        const gl = canvas.getContext(this._glType, this._contextOptions) || canvas.getContext(`experimental-${this._glType}`, this._contextOptions);
+        const id = stamp(canvas);
+        this._canvasId = id;
+        CACHE_GL[id] = CACHE_GL[id] || canvas.getContext(this._glType, this._contextOptions) || canvas.getContext(`experimental-${this._glType}`, this._contextOptions);
         const glContext = this.getContext('webgl');
-        glContext._setgl(gl);
+        glContext._setgl(CACHE_GL[id]);
     }
     /**
      * link virtual rendering context to real htmlCanvas
