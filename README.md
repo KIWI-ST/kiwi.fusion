@@ -11,7 +11,7 @@ npm install kiwi.gl
 ```
 or
 ```javascript
-npm install kiwi.gl 
+npm install kiwi.gl --save-dev
 ```
 ### Usage ###
 ```javascript
