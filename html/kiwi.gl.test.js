@@ -6,6 +6,8 @@ const glCanvas = new kiwi.gl.GLCanvas('mapCanvas');
 const gl = glCanvas.getContext('webgl');
 
 
+
+
 var vertCode = 'attribute vec2 coordinates;' +
 'void main(void) {' +
 'gl_PointSize = 20.0;' +
@@ -40,5 +42,8 @@ gl.enable(gl.DEPTH_TEST);
 gl.clear(gl.COLOR_BUFFER_BIT);
 gl.viewport(0, 0, 300,300);
 gl.drawArrays(gl.POINTS, 0, 3);
+
+
+
 
 glCanvas.linkToCanvas(document.getElementById('mapCanvas'));
