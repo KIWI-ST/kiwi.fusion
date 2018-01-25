@@ -13,6 +13,7 @@ const GLLimits = require('./GLLimits'),
     GLExtension = require('./GLExtension'),
     GLShader = require('./GLShader'),
     GLBuffer = require('./GLBuffer'),
+    GLTexture = require('./GLTexture'),
     GLProgram = require('./GLProgram');
 /**
  * singleton
@@ -183,6 +184,16 @@ class GLContext extends Dispose {
         record.setReturnId(glBuffer.id);
         this._recorder.increase(record);
         return glBuffer;
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createTexture
+     */
+    createTexture(){
+        const glTexture = new GLTexture(this),
+            record = new Record('createTexture');
+        record.setReturnId(glTexture.id);
+        this._recorder.increase(record);
+        return glTexture;
     }
     /**
      * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/attachShader
