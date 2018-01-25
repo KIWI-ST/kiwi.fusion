@@ -14,13 +14,13 @@ const prefix = 'SHADER';
 class GLShader extends Dispose{
     /**
      * 
-     * @param {String} type Either gl.VERTEX_SHADER or gl.FRAGMENT_SHADER
+     * @param {GLenum} type Either gl.VERTEX_SHADER or gl.FRAGMENT_SHADER
      * @param {GLContext} glContext 
      */
     constructor(type, glContext) {
         super(prefix);
         /**
-         * @type {String}
+         * @type {GLenum}
          */
         this._type = type;
         /**
@@ -31,6 +31,14 @@ class GLShader extends Dispose{
          * @type {String} shaderSource 
          */
         this._source=null;
+        /**
+         * @type {boolean}
+         */
+        this._isDelete = false;
+        /**
+         * @type {boolean}
+         */
+        this._isComplied = false;
     }
 
     set source(v){
@@ -39,6 +47,18 @@ class GLShader extends Dispose{
 
     get source(){
         return this._source;
+    }
+    /**
+     * bridge to shader
+     * @param {GLenum} pname 
+     */
+    getParameters(pname){
+        if(pname === GLConstants.DELETE_STATUS)
+            return this._isDelete;
+        else if(pname === GLConstants.COMPILE_STATUS)
+            return this._isComplied;
+        else if(pname === GLConstants.SHADER_TYPE)
+            return this._type;
     }
 
 }

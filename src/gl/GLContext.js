@@ -162,6 +162,7 @@ class GLContext extends Dispose {
         const returnId = shader.id,
             record = new Record('compileShader', shader);
         record.exactIndexByValue(0, returnId);
+        shader._isComplied = true;
         this._recorder.increase(record);
     }
     /**
@@ -227,6 +228,36 @@ class GLContext extends Dispose {
         record.setReturnId(returnId);
         this._recorder.increase(record);
         return program.getAttribLocation(name);
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getShaderParameter
+     * @param {GLShader} shader 
+     * @param {GLenum} pname 
+     */
+    getShaderParameter(shader,pname){
+        return shader.getParameters(pname);
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getShaderInfoLog
+     * @param {GLShader} shader 
+     */
+    getShaderInfoLog(shader){
+        return '';
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getProgramInfoLog
+     * @param {GLProgram} program 
+     */
+    getProgramInfoLog(program){
+        return '';
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getProgramParameter
+     * @type {GLProgram} program
+     * @type {GLenum} pname
+     */
+    getProgramParameter(program, pname){
+        
     }
     /**
      * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/bindBuffer

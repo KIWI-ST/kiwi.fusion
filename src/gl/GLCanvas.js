@@ -54,6 +54,10 @@ class GLCanvas extends Dispose {
          * @type {HtmlCanvasElement}
          */
         this._canvas = null;
+        /**
+         * @type {Object}
+         */
+        this._style = {};
     }
     /**
      * get context attributes
@@ -71,6 +75,12 @@ class GLCanvas extends Dispose {
             preserveDrawingBuffer: options.preserveDrawingBuffer || false,
             failIfMajorPerformanceCaveat: options.failIfMajorPerformanceCaveat || false,
         }
+    }
+    /**
+     * @type {Object}
+     */
+    get style() {
+        return this._style;
     }
     /**
      * 

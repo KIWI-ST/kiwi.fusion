@@ -2413,35 +2413,107 @@ var GLConstants_1 = GLConstants;
  */
 var isNode = (typeof process === 'undefined' ? 'undefined' : _typeof(process)) === 'object' && String(process) === '[object process]' && !process.browser;
 
-var isNode_1 = isNode;
-
 /**
- * default hardware paramter
+ * store mapping data and default value
  */
-var GL_LIMITS = {
-    hardwareConcurrency: 2,
-    maximumCombinedTextureImageUnits: 8,
-    maximumCubeMapSize: 16,
-    maximumFragmentUniformVectors: 16,
-    maximumTextureImageUnits: 8,
-    maximumRenderbufferSize: 1,
-    maximumTextureSize: 64,
-    maximumVaryingVectors: 8,
-    maximumVertexAttributes: 8,
-    maximumVertexTextureImageUnits: 0,
-    maximumVertexUniformVectors: 128,
-    minimumAliasedLineWidth: 0,
-    maximumAliasedLineWidth: 0,
-    minimumAliasedPointSize: 0,
-    maximumAliasedPointSize: 0,
-    maximumViewportWidth: 0,
-    maximumViewportHeight: 0,
-    maximumTextureFilterAnisotropy: 0,
-    maximumDrawBuffers: 0,
-    maximumColorAttachments: 0,
-    highpFloatSupported: false,
-    highpIntSupported: false
+var _polyfill = {};
+/**
+ * source poly
+ */
+var _poly = {
+    'MAX_VIEWPORT_DIMS': {
+        name: 'MAX_VIEWPORT_DIMS',
+        key: GLConstants_1.MAX_VIEWPORT_DIMS,
+        webgl: new Float32Array([32767, 32767]),
+        webgl2: new Float32Array([32767, 32767])
+    },
+    'ALIASED_POINT_SIZE_RANGE': {
+        name: 'ALIASED_POINT_SIZE_RANGE',
+        key: GLConstants_1.ALIASED_POINT_SIZE_RANGE,
+        webgl: new Float32Array([1, 1024]),
+        webgl2: new Float32Array([1, 1024])
+    },
+    'ALIASED_LINE_WIDTH_RANGE': {
+        name: 'ALIASED_LINE_WIDTH_RANGE',
+        key: GLConstants_1.ALIASED_LINE_WIDTH_RANGE,
+        webgl: new Float32Array([1, 1]),
+        webgl2: new Float32Array([1, 1])
+    },
+    'MAX_VERTEX_UNIFORM_VECTORS': {
+        name: 'MAX_VERTEX_UNIFORM_VECTORS',
+        key: GLConstants_1.MAX_VERTEX_UNIFORM_VECTORS,
+        webgl: 128,
+        webgl2: 128
+    },
+    'MAX_VERTEX_TEXTURE_IMAGE_UNITS': {
+        name: 'MAX_VERTEX_TEXTURE_IMAGE_UNITS',
+        key: GLConstants_1.MAX_VERTEX_TEXTURE_IMAGE_UNITS,
+        webgl: 0,
+        webgl2: 0
+    },
+    'MAX_VERTEX_ATTRIBS': {
+        name: 'MAX_VERTEX_ATTRIBS',
+        key: GLConstants_1.MAX_VERTEX_ATTRIBS,
+        webgl: 8,
+        webgl2: 8
+    },
+    'MAX_VARYING_VECTORS': {
+        name: 'MAX_VARYING_VECTORS',
+        key: GLConstants_1.MAX_VARYING_VECTORS,
+        webgl: 8,
+        webgl2: 8
+    },
+    'MAX_TEXTURE_SIZE': {
+        name: 'MAX_TEXTURE_SIZE',
+        key: GLConstants_1.MAX_TEXTURE_SIZE,
+        webgl: 64,
+        webgl2: 64
+    },
+    'MAX_RENDERBUFFER_SIZE': {
+        name: 'MAX_RENDERBUFFER_SIZE',
+        key: GLConstants_1.MAX_RENDERBUFFER_SIZE,
+        webgl: 1,
+        webgl2: 1
+    },
+    'MAX_TEXTURE_IMAGE_UNITS': {
+        name: 'MAX_TEXTURE_IMAGE_UNITS',
+        key: GLConstants_1.MAX_TEXTURE_IMAGE_UNITS,
+        webgl: 8,
+        webgl2: 8
+    },
+    'MAX_FRAGMENT_UNIFORM_VECTORS': {
+        name: 'MAX_FRAGMENT_UNIFORM_VECTORS',
+        key: GLConstants_1.MAX_FRAGMENT_UNIFORM_VECTORS,
+        webgl: 16,
+        webgl2: 16
+    },
+    'MAX_CUBE_MAP_TEXTURE_SIZE': {
+        name: 'MAX_CUBE_MAP_TEXTURE_SIZE',
+        key: GLConstants_1.MAX_CUBE_MAP_TEXTURE_SIZE,
+        webgl: 16,
+        webgl2: 16
+    },
+    'MAX_COMBINED_TEXTURE_IMAGE_UNITS': {
+        name: 'MAX_COMBINED_TEXTURE_IMAGE_UNITS',
+        key: GLConstants_1.MAX_COMBINED_TEXTURE_IMAGE_UNITS,
+        webgl: 8,
+        webgl2: 8
+
+    },
+    'VERSION': {
+        name: 'VERSION',
+        key: GLConstants_1.VERSION,
+        webgl: 'WebGL 1.0',
+        webgl2: 'WebGL 2.0'
+    }
 };
+/**
+ * map GLConstants location to key
+ */
+for (var key in _poly) {
+    var target = _poly[key];
+    _polyfill[key] = _polyfill[target.key] = target;
+}
 /**
  * @class
  */
@@ -2455,32 +2527,28 @@ var GLLimits = function () {
         classCallCheck(this, GLLimits);
 
         this._glContext = glContext;
-        this._options = merge_1({}, GL_LIMITS);
+        this._type = glContext.renderType;
+        this._indexs = [];
+        this._map(_polyfill);
     }
+    /**
+     * will be call while change or set WebGLRenderingContext
+     */
+
 
     createClass(GLLimits, [{
         key: '_include',
-        value: function _include() {
-            var gl = this._glContext.gl;
-            this._options.hardwareConcurrency = isNode_1 ? 2 : window.navigator.hardwareConcurrency || 2;
-            this._options.maximumCombinedTextureImageUnits = gl.getParameter(GLConstants_1.MAX_COMBINED_TEXTURE_IMAGE_UNITS); // min: 8
-            this._options.maximumCubeMapSize = gl.getParameter(GLConstants_1.MAX_CUBE_MAP_TEXTURE_SIZE); // min: 16
-            this._options.maximumFragmentUniformVectors = gl.getParameter(GLConstants_1.MAX_FRAGMENT_UNIFORM_VECTORS); // min: 16
-            this._options.maximumTextureImageUnits = gl.getParameter(GLConstants_1.MAX_TEXTURE_IMAGE_UNITS); // min: 8
-            this._options.maximumRenderbufferSize = gl.getParameter(GLConstants_1.MAX_RENDERBUFFER_SIZE); // min: 1
-            this._options.maximumTextureSize = gl.getParameter(GLConstants_1.MAX_TEXTURE_SIZE); // min: 64
-            this._options.maximumVaryingVectors = gl.getParameter(GLConstants_1.MAX_VARYING_VECTORS); // min: 8
-            this._options.maximumVertexAttributes = gl.getParameter(GLConstants_1.MAX_VERTEX_ATTRIBS); // min: 8
-            this._options.maximumVertexTextureImageUnits = gl.getParameter(GLConstants_1.MAX_VERTEX_TEXTURE_IMAGE_UNITS); // min: 0
-            this._options.maximumVertexUniformVectors = gl.getParameter(GLConstants_1.MAX_VERTEX_UNIFORM_VECTORS); // min: 128
-            this._options.highpFloatSupported = gl.getShaderPrecisionFormat(GLConstants_1.FRAGMENT_SHADER, GLConstants_1.HIGH_FLOAT) !== 0;
-            this._options.highpIntSupported = gl.getShaderPrecisionFormat(GLConstants_1.FRAGMENT_SHADER, GLConstants_1.HIGH_INT) !== 0;
-            this._options.minimumAliasedLineWidth = gl.getParameter(GLConstants_1.ALIASED_LINE_WIDTH_RANGE)[0]; //must include 1
-            this._options.maximumAliasedLineWidth = gl.getParameter(GLConstants_1.ALIASED_LINE_WIDTH_RANGE)[1];
-            this._options.minimumAliasedPointSize = gl.getParameter(GLConstants_1.ALIASED_POINT_SIZE_RANGE)[0];
-            this._options.maximumAliasedPointSize = gl.getParameter(GLConstants_1.ALIASED_POINT_SIZE_RANGE)[1]; //must include 1
-            this._options.maximumViewportWidth = gl.getParameter(GLConstants_1.MAX_VIEWPORT_DIMS)[0];
-            this._options.maximumViewportHeight = gl.getParameter(GLConstants_1.MAX_VIEWPORT_DIMS)[1];
+        value: function _include() {}
+    }, {
+        key: '_map',
+        value: function _map(mapObject) {
+            var type = this._type;
+            for (var _key in mapObject) {
+                if (!this.hasOwnProperty(_key)) {
+                    var _target = mapObject[_key];
+                    if (!this[_key]) this[_key] = _target[type];
+                }
+            }
         }
     }]);
     return GLLimits;
@@ -2594,14 +2662,14 @@ var GLShader = function (_Dispose) {
 
   /**
    * 
-   * @param {String} type Either gl.VERTEX_SHADER or gl.FRAGMENT_SHADER
+   * @param {GLenum} type Either gl.VERTEX_SHADER or gl.FRAGMENT_SHADER
    * @param {GLContext} glContext 
    */
   function GLShader(type, glContext) {
     classCallCheck(this, GLShader);
 
     /**
-     * @type {String}
+     * @type {GLenum}
      */
     var _this = possibleConstructorReturn(this, (GLShader.__proto__ || Object.getPrototypeOf(GLShader)).call(this, prefix$2));
 
@@ -2614,10 +2682,28 @@ var GLShader = function (_Dispose) {
      * @type {String} shaderSource 
      */
     _this._source = null;
+    /**
+     * @type {boolean}
+     */
+    _this._isDelete = false;
+    /**
+     * @type {boolean}
+     */
+    _this._isComplied = false;
     return _this;
   }
 
   createClass(GLShader, [{
+    key: 'getParameters',
+
+    /**
+     * bridge to shader
+     * @param {GLenum} pname 
+     */
+    value: function getParameters(pname) {
+      if (pname === GLConstants_1.DELETE_STATUS) return this._isDelete;else if (pname === GLConstants_1.COMPILE_STATUS) return this._isComplied;else if (pname === GLConstants_1.SHADER_TYPE) return this._type;
+    }
+  }, {
     key: 'source',
     set: function set$$1(v) {
       this._source = v;
@@ -2660,6 +2746,38 @@ var GLBuffer = function (_Dispose) {
 }(Dispose_1);
 
 var GLBuffer_1 = GLBuffer;
+
+/**
+ * birgde to attach texture
+ */
+
+/**
+ * the prefix of Texture type
+ */
+var prefix$4 = 'TEXTURE';
+
+var GLTexture = function (_Dispose) {
+  inherits(GLTexture, _Dispose);
+
+  /**
+   * @param {GLContext} glContext 
+   */
+  function GLTexture(glContext) {
+    classCallCheck(this, GLTexture);
+
+    /**
+     * @type {GLContext}
+     */
+    var _this = possibleConstructorReturn(this, (GLTexture.__proto__ || Object.getPrototypeOf(GLTexture)).call(this, prefix$4));
+
+    _this._glContext = glContext;
+    return _this;
+  }
+
+  return GLTexture;
+}(Dispose_1);
+
+var GLTexture_1 = GLTexture;
 
 /**
  * @author yellow
@@ -2963,8 +3081,7 @@ var GLContext = function (_Dispose) {
             Actuator_1.setGl(gl);
         }
         /**
-         * 
-         * @returns {WebGLRenderingContext}
+         * @returns {String} 'webgl' or 'webgl2'
          */
 
     }, {
@@ -3008,6 +3125,7 @@ var GLContext = function (_Dispose) {
             var returnId = shader.id,
                 record = new Record_1('compileShader', shader);
             record.exactIndexByValue(0, returnId);
+            shader._isComplied = true;
             this._recorder.increase(record);
         }
         /**
@@ -3036,6 +3154,19 @@ var GLContext = function (_Dispose) {
             record.setReturnId(glBuffer.id);
             this._recorder.increase(record);
             return glBuffer;
+        }
+        /**
+         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createTexture
+         */
+
+    }, {
+        key: 'createTexture',
+        value: function createTexture() {
+            var glTexture = new GLTexture_1(this),
+                record = new Record_1('createTexture');
+            record.setReturnId(glTexture.id);
+            this._recorder.increase(record);
+            return glTexture;
         }
         /**
          * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/attachShader
@@ -3078,6 +3209,17 @@ var GLContext = function (_Dispose) {
             record.setReturnId(returnId);
             this._recorder.increase(record);
             return program.getAttribLocation(name);
+        }
+        /**
+         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getShaderParameter
+         * @param {GLShader} shader 
+         * @param {String} pname 
+         */
+
+    }, {
+        key: 'getShaderParameter',
+        value: function getShaderParameter(shader, pname) {
+            return shader.getParameters(pname);
         }
         /**
          * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/bindBuffer
@@ -3153,7 +3295,7 @@ var GLContext = function (_Dispose) {
         }
         /**
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getExtension
-         * @param {*} name 
+         * @param {String} name 
          */
 
     }, {
@@ -3162,9 +3304,15 @@ var GLContext = function (_Dispose) {
             var glExtension = this._glExtension;
             return glExtension[name];
         }
+        /**
+         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getParameter
+         * @param {String} pname 
+         */
+
     }, {
         key: 'getParameter',
         value: function getParameter(pname) {
+            //parameter search from limits
             var glLimits = this._glLimits;
             return glLimits[pname];
         }
@@ -3200,6 +3348,16 @@ var GLContext = function (_Dispose) {
             Actuator_1.play(this._recorder.toInstruction());
         }
     }, {
+        key: 'renderType',
+        get: function get$$1() {
+            return this._renderType;
+        }
+        /**
+         * 
+         * @returns {WebGLRenderingContext}
+         */
+
+    }, {
         key: 'gl',
         get: function get$$1() {
             return this._gl;
@@ -3213,13 +3371,20 @@ var GLContext_1 = GLContext;
 /**
  * 虚拟htmlCanvas对象，用于记录webgl在htmlCanvas时的过程
  * @author yellow date 2018/1/1
- *  
+ */
+
+/**
+ * 
  */
 
 /**
  * store glContext cache
  */
 var CACHE_GLCONTEXT = {};
+/**
+ * store WebGLRenderingContext
+ */
+var CACHE_GL = {};
 /**
  * the prefix of GLCanvas
  */
@@ -3264,6 +3429,10 @@ var GLCanvas = function (_Dispose) {
      * @type {HtmlCanvasElement}
      */
     _this._canvas = null;
+    /**
+     * @type {Object}
+     */
+    _this._style = {};
     return _this;
   }
   /**
@@ -3290,14 +3459,18 @@ var GLCanvas = function (_Dispose) {
       };
     }
     /**
+     * @type {Object}
+     */
+
+  }, {
+    key: 'getContext',
+
+    /**
      * 
      * @param {*} renderType 
      * @param {*} options 
      * @returns {GLContext}
      */
-
-  }, {
-    key: 'getContext',
     value: function getContext() {
       var renderType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'webgl';
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -3329,10 +3502,11 @@ var GLCanvas = function (_Dispose) {
   }, {
     key: 'linkToCanvas',
     value: function linkToCanvas(canvas) {
-      this._canvasId = canvas.id;
-      var gl = canvas.getContext(this._glType, this._contextOptions) || canvas.getContext('experimental-' + this._glType, this._contextOptions);
+      var id = stamp_1(canvas);
+      this._canvasId = id;
+      CACHE_GL[id] = CACHE_GL[id] || canvas.getContext(this._glType, this._contextOptions) || canvas.getContext('experimental-' + this._glType, this._contextOptions);
       var glContext = this.getContext('webgl');
-      glContext._setgl(gl);
+      glContext._setgl(CACHE_GL[id]);
     }
     /**
      * link virtual rendering context to real htmlCanvas
@@ -3345,6 +3519,11 @@ var GLCanvas = function (_Dispose) {
       if (this._canvas) throw new Error('exist htmlcanvaselement');
       var glContext = this.getContext('webgl');
       glContext._setgl(gl);
+    }
+  }, {
+    key: 'style',
+    get: function get$$1() {
+      return this._style;
     }
   }]);
   return GLCanvas;
