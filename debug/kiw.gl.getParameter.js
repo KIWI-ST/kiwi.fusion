@@ -26,5 +26,8 @@ const BLEND_DST_RGB = gl.getParameter(gl.BLEND_DST_RGB);
 const BLEND_EQUATION = gl.getParameter(gl.BLEND_EQUATION);
 
 const BLEND_EQUATION_ALPHA = gl.getParameter(gl.BLEND_EQUATION_ALPHA);
+//
+const VERSION = gl.getParameter(gl.VERSION);
 
-const s= 1;
+const s= "";
+

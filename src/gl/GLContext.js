@@ -275,6 +275,10 @@ class GLContext extends Dispose {
     }
 
     getParameter(pname) {
+        //1.parameter
+        
+
+        //2.limits
         const glLimits = this._glLimits;
         return glLimits[pname];
     }
