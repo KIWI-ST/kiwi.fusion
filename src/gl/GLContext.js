@@ -117,6 +117,12 @@ class GLContext extends Dispose {
         actuator.setGl(gl);
     }
     /**
+     * @returns {String} 'webgl' or 'webgl2'
+     */
+    get renderType(){
+        return this._renderType;
+    }
+    /**
      * 
      * @returns {WebGLRenderingContext}
      */
@@ -267,18 +273,18 @@ class GLContext extends Dispose {
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getExtension
-     * @param {*} name 
+     * @param {String} name 
      */
     getExtension(name) {
         const glExtension = this._glExtension;
         return glExtension[name];
     }
-
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getParameter
+     * @param {String} pname 
+     */
     getParameter(pname) {
-        //1.parameter
-        
-
-        //2.limits
+        //parameter search from limits
         const glLimits = this._glLimits;
         return glLimits[pname];
     }

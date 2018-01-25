@@ -2,41 +2,107 @@
 const merge = require('./../utils/merge'),
     isNode = require('./../utils/isNode'),
     GLConstants = require('./GLConstants');
-
 /**
- * @author yellow date 2018/1/7
+ * store mapping data and default value
  */
-const GL_LIMITS_ = [
-    GLConstants.VERSION
-]
-
+const _polyfill = {};
 /**
- * default hardware paramter
+ * source poly
  */
-const GL_LIMITS = {
-    hardwareConcurrency: 2,
-    maximumCombinedTextureImageUnits: 8,
-    maximumCubeMapSize: 16,
-    maximumFragmentUniformVectors: 16,
-    maximumTextureImageUnits: 8,
-    maximumRenderbufferSize: 1,
-    maximumTextureSize: 64,
-    maximumVaryingVectors: 8,
-    maximumVertexAttributes: 8,
-    maximumVertexTextureImageUnits: 0,
-    maximumVertexUniformVectors: 128,
-    minimumAliasedLineWidth: 0,
-    maximumAliasedLineWidth: 0,
-    minimumAliasedPointSize: 0,
-    maximumAliasedPointSize: 0,
-    maximumViewportWidth: 0,
-    maximumViewportHeight: 0,
-    maximumTextureFilterAnisotropy: 0,
-    maximumDrawBuffers: 0,
-    maximumColorAttachments: 0,
-    highpFloatSupported: false,
-    highpIntSupported: false
+const _poly = {
+    'MAX_VIEWPORT_DIMS': {
+        name: 'MAX_VIEWPORT_DIMS',
+        key: GLConstants.MAX_VIEWPORT_DIMS,
+        webgl: new Float32Array([32767, 32767]),
+        webgl2: new Float32Array([32767, 32767]),
+    },
+    'ALIASED_POINT_SIZE_RANGE': {
+        name: 'ALIASED_POINT_SIZE_RANGE',
+        key: GLConstants.ALIASED_POINT_SIZE_RANGE,
+        webgl: new Float32Array([1, 1024]),
+        webgl2: new Float32Array([1, 1024]),
+    },
+    'ALIASED_LINE_WIDTH_RANGE': {
+        name: 'ALIASED_LINE_WIDTH_RANGE',
+        key: GLConstants.ALIASED_LINE_WIDTH_RANGE,
+        webgl: new Float32Array([1, 1]),
+        webgl2: new Float32Array([1, 1]),
+    },
+    'MAX_VERTEX_UNIFORM_VECTORS': {
+        name: 'MAX_VERTEX_UNIFORM_VECTORS',
+        key: GLConstants.MAX_VERTEX_UNIFORM_VECTORS,
+        webgl: 128,
+        webgl2: 128,
+    },
+    'MAX_VERTEX_TEXTURE_IMAGE_UNITS': {
+        name: 'MAX_VERTEX_TEXTURE_IMAGE_UNITS',
+        key: GLConstants.MAX_VERTEX_TEXTURE_IMAGE_UNITS,
+        webgl: 0,
+        webgl2: 0,
+    },
+    'MAX_VERTEX_ATTRIBS': {
+        name: 'MAX_VERTEX_ATTRIBS',
+        key: GLConstants.MAX_VERTEX_ATTRIBS,
+        webgl: 8,
+        webgl2: 8,
+    },
+    'MAX_VARYING_VECTORS': {
+        name: 'MAX_VARYING_VECTORS',
+        key: GLConstants.MAX_VARYING_VECTORS,
+        webgl: 8,
+        webgl2: 8,
+    },
+    'MAX_TEXTURE_SIZE': {
+        name: 'MAX_TEXTURE_SIZE',
+        key: GLConstants.MAX_TEXTURE_SIZE,
+        webgl: 64,
+        webgl2: 64,
+    },
+    'MAX_RENDERBUFFER_SIZE': {
+        name: 'MAX_RENDERBUFFER_SIZE',
+        key: GLConstants.MAX_RENDERBUFFER_SIZE,
+        webgl: 1,
+        webgl2: 1,
+    },
+    'MAX_TEXTURE_IMAGE_UNITS': {
+        name: 'MAX_TEXTURE_IMAGE_UNITS',
+        key: GLConstants.MAX_TEXTURE_IMAGE_UNITS,
+        webgl: 8,
+        webgl2: 8,
+    },
+    'MAX_FRAGMENT_UNIFORM_VECTORS': {
+        name: 'MAX_FRAGMENT_UNIFORM_VECTORS',
+        key: GLConstants.MAX_FRAGMENT_UNIFORM_VECTORS,
+        webgl: 16,
+        webgl2: 16,
+    },
+    'MAX_CUBE_MAP_TEXTURE_SIZE': {
+        name: 'MAX_CUBE_MAP_TEXTURE_SIZE',
+        key: GLConstants.MAX_CUBE_MAP_TEXTURE_SIZE,
+        webgl: 16,
+        webgl2: 16,
+    },
+    'MAX_COMBINED_TEXTURE_IMAGE_UNITS': {
+        name: 'MAX_COMBINED_TEXTURE_IMAGE_UNITS',
+        key: GLConstants.MAX_COMBINED_TEXTURE_IMAGE_UNITS,
+        webgl: 8,
+        webgl2: 8,
+
+    },
+    'VERSION': {
+        name: 'VERSION',
+        key: GLConstants.VERSION,
+        webgl: 'WebGL 1.0',
+        webgl2: 'WebGL 2.0'
+    }
 };
+/**
+ * map GLConstants location to key
+ */
+for (const key in _poly) {
+    const target = _poly[key];
+    _polyfill[key] = _polyfill[target.key] = target;
+}
 /**
  * @class
  */
@@ -45,34 +111,31 @@ class GLLimits {
      * 
      * @param {GLContext} glContext 
      */
-    constructor(glContext){
+    constructor(glContext) {
         this._glContext = glContext;
-        this._options = merge({}, GL_LIMITS);
+        this._type = glContext.renderType;
+        this._indexs = [];
+        this._map(_polyfill);
+    }
+    /**
+     * will be call while change or set WebGLRenderingContext
+     */
+    _include() {
+
     }
 
-    _include(){
-        const gl = this._glContext.gl;
-        this._options.hardwareConcurrency = isNode?2:(window.navigator.hardwareConcurrency||2);
-        this._options.maximumCombinedTextureImageUnits = gl.getParameter(GLConstants.MAX_COMBINED_TEXTURE_IMAGE_UNITS); // min: 8
-        this._options.maximumCubeMapSize = gl.getParameter(GLConstants.MAX_CUBE_MAP_TEXTURE_SIZE); // min: 16
-        this._options.maximumFragmentUniformVectors = gl.getParameter(GLConstants.MAX_FRAGMENT_UNIFORM_VECTORS); // min: 16
-        this._options.maximumTextureImageUnits = gl.getParameter(GLConstants.MAX_TEXTURE_IMAGE_UNITS); // min: 8
-        this._options.maximumRenderbufferSize = gl.getParameter(GLConstants.MAX_RENDERBUFFER_SIZE); // min: 1
-        this._options.maximumTextureSize = gl.getParameter(GLConstants.MAX_TEXTURE_SIZE); // min: 64
-        this._options.maximumVaryingVectors = gl.getParameter(GLConstants.MAX_VARYING_VECTORS); // min: 8
-        this._options.maximumVertexAttributes = gl.getParameter(GLConstants.MAX_VERTEX_ATTRIBS); // min: 8
-        this._options.maximumVertexTextureImageUnits = gl.getParameter(GLConstants.MAX_VERTEX_TEXTURE_IMAGE_UNITS); // min: 0
-        this._options.maximumVertexUniformVectors = gl.getParameter(GLConstants.MAX_VERTEX_UNIFORM_VECTORS); // min: 128
-        this._options.highpFloatSupported = gl.getShaderPrecisionFormat(GLConstants.FRAGMENT_SHADER, GLConstants.HIGH_FLOAT) !== 0;
-        this._options.highpIntSupported = gl.getShaderPrecisionFormat(GLConstants.FRAGMENT_SHADER, GLConstants.HIGH_INT) !== 0;
-        this._options.minimumAliasedLineWidth = gl.getParameter(GLConstants.ALIASED_LINE_WIDTH_RANGE)[0];//must include 1
-        this._options.maximumAliasedLineWidth = gl.getParameter(GLConstants.ALIASED_LINE_WIDTH_RANGE)[1];     
-        this._options.minimumAliasedPointSize = gl.getParameter(GLConstants.ALIASED_POINT_SIZE_RANGE)[0]
-        this._options.maximumAliasedPointSize = gl.getParameter(GLConstants.ALIASED_POINT_SIZE_RANGE)[1];//must include 1
-        this._options.maximumViewportWidth = gl.getParameter(GLConstants.MAX_VIEWPORT_DIMS)[0];
-        this._options.maximumViewportHeight = gl.getParameter(GLConstants.MAX_VIEWPORT_DIMS)[1];
+    _map(mapObject) {
+        const type = this._type;
+        for (const key in mapObject) {
+            if (!this.hasOwnProperty(key)) {
+                const target = mapObject[key];
+                if (!this[key])
+                    this[key] = target[type];
+            }
+        }
     }
 
 }
 
 module.exports = GLLimits;
+
