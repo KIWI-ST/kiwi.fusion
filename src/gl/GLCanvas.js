@@ -113,7 +113,12 @@ class GLCanvas extends Dispose {
      */
     linkToCanvas(canvas) {
         const id = stamp(canvas);
+        this._canvas = canvas;
         this._canvasId = id;
+        //1. set style
+        this._canvas.style.width = this.style.width || this._canvas.style.width;
+        this._canvas.style.height = this.style.height ||this._canvas.style.width;
+        //2. set gl
         CACHE_GL[id] = CACHE_GL[id] || canvas.getContext(this._glType, this._contextOptions) || canvas.getContext(`experimental-${this._glType}`, this._contextOptions);
         const glContext = this.getContext('webgl');
         glContext._setgl(CACHE_GL[id]);

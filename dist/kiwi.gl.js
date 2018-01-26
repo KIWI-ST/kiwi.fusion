@@ -3213,7 +3213,7 @@ var GLContext = function (_Dispose) {
         /**
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getShaderParameter
          * @param {GLShader} shader 
-         * @param {String} pname 
+         * @param {GLenum} pname 
          */
 
     }, {
@@ -3221,6 +3221,35 @@ var GLContext = function (_Dispose) {
         value: function getShaderParameter(shader, pname) {
             return shader.getParameters(pname);
         }
+        /**
+         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getShaderInfoLog
+         * @param {GLShader} shader 
+         */
+
+    }, {
+        key: 'getShaderInfoLog',
+        value: function getShaderInfoLog(shader) {
+            return '';
+        }
+        /**
+         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getProgramInfoLog
+         * @param {GLProgram} program 
+         */
+
+    }, {
+        key: 'getProgramInfoLog',
+        value: function getProgramInfoLog(program) {
+            return '';
+        }
+        /**
+         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getProgramParameter
+         * @type {GLProgram} program
+         * @type {GLenum} pname
+         */
+
+    }, {
+        key: 'getProgramParameter',
+        value: function getProgramParameter(program, pname) {}
         /**
          * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/bindBuffer
          * @param {GLenum} target  gl.ARRAY_BUFFER | gl.ELEMENT_ARRAY_BUFFER |等
@@ -3503,7 +3532,12 @@ var GLCanvas = function (_Dispose) {
     key: 'linkToCanvas',
     value: function linkToCanvas(canvas) {
       var id = stamp_1(canvas);
+      this._canvas = canvas;
       this._canvasId = id;
+      //1. set style
+      this._canvas.style.width = this.style.width || this._canvas.style.width;
+      this._canvas.style.height = this.style.height || this._canvas.style.width;
+      //2. set gl
       CACHE_GL[id] = CACHE_GL[id] || canvas.getContext(this._glType, this._contextOptions) || canvas.getContext('experimental-' + this._glType, this._contextOptions);
       var glContext = this.getContext('webgl');
       glContext._setgl(CACHE_GL[id]);

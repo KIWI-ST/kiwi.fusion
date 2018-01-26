@@ -23,4 +23,3 @@ renderer = new THREE.WebGLRenderer({
 renderer.setSize(800, 600);
 //
 renderer.render(scene, camera);
-
