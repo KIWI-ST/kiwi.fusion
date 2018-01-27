@@ -206,6 +206,8 @@ class GLContext extends Dispose {
         record.exactIndexByValue(0, program.id);
         record.exactIndexByValue(1, shader.id);
         this._recorder.increase(record);
+        //
+        program.attachShader(shader);
     }
     /**
      * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/linkProgram
@@ -215,6 +217,7 @@ class GLContext extends Dispose {
         const record = new Record('linkProgram', program);
         record.exactIndexByValue(0, program.id);
         this._recorder.increase(record);
+        program.link();
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getAttribLocation
@@ -257,7 +260,7 @@ class GLContext extends Dispose {
      * @type {GLenum} pname
      */
     getProgramParameter(program, pname){
-        
+        var s = GLConstants.ACTIVE_ATTRIBUTES;
     }
     /**
      * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/bindBuffer

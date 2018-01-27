@@ -2,6 +2,7 @@
  * @author yellow
  */
 const Dispose = require('./../utils/Dispose'),
+    GLConstants= require('./GLConstants'),
     stamp = require('./../utils/stamp');
 
 const prefixProgram = 'PROGRAM',
@@ -28,11 +29,38 @@ class GLProgram extends Dispose {
          * 映射uniforms
          */
         this._uniforms = {};
+        /**
+         * @type {GLShader}
+         */
+        this._vs=null;
+        /**
+         * @type {GLShader}
+         */
+        this._fs=null;
     }
-
-    getAttribLocation(name) {
-        this._attributes[name] = this._attributes[name] || stamp({},prefixAttribute);
-        return this._attributes[name];
+    /**
+     * attach shader
+     * @param {GLShader} shader 
+     */
+    attachShader(shader){
+        if(shader.type === GLConstants.FRAGMENT_SHADER)
+            this._fs = shader;
+        else if(shader.type === GLConstants.VERTEX_SHADER)
+            this._vs = shader;
+    }
+    /**
+     * initial shader and analysis uniform/attribute
+     */
+    link(){
+        
+    }
+    /**
+     * 
+     * @param {GLenum} pname 
+     */
+    getAttribLocation(pname) {
+        this._attributes[pname] = this._attributes[pname] || stamp({},prefixAttribute);
+        return this._attributes[pname];
     }
 
 }

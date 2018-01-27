@@ -40,11 +40,21 @@ class GLShader extends Dispose{
          */
         this._isComplied = false;
     }
-
+    /**
+     * @returns {GLenum}
+     */
+    get type(){
+        return this._type;
+    }
+    /**
+     * @type {String}
+     */
     set source(v){
         this._source = v;
     }
-
+    /**
+     * @returns {String}
+     */
     get source(){
         return this._source;
     }
@@ -59,6 +69,21 @@ class GLShader extends Dispose{
             return this._isComplied;
         else if(pname === GLConstants.SHADER_TYPE)
             return this._type;
+    }
+    /**
+     * use regex pattern to analy active attri/uniforms
+     */
+    complie(){
+        const source = this._source;
+        //}{debug analysis source to get acitved Uniforms/attributes
+    }
+
+    get activeUniforms(){
+
+    }
+
+    get activeAttributes(){
+
     }
 
 }
