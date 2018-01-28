@@ -71,6 +71,9 @@ class GLShader extends Dispose{
             return this._type;
     }
     /**
+     * reference:
+     * https://github.com/WebKit/webkit/blob/4c0ce4f62b30a6d39140ac9841c416dee3bd07e0/Source/ThirdParty/ANGLE/util/shader_utils.cpp
+     * }{yellow 寻找power vr sdk下 opengl es的实现
      * use regex pattern to analy active attri/uniforms
      */
     complie(){
