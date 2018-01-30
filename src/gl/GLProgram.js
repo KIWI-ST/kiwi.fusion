@@ -6,7 +6,8 @@ const Dispose = require('./../utils/Dispose'),
     stamp = require('./../utils/stamp');
 
 const prefixProgram = 'PROGRAM',
-    prefixAttribute = 'ATTRIBUTE';
+    prefixAttribute = 'ATTRIBUTE',
+    prefixUniform = 'UNIFOMR';
 /**
  * @class
  */
@@ -39,6 +40,29 @@ class GLProgram extends Dispose {
         this._fs=null;
     }
     /**
+     * @returns {Number}
+     */
+    get attachNum(){
+        let num = 0;
+        if(this._vs)
+            num++;
+        if(this._fs)
+            num++;
+        return num;
+    }
+    /**
+     * @returns {Array}
+     */
+    get uniforms(){
+        return this._uniformsInfo;
+    }
+    /**
+     * @returns {Array}
+     */
+    get attributes(){
+        return this._attributesInfo;
+    }
+    /**
      * attach shader
      * @param {GLShader} shader 
      */
@@ -52,7 +76,10 @@ class GLProgram extends Dispose {
      * initial shader and analysis uniform/attribute
      */
     link(){
-        
+        this._vs.complie();
+        this._fs.complie();
+        this._uniformsInfo = [].concat(this._vs.uniforms).concat(this._fs.uniforms);
+        this._attributesInfo = [].concat(this._vs.attributes).concat(this._fs.attributes);
     }
     /**
      * 
@@ -61,6 +88,18 @@ class GLProgram extends Dispose {
     getAttribLocation(pname) {
         this._attributes[pname] = this._attributes[pname] || stamp({},prefixAttribute);
         return this._attributes[pname];
+    }
+    /**
+     * 
+     * @param {DOMString} pname 
+     */
+    getUnifromLocation(pname){
+        if(this._uniforms[pname])
+            return this._uniforms[pname];
+        const uniformLocation = {};
+        stamp(uniformLocation,prefixUniform);
+        this._uniforms[pname] = this._uniforms[pname] || uniformLocation;
+        return this._uniforms[pname];
     }
 
 }

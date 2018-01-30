@@ -2,10 +2,8 @@
  * 操作记单元
  * @author yellow date 2018/1/4
  */
-const isArray = require('./../utils/isArray'),
-    /**
-    * use stamp to get reference object Id
-    */
+const isString = require('./../utils/isString'), 
+    isArray = require('./../utils/isArray'),
     stamp = require('./../utils/stamp');
 /**
  * @class
@@ -126,7 +124,8 @@ class Record {
      * @param {String} v 
      */
     _analysisReturnId(v) {
-        const arr = v.split('_');
+        const val = isString(v)?v:stamp(v);
+        const arr = val.split('_');
         //map to _ptIndex
         this._returanIdPrefix = arr[0];
     }

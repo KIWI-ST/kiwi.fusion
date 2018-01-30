@@ -24,3 +24,5 @@ renderer.setSize(800, 600);
 //
 renderer.render(scene, camera);
 
+kiwiCanvas.linkToWebGLRenderingContext(require('gl')(800,600));
+

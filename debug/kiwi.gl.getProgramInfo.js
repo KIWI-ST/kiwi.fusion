@@ -7,9 +7,9 @@ var vertexShaderSource = 'attribute vec4 a_position;' +
 'gl_Position = a_position;' +
 '}';
 var fragmentShaderSource = 'precision mediump float;' +
-'uniform vec2 u_float;'+
+'uniform float time;'+
 'void main() {' +
-  'gl_FragColor = vec4(1, 0, 0.5, 1);' +
+  'gl_FragColor = vec4(1, 0, 0.5, time);' +
 '}';
 const htmlCavnasElementId = 'mapCanvas';
 //1
@@ -67,7 +67,8 @@ gl.drawArrays(primitiveType, offset, count);
 
 const n = gl.getProgramParameter(glProgram,gl.ACTIVE_UNIFORMS);
 for(let i=0;i<n;++i){
-    const info = gl.getActiveAttrib(glProgram,i);
+    const info = gl.getActiveUniform(glProgram,i);
     const name = info.name;
+    const addr = gl.getUniformLocation( glProgram,name );
+    const a = "";
 }
-

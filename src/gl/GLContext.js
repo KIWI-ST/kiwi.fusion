@@ -230,7 +230,20 @@ class GLContext extends Dispose {
         record.exactIndexByValue(0, program.id);
         record.setReturnId(returnId);
         this._recorder.increase(record);
-        return program.getAttribLocation(name);
+        return returnId;
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getUniformLocation
+     * @param {GLProgram} program 
+     * @param {DOMString} name 
+     */
+    getUniformLocation(program,name){
+        const returnId = program.getUnifromLocation(name),
+            record = new Record('getUniformLocation', program, name);
+        record.exactIndexByValue(0, program.id);
+        record.setReturnId(returnId);
+        this._recorder.increase(record);
+        return returnId;
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getShaderParameter
@@ -255,12 +268,38 @@ class GLContext extends Dispose {
         return '';
     }
     /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveAttrib
+     * @param {GLProgram} program 
+     * @param {GLuint} index 
+     */
+    getActiveAttrib(program,index){
+        return program.attributes[index];
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveUniform
+     * @param {GLProgram} program 
+     * @param {GLuint} index 
+     */
+    getActiveUniform(program,index){
+        return program.uniforms[index];
+    }
+    /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getProgramParameter
      * @type {GLProgram} program
      * @type {GLenum} pname
      */
     getProgramParameter(program, pname){
-        var s = GLConstants.ACTIVE_ATTRIBUTES;
+        if(pname === GLConstants.ACTIVE_UNIFORMS){
+            return program.uniforms.length;
+        }else if(pname === GLConstants.ACTIVE_ATTRIBUTES){
+            return program.attributes.length;
+        }else if(pname === GLConstants.ATTACHED_SHADERS){
+            return program.attachNum;
+        }else if(pname === GLConstants.LINK_STATUS){
+            return true;
+        }else if(pname === GLConstants.DELETE_STATUS){
+            return true;
+        }
     }
     /**
      * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/bindBuffer

@@ -57,7 +57,7 @@ const Encrypt_State_Information = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/activeTexture
      */
-    'activeTexture': { code: 0, return: 0, replace: 1, ptIndex: [0] },
+    'activeTexture': { code: 0, return: 0, replace: 0},
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/blendColor
      */
