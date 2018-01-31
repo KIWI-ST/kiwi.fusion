@@ -10,9 +10,13 @@
 const Dispose = require('./../utils/Dispose'),
     GLConstants = require('./GLConstants');
 /**
+ * complier
+ */
+const complier = require('kiwi.glsl');
+/**
  * use glsl-man to parse .glsl file
  */
-const glsl = require('glsl-man');
+//const glsl = require('glsl-man');
 /**
  * the prefix of Shader type
  */
@@ -127,9 +131,8 @@ class GLShader extends Dispose {
      * https://github.com/KhronosGroup/glslang/blob/eb2c0c72bf4c2f7a972883003b5f5fca3f8c94bd/glslang/MachineIndependent/ParseHelper.cpp#L186
      */
     _parseShaderStrings(str) {
-        const ast = glsl.parse(str);
-        const uniforms = glsl.query.all(ast,glsl.query.selector('declarator[typeAttribute] > type[qualifier=uniform]'));
-        const attributes = glsl.query.all(ast,glsl.query.selector('declarator[typeAttribute] > type[qualifier=attribute]'));
+        const ast = complier.parse(str);
+        const [uniforms,attributes] = complier.getUniformsAndAttributes(ast);
         return [this._convert(uniforms),this._convert(attributes)];
     }
     /**
@@ -141,8 +144,8 @@ class GLShader extends Dispose {
         //deal with no struct type only 
         nodes.forEach(element => {
             collection.push({
-                name:element.parent.declarators[0].name.name,
-                type:GLSL_TYPE_ENUM[element.name]
+                // name:element.parent.declarators[0].name.name,
+                // type:GLSL_TYPE_ENUM[element.name]
             });
         });
         return collection;

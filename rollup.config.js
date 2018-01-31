@@ -4,6 +4,7 @@ import commonjs from 'rollup-plugin-commonjs';
 
 export default {
     input: './src/init.js',
+    exports: 'named',
     name:'kiwi',
     output:{
         format:'iife',
@@ -11,7 +12,9 @@ export default {
     },
     external: [
         'fs',
-        'path'
+        'steam',
+        'path',
+        'through'
     ],
     plugins: [
         resolve(),
