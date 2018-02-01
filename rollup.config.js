@@ -4,11 +4,11 @@ import commonjs from 'rollup-plugin-commonjs';
 
 export default {
     input: './src/init.js',
-    exports: 'named',
-    name:'kiwi',
     output:{
+        name:'kiwi',
+        exports: 'named',
         format:'iife',
-        file:'./dist/kiwi.gl.js'
+        file:'./dist/bundle.js'
     },
     external: [
         'fs',
