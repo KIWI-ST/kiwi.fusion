@@ -5,7 +5,6 @@ const kiwi = require('./../src/init');
 
 
 var vertexShaderSource = 'attribute vec4 a_position;' +
-'uniform float color;'+
 'void main() {' +
 'gl_Position = a_position;' +
 '}';

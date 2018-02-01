@@ -144,8 +144,8 @@ class GLShader extends Dispose {
         //deal with no struct type only 
         nodes.forEach(element => {
             collection.push({
-                // name:element.parent.declarators[0].name.name,
-                // type:GLSL_TYPE_ENUM[element.name]
+                name:element.name,
+                type:GLSL_TYPE_ENUM[element.type]
             });
         });
         return collection;
