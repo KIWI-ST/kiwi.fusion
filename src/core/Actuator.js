@@ -2,31 +2,37 @@
  * 执行器，用于执行Record操作，全局自带一个Actuator
  * @author yellow date 2018/1/3
  */
-const Encrypt = require('./Encrypt');
+const  isString = require('./../utils/isString'), 
+    stamp = require('./../utils/stamp'),
+    Encrypt = require('./Encrypt');
 /**
  * Cahce store
  */
 const CHACHE = {
     /**
-     * use id to store program
+     * store program
      */
     PROGRAM: {},
     /**
-    * use id to store shader
+    * store shader
     */
     SHADER: {},
     /**
-    * use id to store texture
+    * store texture
     */
     TEXTURE: {},
     /**
-     * use id to store attribute location
+     * store attribute location
      */
     ATTRIBUTE:{},
     /**
-     * use id to store BUFFER
+     * store BUFFER
      */
     BUFFER:{},
+    /**
+     * store uinform
+     */
+    UNIFOMR:{},
 }
 /**
  * @class
@@ -76,11 +82,12 @@ class Actuator {
                     }
                     record.replace(refObjects);
                 }
-                //if need to return and cache
+                //if need to return and cache,
                 if (encrypt.return) {
-                    const returnId = record.returnId,
+                    // case of uniform returned is not string
+                    const returnId = isString(record.returnId)?record.returnId:stamp(record.returnId),
                         returanIdPrefix = record.returanIdPrefix;
-                    CHACHE[returanIdPrefix][returnId] = gl[opName].apply(gl, record.args);
+                        CHACHE[returanIdPrefix][returnId] = gl[opName].apply(gl, record.args);
                 } else{
                     gl[opName].apply(gl, record.args);
                 }

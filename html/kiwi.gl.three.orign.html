@@ -15,7 +15,7 @@
         /**
          * 命名空间导入
          */
-        const glCanvas = new kiwi.gl.GLCanvas('mapCanvas');
+        const glCanvas = document.getElementById('mapCanvas');
         //
         const camera = new THREE.PerspectiveCamera(70, 800 / 600, 0.01, 10);
         camera.position.z = 1;
@@ -25,11 +25,7 @@
         mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
         renderer = new THREE.WebGLRenderer({
-            //canvas: document.getElementById('mapCanvas')
             canvas: glCanvas,
-            context: glCanvas.getContext('webgl', {
-               antialias: true
-            })
         });
         renderer.setSize(800, 600);
         renderer.render(scene, camera);
@@ -43,8 +39,6 @@
 
         animate();
         
-        glCanvas.linkToCanvas(document.getElementById('mapCanvas'));
-
     </script>
 </body>
 

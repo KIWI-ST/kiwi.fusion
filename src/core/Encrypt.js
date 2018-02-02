@@ -445,6 +445,10 @@ const Encrypt_Uniforms_And_Attributes = {
      */
     'getAttribLocation': { code: 0, return: 1, replace: 1, ptIndex: [0] },
     /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getUniformLocation
+     */
+    'getUniformLocation':{ code: 0, return: 1, replace: 1, ptIndex: [0] },
+    /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getVertexAttrib
      */
     'getVertexAttrib': { code: 0, return: 1, replace: 0 },

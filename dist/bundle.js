@@ -1379,6 +1379,10 @@ var Encrypt_Uniforms_And_Attributes = {
    */
   'getAttribLocation': { code: 0, return: 1, replace: 1, ptIndex: [0] },
   /**
+   * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getUniformLocation
+   */
+  'getUniformLocation': { code: 0, return: 1, replace: 1, ptIndex: [0] },
+  /**
    * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getVertexAttrib
    */
   'getVertexAttrib': { code: 0, return: 1, replace: 0 },
@@ -12170,25 +12174,29 @@ var GLProgram_1 = GLProgram;
  */
 var CHACHE = {
     /**
-     * use id to store program
+     * store program
      */
     PROGRAM: {},
     /**
-    * use id to store shader
+    * store shader
     */
     SHADER: {},
     /**
-    * use id to store texture
+    * store texture
     */
     TEXTURE: {},
     /**
-     * use id to store attribute location
+     * store attribute location
      */
     ATTRIBUTE: {},
     /**
-     * use id to store BUFFER
+     * store BUFFER
      */
-    BUFFER: {}
+    BUFFER: {},
+    /**
+     * store uinform
+     */
+    UNIFOMR: {}
     /**
      * @class
      */
@@ -12248,9 +12256,10 @@ var Actuator = function () {
                         }
                         record.replace(refObjects);
                     }
-                    //if need to return and cache
+                    //if need to return and cache,
                     if (encrypt.return) {
-                        var returnId = record.returnId,
+                        // case of uniform returned is not string
+                        var returnId = isString_1(record.returnId) ? record.returnId : stamp_1(record.returnId),
                             returanIdPrefix = record.returanIdPrefix;
                         CHACHE[returanIdPrefix][returnId] = gl[opName].apply(gl, record.args);
                     } else {
