@@ -11777,7 +11777,7 @@ const getUniformsAndAttributes = function (ast) {
 	return [uniforms, attributes];
 };
 
-var init = {
+var init$2 = {
 	parse: parse,
 	getUniformsAndAttributes: getUniformsAndAttributes
 };
@@ -11797,13 +11797,9 @@ var init = {
  */
 
 /**
- * use glsl-man to parse .glsl file
- */
-//const glsl = require('glsl-man');
-/**
  * the prefix of Shader type
  */
-var prefix = 'SHADER';
+var prefix$2 = 'SHADER';
 /**
  * convert DOMString to value
  */
@@ -11838,7 +11834,7 @@ var GLShader = function (_Dispose) {
     /**
      * @type {GLenum}
      */
-    var _this = possibleConstructorReturn(this, (GLShader.__proto__ || Object.getPrototypeOf(GLShader)).call(this, prefix));
+    var _this = possibleConstructorReturn(this, (GLShader.__proto__ || Object.getPrototypeOf(GLShader)).call(this, prefix$2));
 
     _this._type = type;
     /**
@@ -11908,9 +11904,9 @@ var GLShader = function (_Dispose) {
      * https://github.com/KhronosGroup/glslang/blob/eb2c0c72bf4c2f7a972883003b5f5fca3f8c94bd/glslang/MachineIndependent/ParseHelper.cpp#L186
      */
     value: function _parseShaderStrings(str) {
-      var ast = init.parse(str);
+      var ast = init$2.parse(str);
 
-      var _complier$getUniforms = init.getUniformsAndAttributes(ast),
+      var _complier$getUniforms = init$2.getUniformsAndAttributes(ast),
           _complier$getUniforms2 = slicedToArray(_complier$getUniforms, 2),
           uniforms = _complier$getUniforms2[0],
           attributes = _complier$getUniforms2[1];
@@ -11976,7 +11972,7 @@ var GLShader = function (_Dispose) {
 
 var GLShader_1 = GLShader;
 
-var prefix$1 = 'BUFFER';
+var prefix$3 = 'BUFFER';
 
 /**
  * @class
@@ -11995,7 +11991,7 @@ var GLBuffer = function (_Dispose) {
     /**
      * @type {GLContext}
      */
-    var _this = possibleConstructorReturn(this, (GLBuffer.__proto__ || Object.getPrototypeOf(GLBuffer)).call(this, prefix$1));
+    var _this = possibleConstructorReturn(this, (GLBuffer.__proto__ || Object.getPrototypeOf(GLBuffer)).call(this, prefix$3));
 
     _this._glContext = glContext;
     return _this;
@@ -12013,7 +12009,7 @@ var GLBuffer_1 = GLBuffer;
 /**
  * the prefix of Texture type
  */
-var prefix$2 = 'TEXTURE';
+var prefix$4 = 'TEXTURE';
 
 var GLTexture = function (_Dispose) {
   inherits(GLTexture, _Dispose);
@@ -12027,7 +12023,7 @@ var GLTexture = function (_Dispose) {
     /**
      * @type {GLContext}
      */
-    var _this = possibleConstructorReturn(this, (GLTexture.__proto__ || Object.getPrototypeOf(GLTexture)).call(this, prefix$2));
+    var _this = possibleConstructorReturn(this, (GLTexture.__proto__ || Object.getPrototypeOf(GLTexture)).call(this, prefix$4));
 
     _this._glContext = glContext;
     return _this;
@@ -12042,6 +12038,9 @@ var GLTexture_1 = GLTexture;
  * @author yellow
  */
 
+/**
+ * prefix of Cache
+ */
 var prefixProgram = 'PROGRAM';
 var prefixUniform = 'UNIFOMR';
 /**
@@ -12049,148 +12048,142 @@ var prefixUniform = 'UNIFOMR';
  */
 
 var GLProgram = function (_Dispose) {
-    inherits(GLProgram, _Dispose);
+  inherits(GLProgram, _Dispose);
+
+  /**
+   * 
+   * @param {GLContext} glContext 
+   */
+  function GLProgram(glContext) {
+    classCallCheck(this, GLProgram);
 
     /**
-     * 
-     * @param {GLContext} glContext 
+     * 索引glContext对象
      */
-    function GLProgram(glContext) {
-        classCallCheck(this, GLProgram);
+    var _this = possibleConstructorReturn(this, (GLProgram.__proto__ || Object.getPrototypeOf(GLProgram)).call(this, prefixProgram));
 
-        /**
-         * 索引glContext对象
-         */
-        var _this = possibleConstructorReturn(this, (GLProgram.__proto__ || Object.getPrototypeOf(GLProgram)).call(this, prefixProgram));
+    _this._glContext = glContext;
+    /**
+     * 映射attribute 和返回值
+     */
+    _this._attributeCache = {};
+    /**
+     * 映射uniforms
+     */
+    _this._uniformCache = {};
+    /**
+     * @type {GLShader}
+     */
+    _this._vs = null;
+    /**
+     * @type {GLShader}
+     */
+    _this._fs = null;
+    return _this;
+  }
+  /**
+   * @returns {Number}
+   */
 
-        _this._glContext = glContext;
-        /**
-         * 映射attribute 和返回值
-         */
-        _this._attributeCache = {};
-        /**
-         * 映射uniforms
-         */
-        _this._uniformCache = {};
-        /**
-         * @type {GLShader}
-         */
-        _this._vs = null;
-        /**
-         * @type {GLShader}
-         */
-        _this._fs = null;
-        return _this;
+
+  createClass(GLProgram, [{
+    key: 'attachShader',
+
+    /**
+     * attach shader
+     * @param {GLShader} shader 
+     */
+    value: function attachShader(shader) {
+      if (shader.type === GLConstants_1.FRAGMENT_SHADER) this._fs = shader;else if (shader.type === GLConstants_1.VERTEX_SHADER) this._vs = shader;
     }
     /**
-     * @returns {Number}
+     * initial shader and analysis uniform/attribute
      */
 
+  }, {
+    key: 'link',
+    value: function link() {
+      //complier vShader and fShader
+      this._vs.complie();
+      this._fs.complie();
+      //store uniforms and attributes
+      this._uniforms = [].concat(this._vs.uniforms).concat(this._fs.uniforms);
+      this._attributes = [].concat(this._vs.attributes).concat(this._fs.attributes);
+      //reverse value and key
+      this._updateKeyValue();
+    }
+    /**
+     * 
+     */
 
-    createClass(GLProgram, [{
-        key: 'attachShader',
+  }, {
+    key: '_updateKeyValue',
+    value: function _updateKeyValue() {
+      var uniforms = this._uniforms,
+          attributes = this._attributes,
+          uniformCache = this._uniformCache,
+          attributeCache = this._attributeCache;
+      //attribute location index
+      var index = 0;
+      //unifrom map
+      uniforms.forEach(function (uniform) {
+        var uniformLocation = {};
+        stamp_1(uniformLocation, prefixUniform);
+        uniformCache[uniform.name] = uniformLocation;
+      });
+      //attribute map
+      attributes.forEach(function (attribute) {
+        attributeCache[attribute.name] = index++;
+      });
+    }
+    /**
+     * no longer need to replace,return location directly
+     * @param {GLenum} pname 
+     */
 
-        /**
-         * attach shader
-         * @param {GLShader} shader 
-         */
-        value: function attachShader(shader) {
-            if (shader.type === GLConstants_1.FRAGMENT_SHADER) this._fs = shader;else if (shader.type === GLConstants_1.VERTEX_SHADER) this._vs = shader;
-        }
-        /**
-         * initial shader and analysis uniform/attribute
-         */
+  }, {
+    key: 'getAttribLocation',
+    value: function getAttribLocation(pname) {
+      return this._attributeCache[pname];
+    }
+    /**
+     * 
+     * @param {DOMString} pname 
+     */
 
-    }, {
-        key: 'link',
-        value: function link() {
-            //complier vShader and fShader
-            this._vs.complie();
-            this._fs.complie();
-            //store uniforms and attributes
-            this._uniforms = [].concat(this._vs.uniforms).concat(this._fs.uniforms);
-            this._attributes = [].concat(this._vs.attributes).concat(this._fs.attributes);
-            //reverse value and key
-            this._updateKeyValue();
-        }
-        /**
-         * 
-         */
+  }, {
+    key: 'getUnifromLocation',
+    value: function getUnifromLocation(pname) {
+      return this._uniformCache[pname];
+    }
+  }, {
+    key: 'attachNum',
+    get: function get$$1() {
+      var num = 0;
+      if (this._vs) num++;
+      if (this._fs) num++;
+      return num;
+    }
+    /**
+     * @returns {Array}
+     */
 
-    }, {
-        key: '_updateKeyValue',
-        value: function _updateKeyValue() {
-            var uniforms = this._uniforms,
-                attributes = this._attributes,
-                uniformCache = this._uniformCache,
-                attributeCache = this._attributeCache;
-            //attribute location index
-            var index = 0;
-            //unifrom map
-            uniforms.forEach(function (uniform) {
-                var uniformLocation = {};
-                stamp_1(uniformLocation, prefixUniform);
-                uniformCache[uniform.name] = uniformLocation;
-            });
-            //attribute map
-            attributes.forEach(function (attribute) {
-                attributeCache[attribute.name] = index++;
-            });
-        }
-        /**
-         * no longer need to replace,return location directly
-         * @param {GLenum} pname 
-         */
+  }, {
+    key: 'uniforms',
+    get: function get$$1() {
+      return this._uniforms;
+    }
+    /**
+     * @returns {Array}
+     */
 
-    }, {
-        key: 'getAttribLocation',
-        value: function getAttribLocation(pname) {
-            return this._attributeCache[pname];
-        }
-        /**
-         * 
-         * @param {DOMString} pname 
-         */
-
-    }, {
-        key: 'getUnifromLocation',
-        value: function getUnifromLocation(pname) {
-            // if(this._uniformCache[pname])
-            //     return this._uniformCache[pname];
-            // const uniformLocation = {};
-            // stamp(uniformLocation,prefixUniform);
-            // this._uniformCache[pname] = this._uniformCache[pname] || uniformLocation;
-            // return this._uniformCache[pname];
-            return this._uniformCache[pname];
-        }
-    }, {
-        key: 'attachNum',
-        get: function get$$1() {
-            var num = 0;
-            if (this._vs) num++;
-            if (this._fs) num++;
-            return num;
-        }
-        /**
-         * @returns {Array}
-         */
-
-    }, {
-        key: 'uniforms',
-        get: function get$$1() {
-            return this._uniforms;
-        }
-        /**
-         * @returns {Array}
-         */
-
-    }, {
-        key: 'attributes',
-        get: function get$$1() {
-            return this._attributes;
-        }
-    }]);
-    return GLProgram;
+  }, {
+    key: 'attributes',
+    get: function get$$1() {
+      return this._attributes;
+    }
+  }]);
+  return GLProgram;
 }(Dispose_1);
 
 var GLProgram_1 = GLProgram;
@@ -12328,7 +12321,7 @@ var Actuator_1 = actuator;
 /**
  * the prefix of GLContext
  */
-var prefix$3 = "WEBGLRENDERGINGCONTEXT";
+var prefix$1 = "WEBGLRENDERGINGCONTEXT";
 /**
  * @class
  */
@@ -12349,7 +12342,7 @@ var GLContext = function (_Dispose) {
         /**
          * @type {String}
          */
-        var _this = possibleConstructorReturn(this, (GLContext.__proto__ || Object.getPrototypeOf(GLContext)).call(this, prefix$3));
+        var _this = possibleConstructorReturn(this, (GLContext.__proto__ || Object.getPrototypeOf(GLContext)).call(this, prefix$1));
 
         _this._renderType = renderType;
         /**
@@ -12842,7 +12835,7 @@ var CACHE_GL = {};
 /**
  * the prefix of GLCanvas
  */
-var prefix$4 = 'CANVASELEMENT';
+var prefix = 'CANVASELEMENT';
 /**
  * @class
  */
@@ -12862,7 +12855,7 @@ var GLCanvas = function (_Dispose) {
     /**
      * @type {String}
      */
-    var _this = possibleConstructorReturn(this, (GLCanvas.__proto__ || Object.getPrototypeOf(GLCanvas)).call(this, prefix$4));
+    var _this = possibleConstructorReturn(this, (GLCanvas.__proto__ || Object.getPrototypeOf(GLCanvas)).call(this, prefix));
 
     _this._canvasId = id;
     /**
@@ -12990,17 +12983,17 @@ var GLCanvas = function (_Dispose) {
 
 var GLCanvas_1 = GLCanvas;
 
-var init$2 = {
+var init = {
     gl: {
         GLCanvas: GLCanvas_1,
         GLContext: GLContext_1
     }
 };
 
-var init_1$1 = init$2.gl;
+var init_1 = init.gl;
 
-exports['default'] = init$2;
-exports.gl = init_1$1;
+exports['default'] = init;
+exports.gl = init_1;
 
 return exports;
 

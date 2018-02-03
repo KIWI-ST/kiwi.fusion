@@ -4,9 +4,10 @@
 const Dispose = require('./../utils/Dispose'),
     GLConstants= require('./GLConstants'),
     stamp = require('./../utils/stamp');
-
+/**
+ * prefix of Cache
+ */
 const prefixProgram = 'PROGRAM',
-    prefixAttribute = 'ATTRIBUTE',
     prefixUniform = 'UNIFOMR';
 /**
  * @class
@@ -118,15 +119,9 @@ class GLProgram extends Dispose {
      * @param {DOMString} pname 
      */
     getUnifromLocation(pname){
-        // if(this._uniformCache[pname])
-        //     return this._uniformCache[pname];
-        // const uniformLocation = {};
-        // stamp(uniformLocation,prefixUniform);
-        // this._uniformCache[pname] = this._uniformCache[pname] || uniformLocation;
-        // return this._uniformCache[pname];
         return this._uniformCache[pname];
     }
-
+    
 }
 
 module.exports = GLProgram;

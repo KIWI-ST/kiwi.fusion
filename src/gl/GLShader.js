@@ -14,10 +14,6 @@ const Dispose = require('./../utils/Dispose'),
  */
 const complier = require('kiwi.glsl');
 /**
- * use glsl-man to parse .glsl file
- */
-//const glsl = require('glsl-man');
-/**
  * the prefix of Shader type
  */
 const prefix = 'SHADER';
