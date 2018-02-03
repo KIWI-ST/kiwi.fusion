@@ -115,9 +115,9 @@ class Record {
     /**
      * 设置返回的id
      */
-    setReturnId(v) {
+    setReturnId(v,needToAnalysis = true) {
         this._returnId = v;
-        this._analysisReturnId(v);
+        needToAnalysis?this._analysisReturnId(v):null;
     }
     /**
      * 

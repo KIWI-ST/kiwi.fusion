@@ -434,3 +434,43 @@ for(let i =0;i<u_n;i++){
     const name = info.name;
 }
 
+
+var vertexShaderSource = 'attribute vec4 a_position;' +
+'void main() {' +
+'gl_Position = a_position;' +
+'}';
+
+var fragmentShaderSource = 'precision mediump float;' +
+'void main() {' +
+  'gl_FragColor = vec4(1, 0, 0.5, 1);' +
+'}';
+
+
+var shader3 = gl.createShader(gl.VERTEX_SHADER);
+gl.shaderSource(shader3,vertexShaderSource);
+gl.compileShader(shader3);
+
+var shader4 = gl.createShader(gl.FRAGMENT_SHADER);
+gl.shaderSource(shader4,fragmentShaderSource);
+gl.compileShader(shader4);
+
+var program2 = gl.createProgram();
+gl.attachShader(program2,shader3);
+gl.attachShader(program2,shader4);
+gl.linkProgram(program2);
+gl.useProgram(program2);
+
+const a_n2 = gl.getProgramParameter(program2,gl.ACTIVE_ATTRIBUTES);
+const u_n2 = gl.getProgramParameter(program2,gl.ACTIVE_UNIFORMS);
+
+for(let i =0;i<a_n2;i++){
+	const info = gl.getActiveAttrib(program2,i);
+	const name = info.name;
+	const loc = gl.getAttribLocation(program2,name);
+	const s="";
+}
+
+for(let i =0;i<u_n2;i++){
+    const info = gl.getActiveUniform(program2,i);
+    const name = info.name;
+}

@@ -26,6 +26,7 @@
         scene.add(mesh);
         renderer = new THREE.WebGLRenderer({
             canvas: glCanvas,
+            context: glCanvas.getContext('webgl')
         });
         renderer.setSize(800, 600);
         renderer.render(scene, camera);

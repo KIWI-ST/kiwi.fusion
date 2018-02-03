@@ -872,8 +872,10 @@ var Record = function () {
   }, {
     key: 'setReturnId',
     value: function setReturnId(v) {
+      var needToAnalysis = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
       this._returnId = v;
-      this._analysisReturnId(v);
+      needToAnalysis ? this._analysisReturnId(v) : null;
     }
     /**
      * 
@@ -941,7 +943,7 @@ var Record_1 = Record;
  * 
  * 具有返回对象的操作
  * -code 操作代码
- * -return 具有返回值的操作
+ * -return 具有返回值的操作 1代表索引转换 2代表直接返回正确预处理值
  * -replace 需要使用新对象代替引用的操作
  * -ptIndex 替换参数的位置索引
  */
@@ -1365,7 +1367,7 @@ var Encrypt_Uniforms_And_Attributes = {
   /**
    * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray
    */
-  'enableVertexAttribArray': { code: 0, return: 0, replace: 1, ptIndex: [0] },
+  'enableVertexAttribArray': { code: 0, return: 0, replace: 0 },
   /**
    * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveAttrib
    */
@@ -1376,8 +1378,9 @@ var Encrypt_Uniforms_And_Attributes = {
   'getActiveUniform': { code: 0, return: 1, replace: 1, ptIndex: [0] },
   /**
    * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getAttribLocation
+   * }{ debug return directly,no need to cache,
    */
-  'getAttribLocation': { code: 0, return: 1, replace: 1, ptIndex: [0] },
+  'getAttribLocation': { code: 0, return: 2, replace: 1, ptIndex: [0] },
   /**
    * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getUniformLocation
    */
@@ -1393,7 +1396,7 @@ var Encrypt_Uniforms_And_Attributes = {
   /**
    * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
    */
-  'vertexAttribPointer': { code: 0, return: 0, replace: 1, ptIndex: [0] },
+  'vertexAttribPointer': { code: 0, return: 0, replace: 0 },
   /**
    * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniformMatrix
    */
@@ -1422,14 +1425,14 @@ var Encrypt_Uniforms_And_Attributes = {
   /**
    * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttrib
    */
-  'vertexAttrib1f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-  'vertexAttrib2f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-  'vertexAttrib3f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-  'vertexAttrib4f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-  'vertexAttrib1fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-  'vertexAttrib2fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-  'vertexAttrib3fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-  'vertexAttrib4fv': { code: 0, return: 0, replace: 1, ptIndex: [0] }
+  'vertexAttrib1f': { code: 0, return: 0, replace: 0 },
+  'vertexAttrib2f': { code: 0, return: 0, replace: 0 },
+  'vertexAttrib3f': { code: 0, return: 0, replace: 0 },
+  'vertexAttrib4f': { code: 0, return: 0, replace: 0 },
+  'vertexAttrib1fv': { code: 0, return: 0, replace: 0 },
+  'vertexAttrib2fv': { code: 0, return: 0, replace: 0 },
+  'vertexAttrib3fv': { code: 0, return: 0, replace: 0 },
+  'vertexAttrib4fv': { code: 0, return: 0, replace: 0 }
 };
 
 var Encrypt_Drawing_Buffers = {
@@ -12040,126 +12043,154 @@ var GLTexture_1 = GLTexture;
  */
 
 var prefixProgram = 'PROGRAM';
-var prefixAttribute = 'ATTRIBUTE';
 var prefixUniform = 'UNIFOMR';
 /**
  * @class
  */
 
 var GLProgram = function (_Dispose) {
-  inherits(GLProgram, _Dispose);
+    inherits(GLProgram, _Dispose);
 
-  /**
-   * 
-   * @param {GLContext} glContext 
-   */
-  function GLProgram(glContext) {
-    classCallCheck(this, GLProgram);
-
-    /**
-     * 索引glContext对象
-     */
-    var _this = possibleConstructorReturn(this, (GLProgram.__proto__ || Object.getPrototypeOf(GLProgram)).call(this, prefixProgram));
-
-    _this._glContext = glContext;
-    /**
-     * 映射attribute 和返回值
-     */
-    _this._attributes = {};
-    /**
-     * 映射uniforms
-     */
-    _this._uniforms = {};
-    /**
-     * @type {GLShader}
-     */
-    _this._vs = null;
-    /**
-     * @type {GLShader}
-     */
-    _this._fs = null;
-    return _this;
-  }
-  /**
-   * @returns {Number}
-   */
-
-
-  createClass(GLProgram, [{
-    key: 'attachShader',
-
-    /**
-     * attach shader
-     * @param {GLShader} shader 
-     */
-    value: function attachShader(shader) {
-      if (shader.type === GLConstants_1.FRAGMENT_SHADER) this._fs = shader;else if (shader.type === GLConstants_1.VERTEX_SHADER) this._vs = shader;
-    }
-    /**
-     * initial shader and analysis uniform/attribute
-     */
-
-  }, {
-    key: 'link',
-    value: function link() {
-      this._vs.complie();
-      this._fs.complie();
-      this._uniformsInfo = [].concat(this._vs.uniforms).concat(this._fs.uniforms);
-      this._attributesInfo = [].concat(this._vs.attributes).concat(this._fs.attributes);
-    }
     /**
      * 
-     * @param {GLenum} pname 
+     * @param {GLContext} glContext 
      */
+    function GLProgram(glContext) {
+        classCallCheck(this, GLProgram);
 
-  }, {
-    key: 'getAttribLocation',
-    value: function getAttribLocation(pname) {
-      this._attributes[pname] = this._attributes[pname] || stamp_1({}, prefixAttribute);
-      return this._attributes[pname];
+        /**
+         * 索引glContext对象
+         */
+        var _this = possibleConstructorReturn(this, (GLProgram.__proto__ || Object.getPrototypeOf(GLProgram)).call(this, prefixProgram));
+
+        _this._glContext = glContext;
+        /**
+         * 映射attribute 和返回值
+         */
+        _this._attributeCache = {};
+        /**
+         * 映射uniforms
+         */
+        _this._uniformCache = {};
+        /**
+         * @type {GLShader}
+         */
+        _this._vs = null;
+        /**
+         * @type {GLShader}
+         */
+        _this._fs = null;
+        return _this;
     }
     /**
-     * 
-     * @param {DOMString} pname 
+     * @returns {Number}
      */
 
-  }, {
-    key: 'getUnifromLocation',
-    value: function getUnifromLocation(pname) {
-      if (this._uniforms[pname]) return this._uniforms[pname];
-      var uniformLocation = {};
-      stamp_1(uniformLocation, prefixUniform);
-      this._uniforms[pname] = this._uniforms[pname] || uniformLocation;
-      return this._uniforms[pname];
-    }
-  }, {
-    key: 'attachNum',
-    get: function get$$1() {
-      var num = 0;
-      if (this._vs) num++;
-      if (this._fs) num++;
-      return num;
-    }
-    /**
-     * @returns {Array}
-     */
 
-  }, {
-    key: 'uniforms',
-    get: function get$$1() {
-      return this._uniformsInfo;
-    }
-    /**
-     * @returns {Array}
-     */
+    createClass(GLProgram, [{
+        key: 'attachShader',
 
-  }, {
-    key: 'attributes',
-    get: function get$$1() {
-      return this._attributesInfo;
-    }
-  }]);
-  return GLProgram;
+        /**
+         * attach shader
+         * @param {GLShader} shader 
+         */
+        value: function attachShader(shader) {
+            if (shader.type === GLConstants_1.FRAGMENT_SHADER) this._fs = shader;else if (shader.type === GLConstants_1.VERTEX_SHADER) this._vs = shader;
+        }
+        /**
+         * initial shader and analysis uniform/attribute
+         */
+
+    }, {
+        key: 'link',
+        value: function link() {
+            //complier vShader and fShader
+            this._vs.complie();
+            this._fs.complie();
+            //store uniforms and attributes
+            this._uniforms = [].concat(this._vs.uniforms).concat(this._fs.uniforms);
+            this._attributes = [].concat(this._vs.attributes).concat(this._fs.attributes);
+            //reverse value and key
+            this._updateKeyValue();
+        }
+        /**
+         * 
+         */
+
+    }, {
+        key: '_updateKeyValue',
+        value: function _updateKeyValue() {
+            var uniforms = this._uniforms,
+                attributes = this._attributes,
+                uniformCache = this._uniformCache,
+                attributeCache = this._attributeCache;
+            //attribute location index
+            var index = 0;
+            //unifrom map
+            uniforms.forEach(function (uniform) {
+                var uniformLocation = {};
+                stamp_1(uniformLocation, prefixUniform);
+                uniformCache[uniform.name] = uniformLocation;
+            });
+            //attribute map
+            attributes.forEach(function (attribute) {
+                attributeCache[attribute.name] = index++;
+            });
+        }
+        /**
+         * no longer need to replace,return location directly
+         * @param {GLenum} pname 
+         */
+
+    }, {
+        key: 'getAttribLocation',
+        value: function getAttribLocation(pname) {
+            return this._attributeCache[pname];
+        }
+        /**
+         * 
+         * @param {DOMString} pname 
+         */
+
+    }, {
+        key: 'getUnifromLocation',
+        value: function getUnifromLocation(pname) {
+            // if(this._uniformCache[pname])
+            //     return this._uniformCache[pname];
+            // const uniformLocation = {};
+            // stamp(uniformLocation,prefixUniform);
+            // this._uniformCache[pname] = this._uniformCache[pname] || uniformLocation;
+            // return this._uniformCache[pname];
+            return this._uniformCache[pname];
+        }
+    }, {
+        key: 'attachNum',
+        get: function get$$1() {
+            var num = 0;
+            if (this._vs) num++;
+            if (this._fs) num++;
+            return num;
+        }
+        /**
+         * @returns {Array}
+         */
+
+    }, {
+        key: 'uniforms',
+        get: function get$$1() {
+            return this._uniforms;
+        }
+        /**
+         * @returns {Array}
+         */
+
+    }, {
+        key: 'attributes',
+        get: function get$$1() {
+            return this._attributes;
+        }
+    }]);
+    return GLProgram;
 }(Dispose_1);
 
 var GLProgram_1 = GLProgram;
@@ -12257,7 +12288,7 @@ var Actuator = function () {
                         record.replace(refObjects);
                     }
                     //if need to return and cache,
-                    if (encrypt.return) {
+                    if (encrypt.return === 1) {
                         // case of uniform returned is not string
                         var returnId = isString_1(record.returnId) ? record.returnId : stamp_1(record.returnId),
                             returanIdPrefix = record.returanIdPrefix;
@@ -12540,6 +12571,8 @@ var GLContext = function (_Dispose) {
         }
         /**
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getAttribLocation
+         * @modify yellow date 2018/2/3 direction return 
+         * 
          * @param {GLProgram} program 
          * @param {String} name 
          */
@@ -12550,7 +12583,7 @@ var GLContext = function (_Dispose) {
             var returnId = program.getAttribLocation(name),
                 record = new Record_1('getAttribLocation', program, name);
             record.exactIndexByValue(0, program.id);
-            record.setReturnId(returnId);
+            record.setReturnId(returnId, false);
             this._recorder.increase(record);
             return returnId;
         }
@@ -12702,7 +12735,6 @@ var GLContext = function (_Dispose) {
         key: 'enableVertexAttribArray',
         value: function enableVertexAttribArray(index) {
             var record = new Record_1('enableVertexAttribArray', index);
-            record.exactIndexByValue(0, index);
             this._recorder.increase(record);
         }
         /**
@@ -12713,7 +12745,6 @@ var GLContext = function (_Dispose) {
         key: 'vertexAttribPointer',
         value: function vertexAttribPointer(index, size, type, normalized, stride, offset) {
             var record = new Record_1('vertexAttribPointer', index, size, type, normalized, stride, offset);
-            record.exactIndexByValue(0, index);
             this._recorder.increase(record);
         }
         /**

@@ -2,7 +2,7 @@
  * 执行器，用于执行Record操作，全局自带一个Actuator
  * @author yellow date 2018/1/3
  */
-const  isString = require('./../utils/isString'), 
+const isString = require('./../utils/isString'),
     stamp = require('./../utils/stamp'),
     Encrypt = require('./Encrypt');
 /**
@@ -24,15 +24,15 @@ const CHACHE = {
     /**
      * store attribute location
      */
-    ATTRIBUTE:{},
+    ATTRIBUTE: {},
     /**
      * store BUFFER
      */
-    BUFFER:{},
+    BUFFER: {},
     /**
      * store uinform
      */
-    UNIFOMR:{},
+    UNIFOMR: {},
 }
 /**
  * @class
@@ -71,7 +71,7 @@ class Actuator {
                     encrypt = Encrypt[opName] || {};
                 //replace the reference object
                 if (encrypt.replace > 0) {
-                    const refObjects ={};
+                    const refObjects = {};
                     for (const key in record.ptMapIndex) {
                         const target = record.ptMapIndex[key],
                             ptIndex = target.index,
@@ -83,12 +83,13 @@ class Actuator {
                     record.replace(refObjects);
                 }
                 //if need to return and cache,
-                if (encrypt.return) {
+                if (encrypt.return === 1) {
                     // case of uniform returned is not string
-                    const returnId = isString(record.returnId)?record.returnId:stamp(record.returnId),
+                    const returnId = isString(record.returnId) ? record.returnId : stamp(record.returnId),
                         returanIdPrefix = record.returanIdPrefix;
-                        CHACHE[returanIdPrefix][returnId] = gl[opName].apply(gl, record.args);
-                } else{
+                    CHACHE[returanIdPrefix][returnId] = gl[opName].apply(gl, record.args);
+                }
+                else {
                     gl[opName].apply(gl, record.args);
                 }
                 //next record

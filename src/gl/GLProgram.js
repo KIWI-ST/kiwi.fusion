@@ -25,11 +25,11 @@ class GLProgram extends Dispose {
         /**
          * 映射attribute 和返回值
          */
-        this._attributes = {};
+        this._attributeCache = {};
         /**
          * 映射uniforms
          */
-        this._uniforms = {};
+        this._uniformCache = {};
         /**
          * @type {GLShader}
          */
@@ -54,13 +54,13 @@ class GLProgram extends Dispose {
      * @returns {Array}
      */
     get uniforms(){
-        return this._uniformsInfo;
+        return this._uniforms;
     }
     /**
      * @returns {Array}
      */
     get attributes(){
-        return this._attributesInfo;
+        return this._attributes;
     }
     /**
      * attach shader
@@ -76,30 +76,55 @@ class GLProgram extends Dispose {
      * initial shader and analysis uniform/attribute
      */
     link(){
+        //complier vShader and fShader
         this._vs.complie();
         this._fs.complie();
-        this._uniformsInfo = [].concat(this._vs.uniforms).concat(this._fs.uniforms);
-        this._attributesInfo = [].concat(this._vs.attributes).concat(this._fs.attributes);
+        //store uniforms and attributes
+        this._uniforms = [].concat(this._vs.uniforms).concat(this._fs.uniforms);
+        this._attributes = [].concat(this._vs.attributes).concat(this._fs.attributes);
+        //reverse value and key
+        this._updateKeyValue();
     }
     /**
      * 
+     */
+    _updateKeyValue(){
+        const uniforms = this._uniforms,
+            attributes = this._attributes,
+            uniformCache = this._uniformCache,
+            attributeCache = this._attributeCache;
+        //attribute location index
+        let index = 0;
+        //unifrom map
+        uniforms.forEach(uniform => {
+            const uniformLocation = {};
+            stamp(uniformLocation,prefixUniform);
+            uniformCache[uniform.name] = uniformLocation;
+        });
+        //attribute map
+        attributes.forEach(attribute => {
+            attributeCache[attribute.name] = index++;
+        });
+    }
+    /**
+     * no longer need to replace,return location directly
      * @param {GLenum} pname 
      */
     getAttribLocation(pname) {
-        this._attributes[pname] = this._attributes[pname] || stamp({},prefixAttribute);
-        return this._attributes[pname];
+        return this._attributeCache[pname];
     }
     /**
      * 
      * @param {DOMString} pname 
      */
     getUnifromLocation(pname){
-        if(this._uniforms[pname])
-            return this._uniforms[pname];
-        const uniformLocation = {};
-        stamp(uniformLocation,prefixUniform);
-        this._uniforms[pname] = this._uniforms[pname] || uniformLocation;
-        return this._uniforms[pname];
+        // if(this._uniformCache[pname])
+        //     return this._uniformCache[pname];
+        // const uniformLocation = {};
+        // stamp(uniformLocation,prefixUniform);
+        // this._uniformCache[pname] = this._uniformCache[pname] || uniformLocation;
+        // return this._uniformCache[pname];
+        return this._uniformCache[pname];
     }
 
 }

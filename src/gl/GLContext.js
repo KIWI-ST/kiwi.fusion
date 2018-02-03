@@ -221,6 +221,8 @@ class GLContext extends Dispose {
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getAttribLocation
+     * @modify yellow date 2018/2/3 direction return 
+     * 
      * @param {GLProgram} program 
      * @param {String} name 
      */
@@ -228,7 +230,7 @@ class GLContext extends Dispose {
         const returnId = program.getAttribLocation(name),
             record = new Record('getAttribLocation', program, name);
         record.exactIndexByValue(0, program.id);
-        record.setReturnId(returnId);
+        record.setReturnId(returnId,false);
         this._recorder.increase(record);
         return returnId;
     }
@@ -344,7 +346,6 @@ class GLContext extends Dispose {
      */
     enableVertexAttribArray(index) {
         const record = new Record('enableVertexAttribArray', index);
-        record.exactIndexByValue(0, index);
         this._recorder.increase(record);
     }
     /**
@@ -352,7 +353,6 @@ class GLContext extends Dispose {
      */
     vertexAttribPointer(index, size, type, normalized, stride, offset) {
         const record = new Record('vertexAttribPointer', index, size, type, normalized, stride, offset);
-        record.exactIndexByValue(0, index);
         this._recorder.increase(record);
     }
     /**

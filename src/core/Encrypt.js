@@ -5,7 +5,7 @@
  * 
  * 具有返回对象的操作
  * -code 操作代码
- * -return 具有返回值的操作
+ * -return 具有返回值的操作 1代表索引转换 2代表直接返回正确预处理值
  * -replace 需要使用新对象代替引用的操作
  * -ptIndex 替换参数的位置索引
  */
@@ -431,7 +431,7 @@ const Encrypt_Uniforms_And_Attributes = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray
      */
-    'enableVertexAttribArray': { code: 0, return: 0, replace: 1, ptIndex:[0] },
+    'enableVertexAttribArray': { code: 0, return: 0, replace: 0 },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveAttrib
      */
@@ -442,8 +442,9 @@ const Encrypt_Uniforms_And_Attributes = {
     'getActiveUniform': { code: 0, return: 1, replace: 1, ptIndex: [0] },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getAttribLocation
+     * }{ debug return directly,no need to cache,
      */
-    'getAttribLocation': { code: 0, return: 1, replace: 1, ptIndex: [0] },
+    'getAttribLocation': { code: 0, return: 2, replace: 1, ptIndex: [0] },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getUniformLocation
      */
@@ -459,7 +460,7 @@ const Encrypt_Uniforms_And_Attributes = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
      */
-    'vertexAttribPointer': { code: 0, return: 0, replace: 1,ptIndex:[0] },
+    'vertexAttribPointer': { code: 0, return: 0, replace: 0 },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniformMatrix
      */
@@ -488,14 +489,14 @@ const Encrypt_Uniforms_And_Attributes = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttrib
      */
-    'vertexAttrib1f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'vertexAttrib2f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'vertexAttrib3f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'vertexAttrib4f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'vertexAttrib1fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'vertexAttrib2fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'vertexAttrib3fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'vertexAttrib4fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
+    'vertexAttrib1f': { code: 0, return: 0, replace: 0 },
+    'vertexAttrib2f': { code: 0, return: 0, replace: 0 },
+    'vertexAttrib3f': { code: 0, return: 0, replace: 0 },
+    'vertexAttrib4f': { code: 0, return: 0, replace: 0 },
+    'vertexAttrib1fv': { code: 0, return: 0, replace: 0 },
+    'vertexAttrib2fv': { code: 0, return: 0, replace: 0 },
+    'vertexAttrib3fv': { code: 0, return: 0, replace: 0 },
+    'vertexAttrib4fv': { code: 0, return: 0, replace: 0 },
 };
 
 const Encrypt_Drawing_Buffers = {
