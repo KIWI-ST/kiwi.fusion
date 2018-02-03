@@ -11777,7 +11777,7 @@ const getUniformsAndAttributes = function (ast) {
 	return [uniforms, attributes];
 };
 
-var init$2 = {
+var init = {
 	parse: parse,
 	getUniformsAndAttributes: getUniformsAndAttributes
 };
@@ -11803,7 +11803,7 @@ var init$2 = {
 /**
  * the prefix of Shader type
  */
-var prefix$2 = 'SHADER';
+var prefix = 'SHADER';
 /**
  * convert DOMString to value
  */
@@ -11838,7 +11838,7 @@ var GLShader = function (_Dispose) {
     /**
      * @type {GLenum}
      */
-    var _this = possibleConstructorReturn(this, (GLShader.__proto__ || Object.getPrototypeOf(GLShader)).call(this, prefix$2));
+    var _this = possibleConstructorReturn(this, (GLShader.__proto__ || Object.getPrototypeOf(GLShader)).call(this, prefix));
 
     _this._type = type;
     /**
@@ -11908,9 +11908,9 @@ var GLShader = function (_Dispose) {
      * https://github.com/KhronosGroup/glslang/blob/eb2c0c72bf4c2f7a972883003b5f5fca3f8c94bd/glslang/MachineIndependent/ParseHelper.cpp#L186
      */
     value: function _parseShaderStrings(str) {
-      var ast = init$2.parse(str);
+      var ast = init.parse(str);
 
-      var _complier$getUniforms = init$2.getUniformsAndAttributes(ast),
+      var _complier$getUniforms = init.getUniformsAndAttributes(ast),
           _complier$getUniforms2 = slicedToArray(_complier$getUniforms, 2),
           uniforms = _complier$getUniforms2[0],
           attributes = _complier$getUniforms2[1];
@@ -11976,7 +11976,7 @@ var GLShader = function (_Dispose) {
 
 var GLShader_1 = GLShader;
 
-var prefix$3 = 'BUFFER';
+var prefix$1 = 'BUFFER';
 
 /**
  * @class
@@ -11995,7 +11995,7 @@ var GLBuffer = function (_Dispose) {
     /**
      * @type {GLContext}
      */
-    var _this = possibleConstructorReturn(this, (GLBuffer.__proto__ || Object.getPrototypeOf(GLBuffer)).call(this, prefix$3));
+    var _this = possibleConstructorReturn(this, (GLBuffer.__proto__ || Object.getPrototypeOf(GLBuffer)).call(this, prefix$1));
 
     _this._glContext = glContext;
     return _this;
@@ -12013,7 +12013,7 @@ var GLBuffer_1 = GLBuffer;
 /**
  * the prefix of Texture type
  */
-var prefix$4 = 'TEXTURE';
+var prefix$2 = 'TEXTURE';
 
 var GLTexture = function (_Dispose) {
   inherits(GLTexture, _Dispose);
@@ -12027,7 +12027,7 @@ var GLTexture = function (_Dispose) {
     /**
      * @type {GLContext}
      */
-    var _this = possibleConstructorReturn(this, (GLTexture.__proto__ || Object.getPrototypeOf(GLTexture)).call(this, prefix$4));
+    var _this = possibleConstructorReturn(this, (GLTexture.__proto__ || Object.getPrototypeOf(GLTexture)).call(this, prefix$2));
 
     _this._glContext = glContext;
     return _this;
@@ -12328,7 +12328,7 @@ var Actuator_1 = actuator;
 /**
  * the prefix of GLContext
  */
-var prefix$1 = "WEBGLRENDERGINGCONTEXT";
+var prefix$3 = "WEBGLRENDERGINGCONTEXT";
 /**
  * @class
  */
@@ -12349,7 +12349,7 @@ var GLContext = function (_Dispose) {
         /**
          * @type {String}
          */
-        var _this = possibleConstructorReturn(this, (GLContext.__proto__ || Object.getPrototypeOf(GLContext)).call(this, prefix$1));
+        var _this = possibleConstructorReturn(this, (GLContext.__proto__ || Object.getPrototypeOf(GLContext)).call(this, prefix$3));
 
         _this._renderType = renderType;
         /**
@@ -12842,7 +12842,7 @@ var CACHE_GL = {};
 /**
  * the prefix of GLCanvas
  */
-var prefix = 'CANVASELEMENT';
+var prefix$4 = 'CANVASELEMENT';
 /**
  * @class
  */
@@ -12862,7 +12862,7 @@ var GLCanvas = function (_Dispose) {
     /**
      * @type {String}
      */
-    var _this = possibleConstructorReturn(this, (GLCanvas.__proto__ || Object.getPrototypeOf(GLCanvas)).call(this, prefix));
+    var _this = possibleConstructorReturn(this, (GLCanvas.__proto__ || Object.getPrototypeOf(GLCanvas)).call(this, prefix$4));
 
     _this._canvasId = id;
     /**
@@ -12990,17 +12990,17 @@ var GLCanvas = function (_Dispose) {
 
 var GLCanvas_1 = GLCanvas;
 
-var init = {
+var init$2 = {
     gl: {
         GLCanvas: GLCanvas_1,
         GLContext: GLContext_1
     }
 };
 
-var init_1 = init.gl;
+var init_1$1 = init$2.gl;
 
-exports['default'] = init;
-exports.gl = init_1;
+exports['default'] = init$2;
+exports.gl = init_1$1;
 
 return exports;
 
