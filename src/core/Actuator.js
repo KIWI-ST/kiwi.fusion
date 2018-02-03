@@ -83,7 +83,7 @@ class Actuator {
                     record.replace(refObjects);
                 }
                 //if need to return and cache,
-                if (encrypt.return === 1) {
+                if (encrypt.return) {
                     // case of uniform returned is not string
                     const returnId = isString(record.returnId) ? record.returnId : stamp(record.returnId),
                         returanIdPrefix = record.returanIdPrefix;

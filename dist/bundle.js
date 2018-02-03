@@ -943,7 +943,7 @@ var Record_1 = Record;
  * 
  * 具有返回对象的操作
  * -code 操作代码
- * -return 具有返回值的操作 1代表索引转换 2代表直接返回正确预处理值
+ * -return 具有返回值的操作,特指需要返回代替索引的操作
  * -replace 需要使用新对象代替引用的操作
  * -ptIndex 替换参数的位置索引
  */
@@ -1380,7 +1380,7 @@ var Encrypt_Uniforms_And_Attributes = {
    * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getAttribLocation
    * }{ debug return directly,no need to cache,
    */
-  'getAttribLocation': { code: 0, return: 2, replace: 1, ptIndex: [0] },
+  'getAttribLocation': { code: 0, return: 0, replace: 1, ptIndex: [0] },
   /**
    * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getUniformLocation
    */
@@ -12288,7 +12288,7 @@ var Actuator = function () {
                         record.replace(refObjects);
                     }
                     //if need to return and cache,
-                    if (encrypt.return === 1) {
+                    if (encrypt.return) {
                         // case of uniform returned is not string
                         var returnId = isString_1(record.returnId) ? record.returnId : stamp_1(record.returnId),
                             returanIdPrefix = record.returanIdPrefix;
