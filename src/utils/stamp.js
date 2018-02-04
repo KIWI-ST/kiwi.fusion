@@ -37,6 +37,8 @@ const setId = (obj, id) => {
  * @return {String} error if returned 'null'
  */
 const stamp = (obj, prefix = _prefix) => {
+    if(!obj)
+        return null;
     if (!obj._kiwi_gl_id_) {
         const id = getId(prefix);
         return setId(obj, id);

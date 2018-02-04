@@ -119,6 +119,9 @@ class GLProgram extends Dispose {
      * @param {DOMString} pname 
      */
     getUnifromLocation(pname){
+        const uniformLocation = {};
+        stamp(uniformLocation,prefixUniform);
+        this._uniformCache[pname] = this._uniformCache[pname]|| uniformLocation;
         return this._uniformCache[pname];
     }
     

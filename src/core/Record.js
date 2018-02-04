@@ -101,7 +101,7 @@ class Record {
         for (let i = 0, len = ptIndexs.length; i < len; i++) {
             const ptIndex = ptIndexs[i],
                 ptName = stamp(this._rest[ptIndex]);
-            this.exactIndexByValue(ptIndex, ptName);
+            ptName&&ptName.indexOf('_')!==-1?this.exactIndexByValue(ptIndex, ptName):null;
         }
     }
     /**

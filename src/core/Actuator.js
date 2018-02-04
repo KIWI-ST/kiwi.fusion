@@ -26,6 +26,14 @@ const CHACHE = {
      */
     BUFFER: {},
     /**
+     * store FRAMEBUFFER
+     */
+    FRAMEBUFFER:{},
+    /**
+     * store RENDERBUFFER
+     */
+    RENDERBUFFER:{},
+    /**
      * store uinform
      */
     UNIFOMR: {},

@@ -344,7 +344,7 @@ const Encrypt_Programs_And_Shaders = {
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bindAttribLocation
      * @augments
      */
-    'bindAttribLocation': { code: 0, return: 0, replace: 2, ptIndex: [0, 1] },
+    'bindAttribLocation': { code: 0, return: 0, replace: 1, ptIndex: [0] },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/compileShader
      */

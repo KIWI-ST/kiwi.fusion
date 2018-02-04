@@ -13,6 +13,8 @@ const GLLimits = require('./GLLimits'),
     GLExtension = require('./GLExtension'),
     GLShader = require('./GLShader'),
     GLBuffer = require('./GLBuffer'),
+    GLFramebuffer = require('./GLFramebuffer'),
+    GLRenderbuffer = require('./GLRenderbuffer'),
     GLTexture = require('./GLTexture'),
     GLProgram = require('./GLProgram');
 /**
@@ -180,11 +182,28 @@ class GLContext extends Dispose {
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createProgram
      */
     createBuffer() {
-        const glBuffer = new GLBuffer(),
+        const glBuffer = new GLBuffer(this),
             record = new Record('createBuffer');
         record.setReturnId(glBuffer.id);
         this._recorder.increase(record);
         return glBuffer;
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createFramebuffer
+     */
+    createFramebuffer(){
+        const glFramebuffer = new GLFramebuffer(this),
+            record = new Record('createFramebuffer');
+        record.setReturnId(glFramebuffer.id);
+        this._recorder.increase(record);
+        return glFramebuffer;
+    }
+    createRenderbuffer(){
+        const glRenderbuffer = new GLRenderbuffer(this),
+            record = new Record('createRenderbuffer');
+        record.setReturnId(glRenderbuffer.id);
+        this._recorder.increase(record);
+        return glRenderbuffer;
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createTexture

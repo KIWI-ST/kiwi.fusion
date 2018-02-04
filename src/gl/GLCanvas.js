@@ -85,6 +85,12 @@ class GLCanvas extends Dispose {
         }
     }
     /**
+     * @returns {String}
+     */
+    get nodeName(){
+        return 'canvas';
+    }
+    /**
      * https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style
      * https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
      * @type {CSSStyleDeclaration}
@@ -132,8 +138,8 @@ class GLCanvas extends Dispose {
         this._canvas = canvas;
         this._canvasId = id;
         //1. set style
-        this._canvas.style.width = this.style.width || this._canvas.style.width;
-        this._canvas.style.height = this.style.height || this._canvas.style.width;
+        this._canvas.style.width = this.style.width || `${this._canvas.clientWidth}px`;
+        this._canvas.style.height = this.style.height || `${this._canvas.clientHeight}px`;
         //2.
         const records = this._records.toInstruction();
         let record = records.shift();

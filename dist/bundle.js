@@ -666,6 +666,7 @@ var stamp_1 = createCommonjsModule(function (module) {
     var stamp = function stamp(obj) {
         var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _prefix;
 
+        if (!obj) return null;
         if (!obj._kiwi_gl_id_) {
             var id = getId(prefix);
             return setId(obj, id);
@@ -850,7 +851,7 @@ var Record = function () {
       for (var i = 0, len = ptIndexs.length; i < len; i++) {
         var ptIndex = ptIndexs[i],
             ptName = stamp_1(this._rest[ptIndex]);
-        this.exactIndexByValue(ptIndex, ptName);
+        ptName && ptName.indexOf('_') !== -1 ? this.exactIndexByValue(ptIndex, ptName) : null;
       }
     }
     /**
@@ -1280,7 +1281,7 @@ var Encrypt_Programs_And_Shaders = {
    * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bindAttribLocation
    * @augments
    */
-  'bindAttribLocation': { code: 0, return: 0, replace: 2, ptIndex: [0, 1] },
+  'bindAttribLocation': { code: 0, return: 0, replace: 1, ptIndex: [0] },
   /**
    * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/compileShader
    */
@@ -11710,9 +11711,11 @@ const getUniformsAndAttributes = function (ast) {
 			else if (node.type === 'function_declaration') {
 				if (node.name === 'main') {
 					next(node.body.statements, 'main');
-				} else {
-					//debug
-					
+				}
+			}
+			else if(node.type === 'postfix'){
+				if(identify === 'main'){
+					next([node.expression],identify);
 				}
 			}
 			else if (node.type === 'expression') {
@@ -11720,7 +11723,11 @@ const getUniformsAndAttributes = function (ast) {
 			}
 			else if (node.type === 'binary') {
 				//左边是等式
-				active[node.left.name] = 1;
+				if(node.left.type === 'identifier'){
+					active[node.left.name] = 1;
+				}else{
+					next([node.left], identify);
+				}
 				if (node.right.type === 'identifier') {
 					active[node.right.name] = 1;
 				} else {
@@ -11730,8 +11737,7 @@ const getUniformsAndAttributes = function (ast) {
 			else if (node.type === 'function_call') {
 				if(identify === 'main'){
 					node.parameters.forEach(parameter => {
-						if (parameter.type === 'identifier')
-							next([parameter], identify);
+						next([parameter], identify);
 					});
 				}
 			}
@@ -12003,6 +12009,66 @@ var GLBuffer = function (_Dispose) {
 
 var GLBuffer_1 = GLBuffer;
 
+var prefix$4 = 'FRAMEBUFFER';
+
+/**
+ * @class
+ */
+
+var GLFramebuffer = function (_Dispose) {
+  inherits(GLFramebuffer, _Dispose);
+
+  /**
+   * 
+   * @param {GLContext} glContext 
+   */
+  function GLFramebuffer(glContext) {
+    classCallCheck(this, GLFramebuffer);
+
+    /**
+     * @type {GLContext}
+     */
+    var _this = possibleConstructorReturn(this, (GLFramebuffer.__proto__ || Object.getPrototypeOf(GLFramebuffer)).call(this, prefix$4));
+
+    _this._glContext = glContext;
+    return _this;
+  }
+
+  return GLFramebuffer;
+}(Dispose_1);
+
+var GLFramebuffer_1 = GLFramebuffer;
+
+var prefix$5 = 'RENDERBUFFER';
+
+/**
+ * @class
+ */
+
+var GLRenderbuffer = function (_Dispose) {
+  inherits(GLRenderbuffer, _Dispose);
+
+  /**
+   * 
+   * @param {GLContext} glContext 
+   */
+  function GLRenderbuffer(glContext) {
+    classCallCheck(this, GLRenderbuffer);
+
+    /**
+     * @type {GLContext}
+     */
+    var _this = possibleConstructorReturn(this, (GLRenderbuffer.__proto__ || Object.getPrototypeOf(GLRenderbuffer)).call(this, prefix$5));
+
+    _this._glContext = glContext;
+    return _this;
+  }
+
+  return GLRenderbuffer;
+}(Dispose_1);
+
+var GLRenderbuffer_1 = GLRenderbuffer;
+
 /**
  * birgde to attach texture
  */
@@ -12010,7 +12076,7 @@ var GLBuffer_1 = GLBuffer;
 /**
  * the prefix of Texture type
  */
-var prefix$4 = 'TEXTURE';
+var prefix$6 = 'TEXTURE';
 
 var GLTexture = function (_Dispose) {
   inherits(GLTexture, _Dispose);
@@ -12024,7 +12090,7 @@ var GLTexture = function (_Dispose) {
     /**
      * @type {GLContext}
      */
-    var _this = possibleConstructorReturn(this, (GLTexture.__proto__ || Object.getPrototypeOf(GLTexture)).call(this, prefix$4));
+    var _this = possibleConstructorReturn(this, (GLTexture.__proto__ || Object.getPrototypeOf(GLTexture)).call(this, prefix$6));
 
     _this._glContext = glContext;
     return _this;
@@ -12155,6 +12221,9 @@ var GLProgram = function (_Dispose) {
   }, {
     key: 'getUnifromLocation',
     value: function getUnifromLocation(pname) {
+      var uniformLocation = {};
+      stamp_1(uniformLocation, prefixUniform);
+      this._uniformCache[pname] = this._uniformCache[pname] || uniformLocation;
       return this._uniformCache[pname];
     }
   }, {
@@ -12214,6 +12283,14 @@ var CHACHE = {
      * store BUFFER
      */
     BUFFER: {},
+    /**
+     * store FRAMEBUFFER
+     */
+    FRAMEBUFFER: {},
+    /**
+     * store RENDERBUFFER
+     */
+    RENDERBUFFER: {},
     /**
      * store uinform
      */
@@ -12511,11 +12588,33 @@ var GLContext = function (_Dispose) {
     }, {
         key: 'createBuffer',
         value: function createBuffer() {
-            var glBuffer = new GLBuffer_1(),
+            var glBuffer = new GLBuffer_1(this),
                 record = new Record_1('createBuffer');
             record.setReturnId(glBuffer.id);
             this._recorder.increase(record);
             return glBuffer;
+        }
+        /**
+         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createFramebuffer
+         */
+
+    }, {
+        key: 'createFramebuffer',
+        value: function createFramebuffer() {
+            var glFramebuffer = new GLFramebuffer_1(this),
+                record = new Record_1('createFramebuffer');
+            record.setReturnId(glFramebuffer.id);
+            this._recorder.increase(record);
+            return glFramebuffer;
+        }
+    }, {
+        key: 'createRenderbuffer',
+        value: function createRenderbuffer() {
+            var glRenderbuffer = new GLRenderbuffer_1(this),
+                record = new Record_1('createRenderbuffer');
+            record.setReturnId(glRenderbuffer.id);
+            this._recorder.increase(record);
+            return glRenderbuffer;
         }
         /**
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createTexture
@@ -12909,9 +13008,7 @@ var GLCanvas = function (_Dispose) {
       };
     }
     /**
-     * https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style
-     * https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
-     * @type {CSSStyleDeclaration}
+     * @returns {String}
      */
 
   }, {
@@ -12966,8 +13063,8 @@ var GLCanvas = function (_Dispose) {
       this._canvas = canvas;
       this._canvasId = id;
       //1. set style
-      this._canvas.style.width = this.style.width || this._canvas.style.width;
-      this._canvas.style.height = this.style.height || this._canvas.style.width;
+      this._canvas.style.width = this.style.width || this._canvas.clientWidth + 'px';
+      this._canvas.style.height = this.style.height || this._canvas.clientHeight + 'px';
       //2.
       var records = this._records.toInstruction();
       var record = records.shift();
@@ -12999,6 +13096,17 @@ var GLCanvas = function (_Dispose) {
         glContext._setgl(gl);
       }
     }
+  }, {
+    key: 'nodeName',
+    get: function get$$1() {
+      return 'canvas';
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style
+     * https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
+     * @type {CSSStyleDeclaration}
+     */
+
   }, {
     key: 'style',
     get: function get$$1() {
