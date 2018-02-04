@@ -4,9 +4,11 @@
  */
 const Dispose = require('./../utils/Dispose'),
     mergre = require('./../utils/merge'),
+    Record = require('./../core/Record'),
+    Recorder = require('./../core/Recorder'),
     GLContext = require('./GLContext');
 /**
- * 
+ * get kiwi unique id
  */
 const stamp = require('./../utils/stamp');
 /**
@@ -41,7 +43,7 @@ class GLCanvas extends Dispose {
          */
         this._options = mergre({}, options);
         /**
-         * 
+         * @type {String}
          */
         this._glType = 'webgl';
         /**
@@ -51,6 +53,7 @@ class GLCanvas extends Dispose {
         this._contextOptions = {};
         /**
          * real html canvas element
+         * https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement
          * @type {HtmlCanvasElement}
          */
         this._canvas = null;
@@ -58,6 +61,11 @@ class GLCanvas extends Dispose {
          * @type {Object}
          */
         this._style = {};
+        /**
+         * store canvas operations
+         * @type {Recorder}
+         */
+        this._records = new Recorder(null, false);
     }
     /**
      * get context attributes
@@ -77,15 +85,17 @@ class GLCanvas extends Dispose {
         }
     }
     /**
-     * @type {Object}
+     * https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style
+     * https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
+     * @type {CSSStyleDeclaration}
      */
     get style() {
         return this._style;
     }
     /**
-     * 
-     * @param {*} renderType 
-     * @param {*} options 
+     * get GLContext
+     * @param {String} renderType 
+     * @param {Object} [options]
      * @returns {GLContext}
      */
     getContext(renderType = 'webgl', options = {}) {
@@ -100,12 +110,18 @@ class GLCanvas extends Dispose {
     }
     /**
      * https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener
-     * @param {*} type 
-     * @param {*} listener 
-     * @param {*} options 
+     * @param {String} type 
+     * @param {Function} listener 
+     * @param {Object} options 
      */
     addEventListener(type, listener, options) {
-
+        const canvas = this._canvas;
+        if (canvas) {
+            canvas.addEventListener(type, listener, options);
+        } else {
+            const record = new Record('addEventListener', type, listener, options);
+            this._records.increase(record);
+        }
     }
     /**
      * link virtual rendering context to real htmlCanvas
@@ -117,8 +133,15 @@ class GLCanvas extends Dispose {
         this._canvasId = id;
         //1. set style
         this._canvas.style.width = this.style.width || this._canvas.style.width;
-        this._canvas.style.height = this.style.height ||this._canvas.style.width;
-        //2. set gl
+        this._canvas.style.height = this.style.height || this._canvas.style.width;
+        //2.
+        const records = this._records.toInstruction();
+        let record = records.shift();
+        while(record){
+            canvas[record.opName].apply(canvas,record.args);
+            record = records.shift();
+        }
+        //3. set gl
         CACHE_GL[id] = CACHE_GL[id] || canvas.getContext(this._glType, this._contextOptions) || canvas.getContext(`experimental-${this._glType}`, this._contextOptions);
         const glContext = this.getContext('webgl');
         glContext._setgl(CACHE_GL[id]);
@@ -128,10 +151,16 @@ class GLCanvas extends Dispose {
      * @param {WebGLRenderingContext} gl 
      */
     linkToWebGLRenderingContext(gl) {
-        if (this._canvas)
+        if(this._canvas){
             throw new Error('exist htmlcanvaselement');
-        const glContext = this.getContext('webgl');
-        glContext._setgl(gl);
+        }
+        const canvas = gl.canvas;
+        if(canvas){
+            this.linkToCanvas(canvas);
+        }else{
+            const glContext = this.getContext('webgl');
+            glContext._setgl(gl);
+        }
     }
 
 }

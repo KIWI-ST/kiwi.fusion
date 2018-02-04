@@ -1361,8 +1361,8 @@ var Encrypt_Programs_And_Shaders = {
 
 var Encrypt_Uniforms_And_Attributes = {
   /**
-      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/disableVertexAttribArray
-      */
+   * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/disableVertexAttribArray
+   */
   'disableVertexAttribArray': { code: 0, return: 0, replace: 0 },
   /**
    * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray
@@ -1481,6 +1481,7 @@ var Encrypt = merge_1({}, Encrypt_Buffers, Encrypt_Drawing_Buffers, Encrypt_Fram
 
 var Recorder = function () {
   function Recorder(glContext) {
+    var storeInstance = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
     classCallCheck(this, Recorder);
 
     /**
@@ -1494,7 +1495,7 @@ var Recorder = function () {
     /**
      * 注册到全局实例中
      */
-    Recorder.instances[glContext.id] = this;
+    storeInstance ? Recorder.instances[glContext.id] = this : null;
   }
   /**
    * 新增record
@@ -12210,10 +12211,6 @@ var CHACHE = {
     */
     TEXTURE: {},
     /**
-     * store attribute location
-     */
-    ATTRIBUTE: {},
-    /**
      * store BUFFER
      */
     BUFFER: {},
@@ -12821,7 +12818,7 @@ var GLContext_1 = GLContext;
  */
 
 /**
- * 
+ * get kiwi unique id
  */
 
 /**
@@ -12863,7 +12860,7 @@ var GLCanvas = function (_Dispose) {
      */
     _this._options = merge_1({}, options);
     /**
-     * 
+     * @type {String}
      */
     _this._glType = 'webgl';
     /**
@@ -12873,6 +12870,7 @@ var GLCanvas = function (_Dispose) {
     _this._contextOptions = {};
     /**
      * real html canvas element
+     * https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement
      * @type {HtmlCanvasElement}
      */
     _this._canvas = null;
@@ -12880,6 +12878,11 @@ var GLCanvas = function (_Dispose) {
      * @type {Object}
      */
     _this._style = {};
+    /**
+     * store canvas operations
+     * @type {Recorder}
+     */
+    _this._records = new Recorder_1(null, false);
     return _this;
   }
   /**
@@ -12906,16 +12909,18 @@ var GLCanvas = function (_Dispose) {
       };
     }
     /**
-     * @type {Object}
+     * https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style
+     * https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
+     * @type {CSSStyleDeclaration}
      */
 
   }, {
     key: 'getContext',
 
     /**
-     * 
-     * @param {*} renderType 
-     * @param {*} options 
+     * get GLContext
+     * @param {String} renderType 
+     * @param {Object} [options]
      * @returns {GLContext}
      */
     value: function getContext() {
@@ -12933,14 +12938,22 @@ var GLCanvas = function (_Dispose) {
     }
     /**
      * https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener
-     * @param {*} type 
-     * @param {*} listener 
-     * @param {*} options 
+     * @param {String} type 
+     * @param {Function} listener 
+     * @param {Object} options 
      */
 
   }, {
     key: 'addEventListener',
-    value: function addEventListener(type, listener, options) {}
+    value: function addEventListener(type, listener, options) {
+      var canvas = this._canvas;
+      if (canvas) {
+        canvas.addEventListener(type, listener, options);
+      } else {
+        var record = new Record_1('addEventListener', type, listener, options);
+        this._records.increase(record);
+      }
+    }
     /**
      * link virtual rendering context to real htmlCanvas
      * @param {HtmlCanvasElement} canvas 
@@ -12955,7 +12968,14 @@ var GLCanvas = function (_Dispose) {
       //1. set style
       this._canvas.style.width = this.style.width || this._canvas.style.width;
       this._canvas.style.height = this.style.height || this._canvas.style.width;
-      //2. set gl
+      //2.
+      var records = this._records.toInstruction();
+      var record = records.shift();
+      while (record) {
+        canvas[record.opName].apply(canvas, record.args);
+        record = records.shift();
+      }
+      //3. set gl
       CACHE_GL[id] = CACHE_GL[id] || canvas.getContext(this._glType, this._contextOptions) || canvas.getContext('experimental-' + this._glType, this._contextOptions);
       var glContext = this.getContext('webgl');
       glContext._setgl(CACHE_GL[id]);
@@ -12968,9 +12988,16 @@ var GLCanvas = function (_Dispose) {
   }, {
     key: 'linkToWebGLRenderingContext',
     value: function linkToWebGLRenderingContext(gl) {
-      if (this._canvas) throw new Error('exist htmlcanvaselement');
-      var glContext = this.getContext('webgl');
-      glContext._setgl(gl);
+      if (this._canvas) {
+        throw new Error('exist htmlcanvaselement');
+      }
+      var canvas = gl.canvas;
+      if (canvas) {
+        this.linkToCanvas(canvas);
+      } else {
+        var glContext = this.getContext('webgl');
+        glContext._setgl(gl);
+      }
     }
   }, {
     key: 'style',

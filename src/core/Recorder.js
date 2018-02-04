@@ -8,9 +8,9 @@ const Encrypt = require('./Encrypt');
 /**
  * @class
  */
-class Recorder{
+class Recorder {
 
-    constructor(glContext){
+    constructor(glContext, storeInstance = true) {
         /**
          * @type {GLContext}
          */
@@ -22,21 +22,21 @@ class Recorder{
         /**
          * 注册到全局实例中
          */
-        Recorder.instances[glContext.id] = this;
+        storeInstance ? Recorder.instances[glContext.id] = this : null;
     }
     /**
      * 新增record
      * @param {Record} record 
      */
-    increase(record){
+    increase(record) {
         this._records.push(record);
     }
     /**
      * 将现有的记录转换成指令
      */
-    toInstruction(){
+    toInstruction() {
         const len = this._records.length,
-            list = this._records.splice(0,len);
+            list = this._records.splice(0, len);
         return list;
     }
 
