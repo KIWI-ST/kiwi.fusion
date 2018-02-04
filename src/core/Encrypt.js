@@ -424,7 +424,7 @@ const Encrypt_Programs_And_Shaders = {
 };
 
 const Encrypt_Uniforms_And_Attributes = {
- /**
+    /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/disableVertexAttribArray
      */
     'disableVertexAttribArray': { code: 0, return: 0, replace: 0 },

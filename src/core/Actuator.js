@@ -22,10 +22,6 @@ const CHACHE = {
     */
     TEXTURE: {},
     /**
-     * store attribute location
-     */
-    ATTRIBUTE: {},
-    /**
      * store BUFFER
      */
     BUFFER: {},
