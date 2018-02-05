@@ -2,6 +2,8 @@
  * https://developer.mozilla.org/en-US/docs/Web/API/Element
  * @class
  * @author yellow date 2018/2/5
+ * @example
+ * const mock = new Mock(canvasElement,['width','heigh']);
  */
 class Mock {
     /**

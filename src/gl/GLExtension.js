@@ -35,7 +35,9 @@ class GLExtension{
          */
         this._options = {};
     }
-
+    /**
+     * rebuild
+     */
     _include(){
         for (var key in GL_STANDEXTENSIONS) {
             if (GL_STANDEXTENSIONS.hasOwnProperty(key)) {
@@ -62,7 +64,9 @@ class GLExtension{
         }
         return null;
     }
-
+    /**
+     * map available extension 
+     */
     _map() {
         for (var key in this._extensions) {
             if (this._options.hasOwnProperty(key)) {

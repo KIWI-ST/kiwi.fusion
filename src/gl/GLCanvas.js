@@ -25,6 +25,10 @@ const CACHE_GL = {};
 const prefix = 'CANVASELEMENT';
 /**
  * @class
+ * @example
+ * const glCavnas = new GLCanvas('mapCanvas',{
+ *  mock:new Mock(canvanElement,['width','height']);
+ * });
  */
 class GLCanvas extends Dispose {
     /**

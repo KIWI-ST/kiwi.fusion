@@ -65,8 +65,9 @@ class Record {
         return this._ptMapIndex;
     }
     /**
+     * }{debug
      * @private
-     * @param {*} rest 
+     * @param {Array} rest 
      */
     _exact(rest) {
         for (let i = 0, len = rest.length; i < len; i++) {
