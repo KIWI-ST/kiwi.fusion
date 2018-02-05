@@ -29,7 +29,7 @@
     "claygl": "^1.0.3",
     "deepmerge": "^2.0.1",
     "gl": "^4.0.4",
-    "kiwi.glsl": "^0.1.4",
+    "kiwi.glsl": "^0.1.5",
     "rollup": "^0.54.1",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^8.2.6",

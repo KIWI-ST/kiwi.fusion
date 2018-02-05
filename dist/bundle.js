@@ -11766,7 +11766,10 @@ const getUniformsAndAttributes = function (ast) {
 				} else if (identify === 'varying') {
 					
 				} else if(identify === 'main') {
-					next([node.initializer],identify);
+					if(node.initializer)
+						next([node.initializer],identify);
+					else if(node.arraySize)
+						next([node.arraySize],identify);
 				}
 			}
 		});
@@ -12942,7 +12945,8 @@ var GLCanvas = function (_Dispose) {
   /**
    * 
    * @param {String} id the real htmlCanvasElement id 
-   * @param {Object} options 
+   * @param {Object} [options]
+   * @param {Object} [options.mock]
    */
   function GLCanvas(id) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -12982,17 +12986,40 @@ var GLCanvas = function (_Dispose) {
      * @type {Recorder}
      */
     _this._records = new Recorder_1(null, false);
+    /**
+     * mock function
+     */
+    _this._mock();
     return _this;
   }
   /**
-   * get context attributes
-   * include webgl2 attributes
-   * reference https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
-   * @param {Object} [options] 
+   * 
    */
 
 
   createClass(GLCanvas, [{
+    key: '_mock',
+    value: function _mock() {
+      var _this2 = this;
+
+      var mock = this._options.mock;
+      if (!mock) return;
+      var mockList = mock.mockList;
+      mockList.forEach(function (key) {
+        if (!_this2.hasOwnProperty(key)) {
+          var target = mock.getTarget(key);
+          if (!_this2[key]) _this2[key] = target;
+        }
+      });
+    }
+    /**
+     * get context attributes
+     * include webgl2 attributes
+     * reference https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+     * @param {Object} [options] 
+     */
+
+  }, {
     key: '_getContextAttributes',
     value: function _getContextAttributes() {
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -13008,7 +13035,9 @@ var GLCanvas = function (_Dispose) {
       };
     }
     /**
-     * @returns {String}
+     * https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style
+     * https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
+     * @type {CSSStyleDeclaration}
      */
 
   }, {
@@ -13097,17 +13126,6 @@ var GLCanvas = function (_Dispose) {
       }
     }
   }, {
-    key: 'nodeName',
-    get: function get$$1() {
-      return 'canvas';
-    }
-    /**
-     * https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style
-     * https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
-     * @type {CSSStyleDeclaration}
-     */
-
-  }, {
     key: 'style',
     get: function get$$1() {
       return this._style;
@@ -13118,17 +13136,75 @@ var GLCanvas = function (_Dispose) {
 
 var GLCanvas_1 = GLCanvas;
 
+/**
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element
+ * @class
+ * @author yellow date 2018/2/5
+ */
+var Mock = function () {
+  /**
+   * 
+   * @param {HtmlCanvasElement} element 
+   */
+  function Mock(element, mockList) {
+    classCallCheck(this, Mock);
+
+    /**
+     * @type {HtmlCanvasElement}
+     */
+    this._element = element;
+    /**
+     * @type {Array}
+     */
+    this._mockList = mockList;
+  }
+  /**
+   * @type {Array}
+   */
+
+
+  createClass(Mock, [{
+    key: "getTarget",
+
+    /**
+     * 
+     * @param {String} name 
+     */
+    value: function getTarget(name) {
+      return this._element[name];
+    }
+  }, {
+    key: "mockList",
+    set: function set$$1(v) {
+      this._mockList = v;
+    }
+    /**
+     * @type {Array}
+     */
+    ,
+    get: function get$$1() {
+      return this._mockList;
+    }
+  }]);
+  return Mock;
+}();
+
+var Mock_1 = Mock;
+
 var init = {
+    Mock: Mock_1,
     gl: {
         GLCanvas: GLCanvas_1,
         GLContext: GLContext_1
     }
 };
 
-var init_1 = init.gl;
+var init_1 = init.Mock;
+var init_2 = init.gl;
 
 exports['default'] = init;
-exports.gl = init_1;
+exports.Mock = init_1;
+exports.gl = init_2;
 
 return exports;
 

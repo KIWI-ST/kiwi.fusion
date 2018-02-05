@@ -9,10 +9,15 @@
 </head>
 
 <body>
-    <canvas width="800" height="600" id="mapCanvas"></canvas>
+    <canvas width="800" height="600" id="mapCanvas" style="width:800px;height:600px;"></canvas>
     <script type="text/javascript">
 
-        const glCanvas = new kiwi.gl.GLCanvas('mapCanvas');
+        const mapCanvas = document.getElementById('mapCanvas');
+        const mock = new kiwi.Mock(mapCanvas, ['getBoundingClientRect', 'nodeName', 'width', 'height']);
+
+        const glCanvas = new kiwi.gl.GLCanvas('mapCanvas',{
+            mock:mock
+        });
 
         var app = clay.application.create(glCanvas, {
             event: true,

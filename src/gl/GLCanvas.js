@@ -30,7 +30,8 @@ class GLCanvas extends Dispose {
     /**
      * 
      * @param {String} id the real htmlCanvasElement id 
-     * @param {Object} options 
+     * @param {Object} [options]
+     * @param {Object} [options.mock]
      */
     constructor(id, options = {}) {
         super(prefix);
@@ -66,6 +67,25 @@ class GLCanvas extends Dispose {
          * @type {Recorder}
          */
         this._records = new Recorder(null, false);
+        /**
+         * mock function
+         */
+        this._mock();
+    }
+    /**
+     * 
+     */
+    _mock(){
+        const mock = this._options.mock;
+        if(!mock) return;
+        const mockList = mock.mockList;
+        mockList.forEach(key => {
+            if (!this.hasOwnProperty(key)) {
+                const target = mock.getTarget(key);
+                if (!this[key])
+                    this[key] = target;
+            }
+        });
     }
     /**
      * get context attributes
@@ -83,12 +103,6 @@ class GLCanvas extends Dispose {
             preserveDrawingBuffer: options.preserveDrawingBuffer || false,
             failIfMajorPerformanceCaveat: options.failIfMajorPerformanceCaveat || false,
         }
-    }
-    /**
-     * @returns {String}
-     */
-    get nodeName(){
-        return 'canvas';
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style

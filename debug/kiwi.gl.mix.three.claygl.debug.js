@@ -1,12 +1,36 @@
+/**---------------------------------------mock---------------------------------------------------- */
+window = {};
+Image = function () { };
+HTMLCanvasElement = function(){};
+
+class HTMLCanvasElement2 {
+    getBoundingClientRect() {
+        return { x: 8, y: 8, top: 8, bottom: 608, left: 8, right: 808, width: 800, height: 600 };
+    }
+    get nodeName() {
+        return 'canvas';
+    }
+    get width(){
+        return 800;
+    }
+    get height(){
+        return 600;
+    }
+}
+HTMLVideoElement = function () { };
+
+/**----------------------------------------------------------------------------------------------- */
+
 const kiwi = require('./../src/init');
-
-window={};
-Image = function(){};
-HTMLCanvasElement =function(){};
-HTMLVideoElement = function(){};
-
 const clay = require('claygl');
-const glCanvas = new kiwi.gl.GLCanvas('mapCanvas');
+
+
+const mock = new kiwi.Mock(new HTMLCanvasElement2(), ['getBoundingClientRect', 'nodeName','width','height']);
+
+const glCanvas = new kiwi.gl.GLCanvas('mapCanvas',{
+    mock:mock
+});
+
 var app = clay.application.create(glCanvas, {
     event: true,
     graphic: {
@@ -51,4 +75,4 @@ var app = clay.application.create(glCanvas, {
     }
 });
 
-glCanvas.linkToWebGLRenderingContext(require('gl')(800,600));
+glCanvas.linkToWebGLRenderingContext(require('gl')(800, 600));
