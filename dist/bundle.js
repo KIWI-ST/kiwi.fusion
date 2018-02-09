@@ -809,8 +809,10 @@ var Record = function () {
     key: '_exact',
 
     /**
+     * }{debug arraybuffer.set much more faster than copy
+     * 
      * @private
-     * @param {*} rest 
+     * @param {Array} rest 
      */
     value: function _exact(rest) {
       for (var i = 0, len = rest.length; i < len; i++) {
@@ -1516,6 +1518,21 @@ var Recorder = function () {
   }, {
     key: 'toInstruction',
     value: function toInstruction() {
+      var programId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      var record = new Record_1('useProgram', null);
+      record.exactIndexByValue(0, programId);
+      var len = this._records.length,
+          list = [record].concat(this._records.splice(0, len));
+      return list;
+    }
+    /** 
+     * 将现有记录转化成操作，与gl指令无关
+    */
+
+  }, {
+    key: 'toOperation',
+    value: function toOperation() {
       var len = this._records.length,
           list = this._records.splice(0, len);
       return list;
@@ -2606,6 +2623,10 @@ var GLExtension = function () {
          */
         this._options = {};
     }
+    /**
+     * rebuild
+     */
+
 
     createClass(GLExtension, [{
         key: '_include',
@@ -2638,6 +2659,10 @@ var GLExtension = function () {
             }
             return null;
         }
+        /**
+         * map available extension 
+         */
+
     }, {
         key: '_map',
         value: function _map() {
@@ -12439,6 +12464,10 @@ var GLContext = function (_Dispose) {
          */
         _this._glExtension = new GLExtension_1(_this);
         /**
+         * @type {String}
+         */
+        _this._programId = null;
+        /**
          * real WebGLRenderingContext
          * @type {WebGLRenderingContext}
          */
@@ -12814,9 +12843,11 @@ var GLContext = function (_Dispose) {
     }, {
         key: 'useProgram',
         value: function useProgram(program) {
+            var programId = program.id;
             var record = new Record_1('useProgram', program);
-            record.exactIndexByValue(0, program.id);
+            record.exactIndexByValue(0, programId);
             this._recorder.increase(record);
+            this._programId = programId;
         }
         /**
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray
@@ -12873,9 +12904,10 @@ var GLContext = function (_Dispose) {
     }, {
         key: 'drawArrays',
         value: function drawArrays(mode, first, count) {
-            var record = new Record_1('drawArrays', mode, first, count);
+            var record = new Record_1('drawArrays', mode, first, count),
+                programId = this._programId;
             this._recorder.increase(record);
-            Actuator_1.play(this._recorder.toInstruction());
+            Actuator_1.play(this._recorder.toInstruction(programId));
         }
         /**
          * 特别的方法
@@ -12889,10 +12921,17 @@ var GLContext = function (_Dispose) {
     }, {
         key: 'drawElements',
         value: function drawElements(mode, count, type, offset) {
-            var record = new Record_1('drawElements', mode, count, type, offset);
+            var record = new Record_1('drawElements', mode, count, type, offset),
+                programId = this._programId;
             this._recorder.increase(record);
-            Actuator_1.play(this._recorder.toInstruction());
+            Actuator_1.play(this._recorder.toInstruction(programId));
         }
+    }, {
+        key: 'clear',
+        value: function clear() {}
+    }, {
+        key: 'clearColor',
+        value: function clearColor() {}
     }, {
         key: 'renderType',
         get: function get$$1() {
@@ -12915,19 +12954,6 @@ var GLContext = function (_Dispose) {
 var GLContext_1 = GLContext;
 
 /**
- * 虚拟htmlCanvas对象，用于记录webgl在htmlCanvas时的过程
- * @author yellow date 2018/1/1
- */
-
-/**
- * get kiwi unique id
- */
-
-/**
- * store glContext cache
- */
-var CACHE_GLCONTEXT = {};
-/**
  * store WebGLRenderingContext
  */
 var CACHE_GL = {};
@@ -12937,6 +12963,10 @@ var CACHE_GL = {};
 var prefix = 'CANVASELEMENT';
 /**
  * @class
+ * @example
+ * const glCavnas = new GLCanvas('mapCanvas',{
+ *  mock:new Mock(canvanElement,['width','height']);
+ * });
  */
 
 var GLCanvas = function (_Dispose) {
@@ -12977,6 +13007,10 @@ var GLCanvas = function (_Dispose) {
      * @type {HtmlCanvasElement}
      */
     _this._canvas = null;
+    /**
+     * @type {GLContext}
+     */
+    _this._glContext = null;
     /**
      * @type {Object}
      */
@@ -13057,10 +13091,11 @@ var GLCanvas = function (_Dispose) {
           id = this.id;
       this._glType = this._glType || renderType;
       this._contextOptions = this._contextOptions || this._getContextAttributes(options);
-      if (!CACHE_GLCONTEXT[canvasId]) {
-        CACHE_GLCONTEXT[canvasId] = new GLContext_1(id, this._glType, this._contextOptions);
-      }
-      return CACHE_GLCONTEXT[canvasId];
+      this._glContext = this._glContext || new GLContext_1(id, this._glType, this._contextOptions);
+      // if (!CACHE_GLCONTEXT[canvasId]) {
+      //     CACHE_GLCONTEXT[canvasId] = new GLContext(id, this._glType, this._contextOptions);
+      // }
+      return this._glContext;
     }
     /**
      * https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener
@@ -13095,7 +13130,7 @@ var GLCanvas = function (_Dispose) {
       this._canvas.style.width = this.style.width || this._canvas.clientWidth + 'px';
       this._canvas.style.height = this.style.height || this._canvas.clientHeight + 'px';
       //2.
-      var records = this._records.toInstruction();
+      var records = this._records.toOperation();
       var record = records.shift();
       while (record) {
         canvas[record.opName].apply(canvas, record.args);
@@ -13140,6 +13175,8 @@ var GLCanvas_1 = GLCanvas;
  * https://developer.mozilla.org/en-US/docs/Web/API/Element
  * @class
  * @author yellow date 2018/2/5
+ * @example
+ * const mock = new Mock(canvasElement,['width','heigh']);
  */
 var Mock = function () {
   /**

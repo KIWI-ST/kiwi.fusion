@@ -58,6 +58,10 @@ class GLContext extends Dispose {
          */
         this._glExtension = new GLExtension(this);
         /**
+         * @type {String}
+         */
+        this._programId = null;
+        /**
          * real WebGLRenderingContext
          * @type {WebGLRenderingContext}
          */
@@ -355,9 +359,11 @@ class GLContext extends Dispose {
      * @param {GLProgram} program 
      */
     useProgram(program) {
+        const programId = program.id;
         const record = new Record('useProgram', program);
-        record.exactIndexByValue(0, program.id);
+        record.exactIndexByValue(0, programId);
         this._recorder.increase(record);
+        this._programId = programId;
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray
@@ -399,9 +405,10 @@ class GLContext extends Dispose {
      * @param {*} count 
      */
     drawArrays(mode, first, count) {
-        const record = new Record('drawArrays', mode, first, count);
+        const record = new Record('drawArrays', mode, first, count),
+            programId = this._programId;
         this._recorder.increase(record);
-        actuator.play(this._recorder.toInstruction());
+        actuator.play(this._recorder.toInstruction(programId));
     }
     /**
      * 特别的方法
@@ -412,10 +419,20 @@ class GLContext extends Dispose {
      * @param {*} offset 
      */
     drawElements(mode, count, type, offset) {
-        const record = new Record('drawElements', mode, count, type, offset);
+        const record = new Record('drawElements', mode, count, type, offset),
+            programId = this._programId;
         this._recorder.increase(record);
-        actuator.play(this._recorder.toInstruction());
+        actuator.play(this._recorder.toInstruction(programId));
     }
+
+    clear(){
+
+    }
+
+    clearColor(){
+        
+    }
+
 
 }
 

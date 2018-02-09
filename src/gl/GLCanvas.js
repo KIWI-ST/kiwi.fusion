@@ -63,6 +63,10 @@ class GLCanvas extends Dispose {
          */
         this._canvas = null;
         /**
+         * @type {GLContext}
+         */
+        this._glContext = null;
+        /**
          * @type {Object}
          */
         this._style = {};
@@ -127,10 +131,11 @@ class GLCanvas extends Dispose {
             id = this.id;
         this._glType = this._glType || renderType;
         this._contextOptions = this._contextOptions || this._getContextAttributes(options);
-        if (!CACHE_GLCONTEXT[canvasId]) {
-            CACHE_GLCONTEXT[canvasId] = new GLContext(id, this._glType, this._contextOptions);
-        }
-        return CACHE_GLCONTEXT[canvasId];
+        this._glContext = this._glContext ||new GLContext(id, this._glType, this._contextOptions);
+        // if (!CACHE_GLCONTEXT[canvasId]) {
+        //     CACHE_GLCONTEXT[canvasId] = new GLContext(id, this._glType, this._contextOptions);
+        // }
+        return this._glContext;
     }
     /**
      * https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener
@@ -159,7 +164,7 @@ class GLCanvas extends Dispose {
         this._canvas.style.width = this.style.width || `${this._canvas.clientWidth}px`;
         this._canvas.style.height = this.style.height || `${this._canvas.clientHeight}px`;
         //2.
-        const records = this._records.toInstruction();
+        const records = this._records.toOperation();
         let record = records.shift();
         while(record){
             canvas[record.opName].apply(canvas,record.args);
