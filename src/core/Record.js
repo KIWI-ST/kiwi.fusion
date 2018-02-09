@@ -65,7 +65,8 @@ class Record {
         return this._ptMapIndex;
     }
     /**
-     * }{debug
+     * }{debug arraybuffer.set much more faster than copy
+     * 
      * @private
      * @param {Array} rest 
      */
