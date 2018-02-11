@@ -12473,6 +12473,10 @@ var GLContext = function (_Dispose) {
          */
         _this._gl = null;
         /**
+         * @type {Array}
+         */
+        _this._clear = [];
+        /**
          * map funciont
          */
         _this._map();
@@ -12799,43 +12803,6 @@ var GLContext = function (_Dispose) {
             }
         }
         /**
-         * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/bindBuffer
-         * @param {GLenum} target  gl.ARRAY_BUFFER | gl.ELEMENT_ARRAY_BUFFER |等
-         * @param {GLBuffer} buffer 
-         */
-
-    }, {
-        key: 'bindBuffer',
-        value: function bindBuffer(target, buffer) {
-            var record = new Record_1('bindBuffer', target, buffer);
-            record.exactIndexByValue(1, buffer.id);
-            this._recorder.increase(record);
-        }
-        /**
-         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bufferData
-         */
-
-    }, {
-        key: 'bufferData',
-        value: function bufferData(target, srcData, usage) {
-            var record = new Record_1('bufferData', target, srcData, usage);
-            this._recorder.increase(record);
-        }
-        /**
-         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/viewport
-         * @param {*} x 
-         * @param {*} y 
-         * @param {*} width 
-         * @param {*} height 
-         */
-
-    }, {
-        key: 'viewport',
-        value: function viewport(x, y, width, height) {
-            var record = new Record_1('viewport', x, y, width, height);
-            this._recorder.increase(record);
-        }
-        /**
          * 
          * @param {GLProgram} program 
          */
@@ -12848,27 +12815,6 @@ var GLContext = function (_Dispose) {
             record.exactIndexByValue(0, programId);
             this._recorder.increase(record);
             this._programId = programId;
-        }
-        /**
-         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray
-         * @param {GLuint} index 
-         */
-
-    }, {
-        key: 'enableVertexAttribArray',
-        value: function enableVertexAttribArray(index) {
-            var record = new Record_1('enableVertexAttribArray', index);
-            this._recorder.increase(record);
-        }
-        /**
-         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
-         */
-
-    }, {
-        key: 'vertexAttribPointer',
-        value: function vertexAttribPointer(index, size, type, normalized, stride, offset) {
-            var record = new Record_1('vertexAttribPointer', index, size, type, normalized, stride, offset);
-            this._recorder.increase(record);
         }
         /**
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getExtension
@@ -12926,12 +12872,23 @@ var GLContext = function (_Dispose) {
             this._recorder.increase(record);
             Actuator_1.play(this._recorder.toInstruction(programId));
         }
-    }, {
-        key: 'clear',
-        value: function clear() {}
-    }, {
-        key: 'clearColor',
-        value: function clearColor() {}
+        /**
+         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clear
+         */
+        // clear(mask){
+        // const record = new Record('clear', mask);
+        // this._recorder.increase(record);
+        // console.log(`clear:${mask}`);
+        // }
+        /**
+         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clearColor
+         */
+        // clearColor(red, green, blue, alpha){
+        // const record = new Record('clearColor', red, green, blue, alpha);
+        // this._recorder.increase(record);
+        // console.log(`clearColor:${red}-${green}-${blue}-${alpha}`);
+        // }
+
     }, {
         key: 'renderType',
         get: function get$$1() {

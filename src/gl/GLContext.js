@@ -67,6 +67,10 @@ class GLContext extends Dispose {
          */
         this._gl = null;
         /**
+         * @type {Array}
+         */
+        this._clear = [];
+        /**
          * map funciont
          */
         this._map();
@@ -327,34 +331,6 @@ class GLContext extends Dispose {
         }
     }
     /**
-     * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/bindBuffer
-     * @param {GLenum} target  gl.ARRAY_BUFFER | gl.ELEMENT_ARRAY_BUFFER |等
-     * @param {GLBuffer} buffer 
-     */
-    bindBuffer(target, buffer) {
-        const record = new Record('bindBuffer', target, buffer);
-        record.exactIndexByValue(1, buffer.id);
-        this._recorder.increase(record);
-    }
-    /**
-     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bufferData
-     */
-    bufferData(target, srcData, usage) {
-        const record = new Record('bufferData', target, srcData, usage);
-        this._recorder.increase(record);
-    }
-    /**
-     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/viewport
-     * @param {*} x 
-     * @param {*} y 
-     * @param {*} width 
-     * @param {*} height 
-     */
-    viewport(x, y, width, height) {
-        const record = new Record('viewport', x, y, width, height);
-        this._recorder.increase(record);
-    }
-    /**
      * 
      * @param {GLProgram} program 
      */
@@ -364,21 +340,6 @@ class GLContext extends Dispose {
         record.exactIndexByValue(0, programId);
         this._recorder.increase(record);
         this._programId = programId;
-    }
-    /**
-     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray
-     * @param {GLuint} index 
-     */
-    enableVertexAttribArray(index) {
-        const record = new Record('enableVertexAttribArray', index);
-        this._recorder.increase(record);
-    }
-    /**
-     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
-     */
-    vertexAttribPointer(index, size, type, normalized, stride, offset) {
-        const record = new Record('vertexAttribPointer', index, size, type, normalized, stride, offset);
-        this._recorder.increase(record);
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getExtension
@@ -424,15 +385,22 @@ class GLContext extends Dispose {
         this._recorder.increase(record);
         actuator.play(this._recorder.toInstruction(programId));
     }
-
-    clear(){
-
-    }
-
-    clearColor(){
-        
-    }
-
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clear
+     */
+    // clear(mask){
+        // const record = new Record('clear', mask);
+        // this._recorder.increase(record);
+        // console.log(`clear:${mask}`);
+    // }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clearColor
+     */
+    // clearColor(red, green, blue, alpha){
+        // const record = new Record('clearColor', red, green, blue, alpha);
+        // this._recorder.increase(record);
+        // console.log(`clearColor:${red}-${green}-${blue}-${alpha}`);
+    // }
 
 }
 
