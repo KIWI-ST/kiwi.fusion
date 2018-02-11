@@ -1523,8 +1523,10 @@ var Recorder = function () {
       var record = new Record_1('useProgram', null);
       record.exactIndexByValue(0, programId);
       var len = this._records.length,
-          list = [record].concat(this._records.splice(0, len));
-      return list;
+          list = this._records.splice(0, len);
+      var first = list[0];
+      if (first && first.opName === 'clear') list.shift();
+      return [record].concat(list);
     }
     /** 
      * 将现有记录转化成操作，与gl指令无关
@@ -12876,17 +12878,17 @@ var GLContext = function (_Dispose) {
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clear
          */
         // clear(mask){
-        // const record = new Record('clear', mask);
-        // this._recorder.increase(record);
-        // console.log(`clear:${mask}`);
+        //     // const record = new Record('clear', mask);
+        //     // this._recorder.increase(record);
+        //     console.log(`clear:${mask}`);
         // }
         /**
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clearColor
          */
         // clearColor(red, green, blue, alpha){
-        // const record = new Record('clearColor', red, green, blue, alpha);
-        // this._recorder.increase(record);
-        // console.log(`clearColor:${red}-${green}-${blue}-${alpha}`);
+        //     // const record = new Record('clearColor', red, green, blue, alpha);
+        //     // this._recorder.increase(record);
+        //     console.log(`clearColor:${red}-${green}-${blue}-${alpha}`);
         // }
 
     }, {

@@ -389,17 +389,17 @@ class GLContext extends Dispose {
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clear
      */
     // clear(mask){
-        // const record = new Record('clear', mask);
-        // this._recorder.increase(record);
-        // console.log(`clear:${mask}`);
+    //     // const record = new Record('clear', mask);
+    //     // this._recorder.increase(record);
+    //     console.log(`clear:${mask}`);
     // }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clearColor
      */
     // clearColor(red, green, blue, alpha){
-        // const record = new Record('clearColor', red, green, blue, alpha);
-        // this._recorder.increase(record);
-        // console.log(`clearColor:${red}-${green}-${blue}-${alpha}`);
+    //     // const record = new Record('clearColor', red, green, blue, alpha);
+    //     // this._recorder.increase(record);
+    //     console.log(`clearColor:${red}-${green}-${blue}-${alpha}`);
     // }
 
 }

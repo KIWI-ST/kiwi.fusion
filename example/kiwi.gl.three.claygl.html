@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -87,6 +87,7 @@
 
         function animate() {
             requestAnimationFrame(animate);
+            mesh.position.z += 0.001;
             mesh.rotation.x += 0.01;
             mesh.rotation.y += 0.02;
             renderer.render(scene, camera);
