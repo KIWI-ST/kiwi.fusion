@@ -4,11 +4,11 @@
 [![npm version](https://badge.fury.io/js/kiwi.gl.svg)](https://badge.fury.io/js/kiwi.gl)
 
 >a virtual webgl running context which can mix thirdly webgl library gl commands togother,include three.js,qtek and so on.
-### Install ###
+### install ###
 ```javascript
 npm install kiwi.gl 
 ```
-### Usage ###
+### example ###
 > use kiwi.gl with threejs
 ```javascript
 // use virtual glCanvas instead of real canvas element
@@ -46,7 +46,7 @@ glCanvas1.linkToCanvas(document.getElementById('mapCanvas'));
 const mapCanvas = document.getElementById('mapCanvas');
 const mock = new kiwi.Mock(mapCanvas, ['getBoundingClientRect', 'nodeName', 'width', 'height']);
 const glCanvas2 = new kiwi.gl.GLCanvas('mapCanvas',{mock:mock});
-
+//init 3d scene by claygl
 clay.application.create(glCanvas2, {
     event: true,
     graphic: { shadow: true },
@@ -82,9 +82,10 @@ glCanvas2.linkToCanvas(document.getElementById('mapCanvas'));
 ![claygl-1](https://user-images.githubusercontent.com/5127112/36083571-bf0e5c34-0fee-11e8-9ebe-0c991440f216.png)
 > mixture
 ```javascript
-//if virtual canvas link to the same real html canvas element,these two scene will be painted on a canvas
+//if virtual canvas link to the same real htmlCanvasElement,these two scene will be painted on same canvas
 glCanvas1.linkToCanvas(document.getElementById('mapCanvas'));
 glCanvas2.linkToCanvas(document.getElementById('mapCanvas'));
-
 ```
 ![claygl-three-1](https://user-images.githubusercontent.com/5127112/36083586-f048e4d6-0fee-11e8-84e7-a826314b7a79.png)
+### notice ####
+> The tests are not yet finished, and all comments are welcome
