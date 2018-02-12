@@ -32,17 +32,14 @@ class Recorder {
         this._records.push(record);
     }
     /**
-     * 将现有的记录转换成指令
+     * convert to gl commands collection
      */
-    toInstruction(programId = null) {
-        const record = new Record('useProgram', null);
+    toInstruction(programId) {
+        const reocrds = this._records,
+            len = reocrds.length,
+            record = new Record('useProgram', null);
         record.exactIndexByValue(0, programId);
-        const len = this._records.length,
-            list = this._records.splice(0, len);
-        const first = list[0];
-        if (first && first.opName === 'clear')
-            list.shift();
-        return [record].concat(list);
+        return [record].concat(reocrds.splice(0, len));
     }
     /** 
      * 将现有记录转化成操作，与gl指令无关

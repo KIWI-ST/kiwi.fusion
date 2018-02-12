@@ -83,16 +83,20 @@ class GLCanvas extends Dispose {
     /**
      * 
      */
-    _mock(){
+    _mock() {
         const mock = this._options.mock;
-        if(!mock) return;
+        if (!mock) return;
         const mockList = mock.mockList;
         mockList.forEach(key => {
-            if (!this.hasOwnProperty(key)) {
-                const target = mock.getTarget(key);
-                if (!this[key])
-                    this[key] = target;
-            }
+            if (!this.hasOwnProperty(key) && !this[key])
+                //1.function
+                if (!mock.isAttribute(key))
+                    this[key] = (...rest) => {
+                        const element = mock.element;
+                        return element[key].apply(element, rest);
+                    };
+                else
+                    this[key] = mock.element[key];
         });
     }
     /**
@@ -127,14 +131,10 @@ class GLCanvas extends Dispose {
      * @returns {GLContext}
      */
     getContext(renderType = 'webgl', options = {}) {
-        const canvasId = this._canvasId,
-            id = this.id;
+        const id = this.id;
         this._glType = this._glType || renderType;
         this._contextOptions = this._contextOptions || this._getContextAttributes(options);
-        this._glContext = this._glContext ||new GLContext(id, this._glType, this._contextOptions);
-        // if (!CACHE_GLCONTEXT[canvasId]) {
-        //     CACHE_GLCONTEXT[canvasId] = new GLContext(id, this._glType, this._contextOptions);
-        // }
+        this._glContext = this._glContext || new GLContext(id, this._glType, this._contextOptions);
         return this._glContext;
     }
     /**
@@ -166,8 +166,8 @@ class GLCanvas extends Dispose {
         //2.
         const records = this._records.toOperation();
         let record = records.shift();
-        while(record){
-            canvas[record.opName].apply(canvas,record.args);
+        while (record) {
+            canvas[record.opName].apply(canvas, record.args);
             record = records.shift();
         }
         //3. set gl
@@ -180,13 +180,13 @@ class GLCanvas extends Dispose {
      * @param {WebGLRenderingContext} gl 
      */
     linkToWebGLRenderingContext(gl) {
-        if(this._canvas){
+        if (this._canvas) {
             throw new Error('exist htmlcanvaselement');
         }
         const canvas = gl.canvas;
-        if(canvas){
+        if (canvas) {
             this.linkToCanvas(canvas);
-        }else{
+        } else {
             const glContext = this.getContext('webgl');
             glContext._setgl(gl);
         }

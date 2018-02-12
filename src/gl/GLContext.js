@@ -130,7 +130,7 @@ class GLContext extends Dispose {
     /**
      * @returns {String} 'webgl' or 'webgl2'
      */
-    get renderType(){
+    get renderType() {
         return this._renderType;
     }
     /**
@@ -199,14 +199,14 @@ class GLContext extends Dispose {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createFramebuffer
      */
-    createFramebuffer(){
+    createFramebuffer() {
         const glFramebuffer = new GLFramebuffer(this),
             record = new Record('createFramebuffer');
         record.setReturnId(glFramebuffer.id);
         this._recorder.increase(record);
         return glFramebuffer;
     }
-    createRenderbuffer(){
+    createRenderbuffer() {
         const glRenderbuffer = new GLRenderbuffer(this),
             record = new Record('createRenderbuffer');
         record.setReturnId(glRenderbuffer.id);
@@ -216,7 +216,7 @@ class GLContext extends Dispose {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createTexture
      */
-    createTexture(){
+    createTexture() {
         const glTexture = new GLTexture(this),
             record = new Record('createTexture');
         record.setReturnId(glTexture.id);
@@ -257,7 +257,7 @@ class GLContext extends Dispose {
         const returnId = program.getAttribLocation(name),
             record = new Record('getAttribLocation', program, name);
         record.exactIndexByValue(0, program.id);
-        record.setReturnId(returnId,false);
+        record.setReturnId(returnId, false);
         this._recorder.increase(record);
         return returnId;
     }
@@ -266,7 +266,7 @@ class GLContext extends Dispose {
      * @param {GLProgram} program 
      * @param {DOMString} name 
      */
-    getUniformLocation(program,name){
+    getUniformLocation(program, name) {
         const returnId = program.getUnifromLocation(name),
             record = new Record('getUniformLocation', program, name);
         record.exactIndexByValue(0, program.id);
@@ -279,21 +279,21 @@ class GLContext extends Dispose {
      * @param {GLShader} shader 
      * @param {GLenum} pname 
      */
-    getShaderParameter(shader,pname){
+    getShaderParameter(shader, pname) {
         return shader.getParameters(pname);
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getShaderInfoLog
      * @param {GLShader} shader 
      */
-    getShaderInfoLog(shader){
+    getShaderInfoLog(shader) {
         return '';
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getProgramInfoLog
      * @param {GLProgram} program 
      */
-    getProgramInfoLog(program){
+    getProgramInfoLog(program) {
         return '';
     }
     /**
@@ -301,7 +301,7 @@ class GLContext extends Dispose {
      * @param {GLProgram} program 
      * @param {GLuint} index 
      */
-    getActiveAttrib(program,index){
+    getActiveAttrib(program, index) {
         return program.attributes[index];
     }
     /**
@@ -309,7 +309,7 @@ class GLContext extends Dispose {
      * @param {GLProgram} program 
      * @param {GLuint} index 
      */
-    getActiveUniform(program,index){
+    getActiveUniform(program, index) {
         return program.uniforms[index];
     }
     /**
@@ -317,16 +317,16 @@ class GLContext extends Dispose {
      * @type {GLProgram} program
      * @type {GLenum} pname
      */
-    getProgramParameter(program, pname){
-        if(pname === GLConstants.ACTIVE_UNIFORMS){
+    getProgramParameter(program, pname) {
+        if (pname === GLConstants.ACTIVE_UNIFORMS) {
             return program.uniforms.length;
-        }else if(pname === GLConstants.ACTIVE_ATTRIBUTES){
+        } else if (pname === GLConstants.ACTIVE_ATTRIBUTES) {
             return program.attributes.length;
-        }else if(pname === GLConstants.ATTACHED_SHADERS){
+        } else if (pname === GLConstants.ATTACHED_SHADERS) {
             return program.attachNum;
-        }else if(pname === GLConstants.LINK_STATUS){
+        } else if (pname === GLConstants.LINK_STATUS) {
             return true;
-        }else if(pname === GLConstants.DELETE_STATUS){
+        } else if (pname === GLConstants.DELETE_STATUS) {
             return true;
         }
     }
@@ -388,19 +388,15 @@ class GLContext extends Dispose {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clear
      */
-    // clear(mask){
-    //     // const record = new Record('clear', mask);
-    //     // this._recorder.increase(record);
-    //     console.log(`clear:${mask}`);
-    // }
-    /**
-     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clearColor
-     */
-    // clearColor(red, green, blue, alpha){
-    //     // const record = new Record('clearColor', red, green, blue, alpha);
-    //     // this._recorder.increase(record);
-    //     console.log(`clearColor:${red}-${green}-${blue}-${alpha}`);
-    // }
+    clear(mask) {
+        //}{hack igonre 'screen clearing operations'
+        //1.GLConstants.COLOR_BUFFER_BIT|GLConstants.DEPTH_BUFFER_BIT|GLConstants.STENCIL_BUFFER_BIT  = 17664
+        //2.mask alpah !== 0
+        if (mask !== 17664) {
+            const record = new Record('clear', mask);
+            this._recorder.increase(record);
+        }
+    }
 
 }
 

@@ -1512,21 +1512,17 @@ var Recorder = function () {
       this._records.push(record);
     }
     /**
-     * 将现有的记录转换成指令
+     * convert to gl commands collection
      */
 
   }, {
     key: 'toInstruction',
-    value: function toInstruction() {
-      var programId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-      var record = new Record_1('useProgram', null);
+    value: function toInstruction(programId) {
+      var reocrds = this._records,
+          len = reocrds.length,
+          record = new Record_1('useProgram', null);
       record.exactIndexByValue(0, programId);
-      var len = this._records.length,
-          list = this._records.splice(0, len);
-      var first = list[0];
-      if (first && first.opName === 'clear') list.shift();
-      return [record].concat(list);
+      return [record].concat(reocrds.splice(0, len));
     }
     /** 
      * 将现有记录转化成操作，与gl指令无关
@@ -12877,20 +12873,18 @@ var GLContext = function (_Dispose) {
         /**
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clear
          */
-        // clear(mask){
-        //     // const record = new Record('clear', mask);
-        //     // this._recorder.increase(record);
-        //     console.log(`clear:${mask}`);
-        // }
-        /**
-         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clearColor
-         */
-        // clearColor(red, green, blue, alpha){
-        //     // const record = new Record('clearColor', red, green, blue, alpha);
-        //     // this._recorder.increase(record);
-        //     console.log(`clearColor:${red}-${green}-${blue}-${alpha}`);
-        // }
 
+    }, {
+        key: 'clear',
+        value: function clear(mask) {
+            //}{hack igonre 'screen clearing operations'
+            //1.GLConstants.COLOR_BUFFER_BIT|GLConstants.DEPTH_BUFFER_BIT|GLConstants.STENCIL_BUFFER_BIT  = 17664
+            //2.mask alpah !== 0
+            if (mask !== 17664) {
+                var record = new Record_1('clear', mask);
+                this._recorder.increase(record);
+            }
+        }
     }, {
         key: 'renderType',
         get: function get$$1() {
@@ -12999,10 +12993,16 @@ var GLCanvas = function (_Dispose) {
       if (!mock) return;
       var mockList = mock.mockList;
       mockList.forEach(function (key) {
-        if (!_this2.hasOwnProperty(key)) {
-          var target = mock.getTarget(key);
-          if (!_this2[key]) _this2[key] = target;
-        }
+        if (!_this2.hasOwnProperty(key) && !_this2[key])
+          //1.function
+          if (!mock.isAttribute(key)) _this2[key] = function () {
+            for (var _len = arguments.length, rest = Array(_len), _key = 0; _key < _len; _key++) {
+              rest[_key] = arguments[_key];
+            }
+
+            var element = mock.element;
+            return element[key].apply(element, rest);
+          };else _this2[key] = mock.element[key];
       });
     }
     /**
@@ -13046,14 +13046,10 @@ var GLCanvas = function (_Dispose) {
       var renderType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'webgl';
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-      var canvasId = this._canvasId,
-          id = this.id;
+      var id = this.id;
       this._glType = this._glType || renderType;
       this._contextOptions = this._contextOptions || this._getContextAttributes(options);
       this._glContext = this._glContext || new GLContext_1(id, this._glType, this._contextOptions);
-      // if (!CACHE_GLCONTEXT[canvasId]) {
-      //     CACHE_GLCONTEXT[canvasId] = new GLContext(id, this._glType, this._contextOptions);
-      // }
       return this._glContext;
     }
     /**
@@ -13137,52 +13133,64 @@ var GLCanvas_1 = GLCanvas;
  * @example
  * const mock = new Mock(canvasElement,['width','heigh']);
  */
+
+var attribute = {
+    'style': 1,
+    'nodeName': 1,
+    'width': 1,
+    'height': 1
+};
+
+/**
+ * @class
+ */
+
 var Mock = function () {
-  /**
-   * 
-   * @param {HtmlCanvasElement} element 
-   */
-  function Mock(element, mockList) {
-    classCallCheck(this, Mock);
-
-    /**
-     * @type {HtmlCanvasElement}
-     */
-    this._element = element;
-    /**
-     * @type {Array}
-     */
-    this._mockList = mockList;
-  }
-  /**
-   * @type {Array}
-   */
-
-
-  createClass(Mock, [{
-    key: "getTarget",
-
     /**
      * 
-     * @param {String} name 
+     * @param {HtmlCanvasElement} element 
      */
-    value: function getTarget(name) {
-      return this._element[name];
-    }
-  }, {
-    key: "mockList",
-    set: function set$$1(v) {
-      this._mockList = v;
+    function Mock(element, mockList) {
+        classCallCheck(this, Mock);
+
+        /**
+         * @type {HtmlCanvasElement}
+         */
+        this._element = element;
+        /**
+         * @type {Array}
+         */
+        this._mockList = mockList;
     }
     /**
      * @type {Array}
      */
-    ,
-    get: function get$$1() {
-      return this._mockList;
-    }
-  }]);
-  return Mock;
+
+
+    createClass(Mock, [{
+        key: 'isAttribute',
+        value: function isAttribute(name) {
+            return attribute[name] === 1;
+        }
+    }, {
+        key: 'mockList',
+        set: function set$$1(v) {
+            this._mockList = v;
+        }
+        /**
+         * @type {Array}
+         */
+        ,
+        get: function get$$1() {
+            return this._mockList;
+        }
+    }, {
+        key: 'element',
+        get: function get$$1() {
+            return this._element;
+        }
+    }]);
+    return Mock;
 }();
 
 var Mock_1 = Mock;
