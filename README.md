@@ -9,16 +9,82 @@
 npm install kiwi.gl 
 ```
 ### Usage ###
->It doesn't change anything:
+> use kiwi.gl with threejs
 ```javascript
-//create GLCanvas
-const glCanvas = new kiwi.gl.GLCanvas('canvasId');
-//get GLContext 
-const gl = glCanvas.getContext('webgl');
-//use virtual glContext to create shader
-const shader = gl.createShader(gl.VERTEX_SHADER);
-//use virtual glContext to create program
-const program = gl.createProgram();
-//attach virtal program and shader
-gl.attachShader(program,shader);
+// use virtual glCanvas instead of real canvas element
+const glCanvas1 = new kiwi.gl.GLCanvas('mapCanvas');
+// init 3d scene by threejs
+const camera = new THREE.PerspectiveCamera(70, 800 / 600, 0.01, 10);
+camera.position.z = 1;
+scene = new THREE.Scene();
+geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+material = new THREE.MeshNormalMaterial();
+mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+renderer = new THREE.WebGLRenderer({
+    canvas: glCanvas1,
+    context: glCanvas1.getContext('webgl', {
+        antialias: true
+    })
+});
+renderer.setSize(800, 600);
+renderer.render(scene, camera);
+function animate() {
+    requestAnimationFrame(animate);
+    mesh.rotation.x += 0.01;
+    mesh.rotation.y += 0.02;
+    renderer.render(scene, camera);
+}
+animate();
+// link to real htmlcanvaselement
+glCanvas1.linkToCanvas(document.getElementById('mapCanvas'));
 ```
+![threejs-1](https://user-images.githubusercontent.com/5127112/36083573-c4093c04-0fee-11e8-8d02-b1892672b739.png)
+> use kiwi.gl with claygl
+```javascript
+// use virtual glCanvas instead of real canvas element
+const mapCanvas = document.getElementById('mapCanvas');
+const mock = new kiwi.Mock(mapCanvas, ['getBoundingClientRect', 'nodeName', 'width', 'height']);
+const glCanvas2 = new kiwi.gl.GLCanvas('mapCanvas',{mock:mock});
+
+clay.application.create(glCanvas2, {
+    event: true,
+    graphic: { shadow: true },
+    init: function (app) {
+        this._camera = app.createCamera([0, 3, 8], [0, 1, 0]);
+        app.createDirectionalLight([-1, -1, -1], '#fff', 0.7);
+        app.createAmbientLight('#fff', 0.3);
+        app.createCube();
+        app.createSphere().position.set(2, 0, 0);
+        app.createPlane().position.set(-2, 0, 0);
+        app.createMesh(new clay.geometry.Cone()).position.set(4, 0, 0);
+        app.createMesh(new clay.geometry.Cylinder()).position.set(-4, 0, 0);
+        var roomCube = app.createCubeInside({
+            roughness: 1,
+            color: [0.3, 0.3, 0.3]
+            });
+            roomCube.silent = true;
+            roomCube.castShadow = false;
+            roomCube.scale.set(10, 10, 10);
+            roomCube.position.y = 9;
+            this._control = new clay.plugin.OrbitControl({
+                target: this._camera,
+                domElement: app.container
+            });
+        },
+        loop: function (app) {
+            this._control.update(app.frameTime);
+        }
+});
+// link to real htmlcanvaselement
+glCanvas2.linkToCanvas(document.getElementById('mapCanvas'));
+```
+![claygl-1](https://user-images.githubusercontent.com/5127112/36083571-bf0e5c34-0fee-11e8-9ebe-0c991440f216.png)
+> mixture
+```javascript
+//if virtual canvas link to the same real html canvas element,these two scene will be painted on a canvas
+glCanvas1.linkToCanvas(document.getElementById('mapCanvas'));
+glCanvas2.linkToCanvas(document.getElementById('mapCanvas'));
+
+```
+![claygl-three-1](https://user-images.githubusercontent.com/5127112/36083586-f048e4d6-0fee-11e8-84e7-a826314b7a79.png)
