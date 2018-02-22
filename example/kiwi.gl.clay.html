@@ -13,7 +13,7 @@
     <script type="text/javascript">
 
         const mapCanvas = document.getElementById('mapCanvas');
-        const mock = new kiwi.Mock(mapCanvas, ['getBoundingClientRect', 'nodeName', 'width', 'height']);
+        const mock = new kiwi.gl.HtmlMock(mapCanvas, ['getBoundingClientRect', 'nodeName', 'width', 'height']);
 
         const glCanvas = new kiwi.gl.GLCanvas('mapCanvas',{
             mock:mock

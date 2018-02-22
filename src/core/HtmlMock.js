@@ -16,7 +16,7 @@ const attribute = {
 /**
  * @class
  */
-class Mock {
+class HtmlMock {
     /**
      * 
      * @param {HtmlCanvasElement} element 
@@ -54,4 +54,4 @@ class Mock {
 
 }
 
-module.exports = Mock;
+module.exports = HtmlMock;

@@ -124,21 +124,28 @@ class GLContext extends Dispose {
         this._gl = gl;
         this._glLimits._include();
         this._glExtension._include();
-        //替换绘制实体
-        actuator.setGl(gl);
+        actuator.apply(gl);
     }
     /**
+     * get the version of webgl
      * @returns {String} 'webgl' or 'webgl2'
      */
     get renderType() {
         return this._renderType;
     }
     /**
-     * 
+     * get webglrendercontext
      * @returns {WebGLRenderingContext}
      */
     get gl() {
         return this._gl;
+    }
+    /**
+     * get glcontext's recorder
+     * @returns {Recorder}
+     */
+    get recorder(){
+        return this._recorder;
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createShader
@@ -147,7 +154,6 @@ class GLContext extends Dispose {
     createShader(type) {
         const glShader = new GLShader(type, this),
             record = new Record('createShader', type);
-        //createShader 操作必需返回值
         record.setReturnId(glShader.id);
         this._recorder.increase(record);
         return glShader;
@@ -177,7 +183,7 @@ class GLContext extends Dispose {
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createProgram
-     * 创建program对象
+     * @returns {GLProgram}
      */
     createProgram() {
         const glProgram = new GLProgram(this),
@@ -188,6 +194,7 @@ class GLContext extends Dispose {
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createProgram
+     * @returns {GLBuffer}
      */
     createBuffer() {
         const glBuffer = new GLBuffer(this),
@@ -198,6 +205,7 @@ class GLContext extends Dispose {
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createFramebuffer
+     * @returns {GLFramebuffer}
      */
     createFramebuffer() {
         const glFramebuffer = new GLFramebuffer(this),
@@ -206,6 +214,10 @@ class GLContext extends Dispose {
         this._recorder.increase(record);
         return glFramebuffer;
     }
+    /** 
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createRenderbuffer
+     * @returns {GLRenderbuffer}
+     */
     createRenderbuffer() {
         const glRenderbuffer = new GLRenderbuffer(this),
             record = new Record('createRenderbuffer');
@@ -215,6 +227,7 @@ class GLContext extends Dispose {
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createTexture
+     * @returns {GLTexture}
      */
     createTexture() {
         const glTexture = new GLTexture(this),
@@ -331,7 +344,6 @@ class GLContext extends Dispose {
         }
     }
     /**
-     * 
      * @param {GLProgram} program 
      */
     useProgram(program) {
@@ -359,11 +371,8 @@ class GLContext extends Dispose {
         return glLimits[pname];
     }
     /**
-     * 特别的方法
+     * turning function
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawArrays
-     * @param {*} mode 
-     * @param {*} first 
-     * @param {*} count 
      */
     drawArrays(mode, first, count) {
         const record = new Record('drawArrays', mode, first, count),
@@ -372,12 +381,8 @@ class GLContext extends Dispose {
         actuator.play(this._recorder.toInstruction(programId));
     }
     /**
-     * 特别的方法
+     * turning function
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawElements
-     * @param {*} mode 
-     * @param {*} count 
-     * @param {*} type 
-     * @param {*} offset 
      */
     drawElements(mode, count, type, offset) {
         const record = new Record('drawElements', mode, count, type, offset),

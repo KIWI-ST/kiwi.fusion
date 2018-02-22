@@ -35,7 +35,7 @@ class GLCanvas extends Dispose {
      * 
      * @param {String} id the real htmlCanvasElement id 
      * @param {Object} [options]
-     * @param {Object} [options.mock]
+     * @param {HtmlMock} [options.mock]
      */
     constructor(id, options = {}) {
         super(prefix);
@@ -89,7 +89,6 @@ class GLCanvas extends Dispose {
         const mockList = mock.mockList;
         mockList.forEach(key => {
             if (!this.hasOwnProperty(key) && !this[key])
-                //1.function
                 if (!mock.isAttribute(key))
                     this[key] = (...rest) => {
                         const element = mock.element;

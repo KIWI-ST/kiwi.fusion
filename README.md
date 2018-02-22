@@ -44,7 +44,8 @@ glCanvas1.linkToCanvas(document.getElementById('mapCanvas'));
 ```javascript
 // use virtual glCanvas instead of real canvas element
 const mapCanvas = document.getElementById('mapCanvas');
-const mock = new kiwi.Mock(mapCanvas, ['getBoundingClientRect', 'nodeName', 'width', 'height']);
+//mock html element attributes and functions
+const mock = new kiwi.gl.HtmlMock(mapCanvas, ['getBoundingClientRect', 'nodeName', 'width', 'height']);
 const glCanvas2 = new kiwi.gl.GLCanvas('mapCanvas',{mock:mock});
 //init 3d scene by claygl
 clay.application.create(glCanvas2, {

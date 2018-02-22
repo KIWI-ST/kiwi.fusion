@@ -42,18 +42,17 @@ class Recorder {
         return [record].concat(reocrds.splice(0, len));
     }
     /** 
-     * 将现有记录转化成操作，与gl指令无关
+     * convert to commands collection which not just webgl operation
+     * makes recorder as a general logger.(such as htmlElement logger)
     */
     toOperation() {
         const len = this._records.length,
             list = this._records.splice(0, len);
         return list;
     }
-
+    
 }
-/**
- * 
- */
+
 Recorder.instances = {};
 
 module.exports = Recorder;

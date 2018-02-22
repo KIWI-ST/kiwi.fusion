@@ -8,6 +8,7 @@
     "url": "git+https://github.com/axmand/kiwi.gl.git"
   },
   "scripts": {
+    "test": "mocha",
     "compile": "rollup -c",
     "prepublish": "npm run compile"
   },
@@ -26,16 +27,19 @@
     "babel-plugin-transform-es2015-typeof-symbol": "^6.23.0",
     "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-preset-es2015": "^6.24.1",
+    "chai": "^4.1.2",
     "claygl": "^1.0.3",
     "deepmerge": "^2.0.1",
     "gl": "^4.0.4",
+    "karma": "^2.0.0",
     "kiwi.glsl": "^0.1.6",
-    "rollup": "^0.55.5",
+    "mocha": "^5.0.1",
+    "rollup": "^0.56.2",
     "rollup-plugin-babel": "^3.0.3",
-    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-commonjs": "^8.3.0",
     "rollup-plugin-multidest": "^1.0.0",
-    "rollup-plugin-node-resolve": "^3.0.2",
-    "three": "^0.89.0"
+    "rollup-plugin-node-resolve": "^3.0.3",
+    "three": "^0.90.0"
   },
   "dependencies": {}
 }

@@ -28,11 +28,11 @@ const CHACHE = {
     /**
      * store FRAMEBUFFER
      */
-    FRAMEBUFFER:{},
+    FRAMEBUFFER: {},
     /**
      * store RENDERBUFFER
      */
-    RENDERBUFFER:{},
+    RENDERBUFFER: {},
     /**
      * store uinform
      */
@@ -52,14 +52,42 @@ class Actuator {
          * @type {WebGLRenderingContext}
          */
         this._gl = null;
+        /**
+         * @type {Boolean}
+         */
+        this._debug = false;
+        /**
+         * debug logger
+         * @type {Array}
+         */
+        this._logger = [];
     }
     /**
      * 
-     * @param {WebGLRenderingContext} gl 
+     * @param {WebGLRenderingContext} v
      */
-    setGl(v) {
+    apply(v) {
         this._gl = v;
         this.play();
+    }
+    /**
+     * get the excuted commands
+     */
+    get logger() {
+        return this._logger;
+    }
+    /**
+     * 
+     */
+    get debug() {
+        return this._debug;
+    }
+    /**
+     * @param {Boolean} v
+     */
+    set debug(v) {
+        this._debug = v;
+        !v ? this._logger = [] : null;
     }
     /**
      * 执行
@@ -96,6 +124,8 @@ class Actuator {
                 else {
                     gl[opName].apply(gl, record.args);
                 }
+                //debug logger
+                this._debug ? this._logger.push(opName) : null;
                 //next record
                 record = this._records.shift();
             }

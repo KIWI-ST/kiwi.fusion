@@ -1525,7 +1525,8 @@ var Recorder = function () {
       return [record].concat(reocrds.splice(0, len));
     }
     /** 
-     * 将现有记录转化成操作，与gl指令无关
+     * convert to commands collection which not just webgl operation
+     * makes recorder as a general logger.(such as htmlElement logger)
     */
 
   }, {
@@ -1538,10 +1539,6 @@ var Recorder = function () {
   }]);
   return Recorder;
 }();
-/**
- * 
- */
-
 
 Recorder.instances = {};
 
@@ -12293,109 +12290,145 @@ var GLProgram_1 = GLProgram;
  * Cahce store
  */
 var CHACHE = {
-    /**
-     * store program
-     */
-    PROGRAM: {},
-    /**
-    * store shader
-    */
-    SHADER: {},
-    /**
-    * store texture
-    */
-    TEXTURE: {},
-    /**
-     * store BUFFER
-     */
-    BUFFER: {},
-    /**
-     * store FRAMEBUFFER
-     */
-    FRAMEBUFFER: {},
-    /**
-     * store RENDERBUFFER
-     */
-    RENDERBUFFER: {},
-    /**
-     * store uinform
-     */
-    UNIFOMR: {}
-    /**
-     * @class
-     */
+  /**
+   * store program
+   */
+  PROGRAM: {},
+  /**
+  * store shader
+  */
+  SHADER: {},
+  /**
+  * store texture
+  */
+  TEXTURE: {},
+  /**
+   * store BUFFER
+   */
+  BUFFER: {},
+  /**
+   * store FRAMEBUFFER
+   */
+  FRAMEBUFFER: {},
+  /**
+   * store RENDERBUFFER
+   */
+  RENDERBUFFER: {},
+  /**
+   * store uinform
+   */
+  UNIFOMR: {}
+  /**
+   * @class
+   */
 };
 var Actuator = function () {
-    function Actuator() {
-        classCallCheck(this, Actuator);
+  function Actuator() {
+    classCallCheck(this, Actuator);
 
-        /**
-         * @type {Array}
-         */
-        this._records = [];
-        /**
-         * @type {WebGLRenderingContext}
-         */
-        this._gl = null;
+    /**
+     * @type {Array}
+     */
+    this._records = [];
+    /**
+     * @type {WebGLRenderingContext}
+     */
+    this._gl = null;
+    /**
+     * @type {Boolean}
+     */
+    this._debug = false;
+    /**
+     * debug logger
+     * @type {Array}
+     */
+    this._logger = [];
+  }
+  /**
+   * 
+   * @param {WebGLRenderingContext} v
+   */
+
+
+  createClass(Actuator, [{
+    key: 'apply',
+    value: function apply(v) {
+      this._gl = v;
+      this.play();
+    }
+    /**
+     * get the excuted commands
+     */
+
+  }, {
+    key: 'play',
+
+    /**
+     * 执行
+     * @param {Array} records 
+     */
+    value: function play() {
+      var records = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+      this._records = this._records.concat(records);
+      var gl = this._gl;
+      if (gl) {
+        var record = this._records.shift();
+        while (record) {
+          var opName = record.opName,
+              encrypt = Encrypt[opName] || {};
+          //replace the reference object
+          if (encrypt.replace > 0) {
+            var refObjects = {};
+            for (var key in record.ptMapIndex) {
+              var target = record.ptMapIndex[key],
+                  ptIndex = target.index,
+                  ptName = target.id,
+                  cacheName = target.prefix,
+                  refObject = CHACHE[cacheName][ptName];
+              refObjects[ptIndex] = refObject;
+            }
+            record.replace(refObjects);
+          }
+          //if need to return and cache,
+          if (encrypt.return) {
+            // case of uniform returned is not string
+            var returnId = isString_1(record.returnId) ? record.returnId : stamp_1(record.returnId),
+                returanIdPrefix = record.returanIdPrefix;
+            CHACHE[returanIdPrefix][returnId] = gl[opName].apply(gl, record.args);
+          } else {
+            gl[opName].apply(gl, record.args);
+          }
+          //debug logger
+          this._debug ? this._logger.push(opName) : null;
+          //next record
+          record = this._records.shift();
+        }
+      }
+    }
+  }, {
+    key: 'logger',
+    get: function get$$1() {
+      return this._logger;
     }
     /**
      * 
-     * @param {WebGLRenderingContext} gl 
      */
 
-
-    createClass(Actuator, [{
-        key: 'setGl',
-        value: function setGl(v) {
-            this._gl = v;
-            this.play();
-        }
-        /**
-         * 执行
-         * @param {Array} records 
-         */
-
-    }, {
-        key: 'play',
-        value: function play() {
-            var records = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-
-            this._records = this._records.concat(records);
-            var gl = this._gl;
-            if (gl) {
-                var record = this._records.shift();
-                while (record) {
-                    var opName = record.opName,
-                        encrypt = Encrypt[opName] || {};
-                    //replace the reference object
-                    if (encrypt.replace > 0) {
-                        var refObjects = {};
-                        for (var key in record.ptMapIndex) {
-                            var target = record.ptMapIndex[key],
-                                ptIndex = target.index,
-                                ptName = target.id,
-                                cacheName = target.prefix,
-                                refObject = CHACHE[cacheName][ptName];
-                            refObjects[ptIndex] = refObject;
-                        }
-                        record.replace(refObjects);
-                    }
-                    //if need to return and cache,
-                    if (encrypt.return) {
-                        // case of uniform returned is not string
-                        var returnId = isString_1(record.returnId) ? record.returnId : stamp_1(record.returnId),
-                            returanIdPrefix = record.returanIdPrefix;
-                        CHACHE[returanIdPrefix][returnId] = gl[opName].apply(gl, record.args);
-                    } else {
-                        gl[opName].apply(gl, record.args);
-                    }
-                    //next record
-                    record = this._records.shift();
-                }
-            }
-        }
-    }]);
-    return Actuator;
+  }, {
+    key: 'debug',
+    get: function get$$1() {
+      return this._debug;
+    }
+    /**
+     * @param {Boolean} v
+     */
+    ,
+    set: function set$$1(v) {
+      this._debug = v;
+    }
+  }]);
+  return Actuator;
 }();
 /**
  * instance of Actuator
@@ -12550,10 +12583,10 @@ var GLContext = function (_Dispose) {
             this._gl = gl;
             this._glLimits._include();
             this._glExtension._include();
-            //替换绘制实体
-            Actuator_1.setGl(gl);
+            Actuator_1.apply(gl);
         }
         /**
+         * get the version of webgl
          * @returns {String} 'webgl' or 'webgl2'
          */
 
@@ -12567,7 +12600,6 @@ var GLContext = function (_Dispose) {
         value: function createShader(type) {
             var glShader = new GLShader_1(type, this),
                 record = new Record_1('createShader', type);
-            //createShader 操作必需返回值
             record.setReturnId(glShader.id);
             this._recorder.increase(record);
             return glShader;
@@ -12603,7 +12635,7 @@ var GLContext = function (_Dispose) {
         }
         /**
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createProgram
-         * 创建program对象
+         * @returns {GLProgram}
          */
 
     }, {
@@ -12617,6 +12649,7 @@ var GLContext = function (_Dispose) {
         }
         /**
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createProgram
+         * @returns {GLBuffer}
          */
 
     }, {
@@ -12630,6 +12663,7 @@ var GLContext = function (_Dispose) {
         }
         /**
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createFramebuffer
+         * @returns {GLFramebuffer}
          */
 
     }, {
@@ -12641,6 +12675,11 @@ var GLContext = function (_Dispose) {
             this._recorder.increase(record);
             return glFramebuffer;
         }
+        /** 
+         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createRenderbuffer
+         * @returns {GLRenderbuffer}
+         */
+
     }, {
         key: 'createRenderbuffer',
         value: function createRenderbuffer() {
@@ -12652,6 +12691,7 @@ var GLContext = function (_Dispose) {
         }
         /**
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createTexture
+         * @returns {GLTexture}
          */
 
     }, {
@@ -12801,7 +12841,6 @@ var GLContext = function (_Dispose) {
             }
         }
         /**
-         * 
          * @param {GLProgram} program 
          */
 
@@ -12838,11 +12877,8 @@ var GLContext = function (_Dispose) {
             return glLimits[pname];
         }
         /**
-         * 特别的方法
+         * turning function
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawArrays
-         * @param {*} mode 
-         * @param {*} first 
-         * @param {*} count 
          */
 
     }, {
@@ -12854,12 +12890,8 @@ var GLContext = function (_Dispose) {
             Actuator_1.play(this._recorder.toInstruction(programId));
         }
         /**
-         * 特别的方法
+         * turning function
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawElements
-         * @param {*} mode 
-         * @param {*} count 
-         * @param {*} type 
-         * @param {*} offset 
          */
 
     }, {
@@ -12891,7 +12923,7 @@ var GLContext = function (_Dispose) {
             return this._renderType;
         }
         /**
-         * 
+         * get webglrendercontext
          * @returns {WebGLRenderingContext}
          */
 
@@ -12899,6 +12931,16 @@ var GLContext = function (_Dispose) {
         key: 'gl',
         get: function get$$1() {
             return this._gl;
+        }
+        /**
+         * get glcontext's recorder
+         * @returns {Recorder}
+         */
+
+    }, {
+        key: 'recorder',
+        get: function get$$1() {
+            return this._recorder;
         }
     }]);
     return GLContext;
@@ -12929,7 +12971,7 @@ var GLCanvas = function (_Dispose) {
    * 
    * @param {String} id the real htmlCanvasElement id 
    * @param {Object} [options]
-   * @param {Object} [options.mock]
+   * @param {HtmlMock} [options.mock]
    */
   function GLCanvas(id) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -12993,16 +13035,14 @@ var GLCanvas = function (_Dispose) {
       if (!mock) return;
       var mockList = mock.mockList;
       mockList.forEach(function (key) {
-        if (!_this2.hasOwnProperty(key) && !_this2[key])
-          //1.function
-          if (!mock.isAttribute(key)) _this2[key] = function () {
-            for (var _len = arguments.length, rest = Array(_len), _key = 0; _key < _len; _key++) {
-              rest[_key] = arguments[_key];
-            }
+        if (!_this2.hasOwnProperty(key) && !_this2[key]) if (!mock.isAttribute(key)) _this2[key] = function () {
+          for (var _len = arguments.length, rest = Array(_len), _key = 0; _key < _len; _key++) {
+            rest[_key] = arguments[_key];
+          }
 
-            var element = mock.element;
-            return element[key].apply(element, rest);
-          };else _this2[key] = mock.element[key];
+          var element = mock.element;
+          return element[key].apply(element, rest);
+        };else _this2[key] = mock.element[key];
       });
     }
     /**
@@ -13145,13 +13185,13 @@ var attribute = {
  * @class
  */
 
-var Mock = function () {
+var HtmlMock = function () {
     /**
      * 
      * @param {HtmlCanvasElement} element 
      */
-    function Mock(element, mockList) {
-        classCallCheck(this, Mock);
+    function HtmlMock(element, mockList) {
+        classCallCheck(this, HtmlMock);
 
         /**
          * @type {HtmlCanvasElement}
@@ -13167,7 +13207,7 @@ var Mock = function () {
      */
 
 
-    createClass(Mock, [{
+    createClass(HtmlMock, [{
         key: 'isAttribute',
         value: function isAttribute(name) {
             return attribute[name] === 1;
@@ -13190,25 +13230,49 @@ var Mock = function () {
             return this._element;
         }
     }]);
-    return Mock;
+    return HtmlMock;
 }();
 
-var Mock_1 = Mock;
+var HtmlMock_1 = HtmlMock;
 
 var init = {
-    Mock: Mock_1,
-    gl: {
-        GLCanvas: GLCanvas_1,
-        GLContext: GLContext_1
+  gl: {
+    /**
+     * mock html element functions and attributes
+     */
+    HtmlMock: HtmlMock_1,
+    /**
+     * virtual HtmlCanvasElement
+     */
+    GLCanvas: GLCanvas_1,
+    /**
+     * debug settings
+     */
+    Debug: {
+      /**
+       * enable debug logger
+       */
+      Enable: function Enable() {
+        Actuator_1.debug = true;
+      },
+      /**
+       * disable debug logger
+       */
+      Disable: function Disable() {
+        Actuator_1.debug = false;
+      },
+      /**
+       * executed commands
+       */
+      logger: Actuator_1.logger
     }
+  }
 };
 
-var init_1 = init.Mock;
-var init_2 = init.gl;
+var init_1 = init.gl;
 
 exports['default'] = init;
-exports.Mock = init_1;
-exports.gl = init_2;
+exports.gl = init_1;
 
 return exports;
 
