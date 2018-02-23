@@ -7,7 +7,7 @@
 [3D](http://139.129.7.130/kiwi.gl/example/kiwi.gl.3d.html)  
 [three](http://139.129.7.130/kiwi.gl/example/kiwi.gl.three.html)  
 [claygl](http://139.129.7.130/kiwi.gl/example/kiwi.gl.clay.html)  
-[three&claygl](http://139.129.7.130/kiwi.gl/example/kiwi.gl.three.clay.html)
+[three&claygl](http://139.129.7.130/kiwi.gl/example/kiwi.gl.three.claygl.html)
 ### install ###
 ```javascript
 npm install kiwi.gl 
