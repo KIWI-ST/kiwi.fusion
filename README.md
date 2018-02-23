@@ -1,9 +1,13 @@
 # kiwi.gl
 [![Build Status](https://travis-ci.org/axmand/kiwi.gl.svg?branch=master)](https://travis-ci.org/axmand/kiwi.gl)
-[![codecov](https://codecov.io/gh/axmand/kiwi.gl/branch/master/graph/badge.svg)](https://codecov.io/gh/axmand/kiwi.gl)
+<!-- [![codecov](https://codecov.io/gh/axmand/kiwi.gl/branch/master/graph/badge.svg)](https://codecov.io/gh/axmand/kiwi.gl) -->
 [![npm version](https://badge.fury.io/js/kiwi.gl.svg)](https://badge.fury.io/js/kiwi.gl)
-
 >a virtual webgl running context which can mix thirdly webgl library gl commands togother,include three.js,qtek and so on.
+### example ###
+(3D)[http://139.129.7.130/kiwi.gl/example/kiwi.gl.3d.html]  
+(three)[http://139.129.7.130/kiwi.gl/example/kiwi.gl.three.html]  
+(claygl)[http://139.129.7.130/kiwi.gl/example/kiwi.gl.clay.html]  
+(three&claygl)[http://139.129.7.130/kiwi.gl/example/kiwi.gl.three.clay.html]
 ### install ###
 ```javascript
 npm install kiwi.gl 
