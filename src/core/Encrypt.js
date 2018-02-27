@@ -57,7 +57,7 @@ const Encrypt_State_Information = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/activeTexture
      */
-    'activeTexture': { code: 0, return: 0, replace: 0},
+    'activeTexture': { code: 0, return: 0, replace: 0 },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/blendColor
      */
@@ -280,9 +280,9 @@ const Encrypt_Renderbuffers = {
 };
 
 const Encrypt_Textures = {
-        /**
-     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bindTexture
-     */
+    /**
+ * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bindTexture
+ */
     'bindTexture': { code: 0, return: 0, replace: 1, ptIndex: [1] },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/compressedTexImage2D
@@ -360,11 +360,11 @@ const Encrypt_Programs_And_Shaders = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/deleteProgram
      */
-    'deleteProgram': { code: 0, return: 0, replace: 1, ptIndex:[0] },
+    'deleteProgram': { code: 0, return: 0, replace: 1, ptIndex: [0] },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/deleteShader
      */
-    'deleteShader': { code: 0, return: 0, replace: 1, ptIndex:[0] },
+    'deleteShader': { code: 0, return: 0, replace: 1, ptIndex: [0] },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/detachShader
      */
@@ -448,7 +448,7 @@ const Encrypt_Uniforms_And_Attributes = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getUniformLocation
      */
-    'getUniformLocation':{ code: 0, return: 1, replace: 1, ptIndex: [0] },
+    'getUniformLocation': { code: 0, return: 1, replace: 1, ptIndex: [0] },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getVertexAttrib
      */
@@ -531,6 +531,28 @@ const Encrypt_Working_With_Extensions = {
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getExtension
      */
     'getExtension': { code: 0, return: 1, replace: 0 },
+}
+
+/** 
+ * only in webgl2
+*/
+const Experimental_Encrypt_Vertex_Array_Objects = {
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/createVertexArray
+     */
+    'createVertexArray': { code: 0, return: 1, replace: 0 },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/deleteVertexArray
+     */
+    'deleteVertexArray': { code: 0, return: 0, replace: 1, ptIndex: [0] },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/isVertexArray
+     */
+    'isVertexArray': { code: 0, return: 0, replace: 1, ptIndex: [0] },
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/bindVertexArray
+     */
+    'bindVertexArray': { code: 0, return: 0, replace: 1, ptIndex: [0] }
 }
 
 module.exports = merge({},

@@ -8,7 +8,7 @@
     "url": "git+https://github.com/axmand/kiwi.gl.git"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "mocha -u tdd --timeout 999999 --colors ./test/**/*.spec.js",
     "compile": "rollup -c",
     "prepublish": "npm run compile"
   },

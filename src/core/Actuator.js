@@ -37,6 +37,10 @@ const CHACHE = {
      * store uinform
      */
     UNIFOMR: {},
+    /**
+     * store vao
+     */
+    VERTEXARRAYOBJRCT:{},
 }
 /**
  * @class

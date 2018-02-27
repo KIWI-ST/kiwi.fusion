@@ -15,6 +15,7 @@ const GLLimits = require('./GLLimits'),
     GLBuffer = require('./GLBuffer'),
     GLFramebuffer = require('./GLFramebuffer'),
     GLRenderbuffer = require('./GLRenderbuffer'),
+    GLVertexArray = require('./GLVertexArray'),
     GLTexture = require('./GLTexture'),
     GLProgram = require('./GLProgram');
 /**
@@ -224,6 +225,18 @@ class GLContext extends Dispose {
         record.setReturnId(glRenderbuffer.id);
         this._recorder.increase(record);
         return glRenderbuffer;
+    }
+    /** 
+     * needs ext 'OES_vertex_array_object' support
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLVertexArrayObject
+     * @returns {GL}
+    */
+    createVertexArray(){
+        const glVao = new GLVertexArray(this),
+            record = new Record('createVertexArray');
+        record.setReturnId(glVao.id);
+        this._recorder.increase(record);
+        return glVao;
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createTexture

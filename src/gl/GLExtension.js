@@ -2,6 +2,9 @@
  * management of GLExtension
  * @author yellow date 2017/6/15
  */
+const browser = require('./../utils/browser');
+
+
 const GL_STANDEXTENSIONS = {
     standardDerivatives: ['OES_standard_derivatives'],
     elementIndexUint: ['OES_element_index_uint'],
@@ -13,18 +16,18 @@ const GL_STANDEXTENSIONS = {
     pvrtc: ['WEBGL_compressed_texture_pvrtc', 'WEBKIT_WEBGL_compressed_texture_pvrtc'],
     etc1: ['WEBGL_compressed_texture_etc1'],
     textureFilterAnisotropic: ['EXT_texture_filter_anisotropic', 'MOZ_EXT_texture_filter_anisotropic', 'WEBKIT_EXT_texture_filter_anisotropic'],
-    vertexArrayObject:['OES_vertex_array_object','MOZ_OES_vertex_array_object','WEBKIT_OES_vertex_array_object'],
-    angleInstancedArrays:['ANGLE_instanced_arrays']
+    vertexArrayObject: ['OES_vertex_array_object', 'MOZ_OES_vertex_array_object', 'WEBKIT_OES_vertex_array_object'],
+    angleInstancedArrays: ['ANGLE_instanced_arrays']
 };
 /**
  * @class
  */
-class GLExtension{
+class GLExtension {
     /**
      * 
      * @param {GLContext} glContext 
      */
-    constructor(glContext){
+    constructor(glContext) {
         /**
          * quote of GLContext instance
          */
@@ -38,7 +41,7 @@ class GLExtension{
     /**
      * rebuild
      */
-    _include(){
+    _include() {
         for (var key in GL_STANDEXTENSIONS) {
             if (GL_STANDEXTENSIONS.hasOwnProperty(key)) {
                 let extensionName = GL_STANDEXTENSIONS[key],
@@ -48,10 +51,10 @@ class GLExtension{
             }
         }
     }
-     /**
-     * 
-     * @param {String[]} extNames 
-     */
+    /**
+    * 
+    * @param {String[]} extNames 
+    */
     getExtension(...extNames) {
         const gl = this._glContext.gl,
             names = [].concat(...extNames),
