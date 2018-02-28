@@ -384,6 +384,18 @@ class GLContext extends Dispose {
         return glLimits[pname];
     }
     /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clear
+     */
+    clear(mask) {
+        //}{hack igonre 'screen clearing operations'
+        //1.GLConstants.COLOR_BUFFER_BIT|GLConstants.DEPTH_BUFFER_BIT|GLConstants.STENCIL_BUFFER_BIT  = 17664
+        //2.mask alpah !== 0
+        if (mask !== 17664) {
+            const record = new Record('clear', mask);
+            this._recorder.increase(record);
+        }
+    }
+    /**
      * turning function
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawArrays
      */
@@ -403,19 +415,6 @@ class GLContext extends Dispose {
         this._recorder.increase(record);
         actuator.play(this._recorder.toInstruction(programId));
     }
-    /**
-     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clear
-     */
-    clear(mask) {
-        //}{hack igonre 'screen clearing operations'
-        //1.GLConstants.COLOR_BUFFER_BIT|GLConstants.DEPTH_BUFFER_BIT|GLConstants.STENCIL_BUFFER_BIT  = 17664
-        //2.mask alpah !== 0
-        if (mask !== 17664) {
-            const record = new Record('clear', mask);
-            this._recorder.increase(record);
-        }
-    }
-
 }
 
 module.exports = GLContext;

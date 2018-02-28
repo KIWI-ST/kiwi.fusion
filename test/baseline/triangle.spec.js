@@ -71,27 +71,27 @@ describe('baseline test', () => {
     });
 
     it('#2.vertex array object', () => {
-        const htmlCavnasElementId = 'mapCanvas';
-        const glCanvas = new kiwi.gl.GLCanvas(htmlCavnasElementId);
-        const gl = glCanvas.getContext('webgl');
-        //shader and program
-        const glShader1 = gl.createShader(gl.VERTEX_SHADER);
-        const glShader2 = gl.createShader(gl.FRAGMENT_SHADER);
-        gl.shaderSource(glShader1, common.base_vs);
-        gl.shaderSource(glShader2, common.base_fs);
-        gl.compileShader(glShader1);
-        gl.compileShader(glShader2);
-        const glProgram = gl.createProgram();
-        gl.attachShader(glProgram, glShader1);
-        gl.attachShader(glProgram, glShader2);
-        gl.linkProgram(glProgram);
-        /** 
-         * vao needs extension support
-         * ext: OES_vertex_array_object
-         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLVertexArrayObject
-        */
-        const vao = gl.createVertexArray();
-        gl.bind
-        gl.bindBuffer(GLConstants.ARRAY_BUFFER,)
+        // const htmlCavnasElementId = 'mapCanvas';
+        // const glCanvas = new kiwi.gl.GLCanvas(htmlCavnasElementId);
+        // const gl = glCanvas.getContext('webgl');
+        // //shader and program
+        // const glShader1 = gl.createShader(gl.VERTEX_SHADER);
+        // const glShader2 = gl.createShader(gl.FRAGMENT_SHADER);
+        // gl.shaderSource(glShader1, common.base_vs);
+        // gl.shaderSource(glShader2, common.base_fs);
+        // gl.compileShader(glShader1);
+        // gl.compileShader(glShader2);
+        // const glProgram = gl.createProgram();
+        // gl.attachShader(glProgram, glShader1);
+        // gl.attachShader(glProgram, glShader2);
+        // gl.linkProgram(glProgram);
+        // /** 
+        //  * vao needs extension support
+        //  * ext: OES_vertex_array_object
+        //  * https://developer.mozilla.org/en-US/docs/Web/API/WebGLVertexArrayObject
+        // */
+        // const vao = gl.createVertexArray();
+        // gl.bind
+        // gl.bindBuffer(GLConstants.ARRAY_BUFFER,)
     });
 });

@@ -2,9 +2,10 @@
  * @author yellow date 2018/1/4
  */
 const Record = require('./Record');
-
+/** 
+ * 
+*/
 const Encrypt = require('./Encrypt');
-
 /**
  * @class
  */
@@ -50,7 +51,7 @@ class Recorder {
             list = this._records.splice(0, len);
         return list;
     }
-    
+
 }
 
 Recorder.instances = {};

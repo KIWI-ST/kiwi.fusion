@@ -21,5 +21,4 @@ class GLBuffer extends Dispose{
 
 }
 
-
 module.exports = GLBuffer;
