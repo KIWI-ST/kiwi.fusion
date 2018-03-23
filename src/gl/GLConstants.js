@@ -318,8 +318,25 @@ const GLConstants = {
     TEXTURE_CUBE_MAP_NEGATIVE_Z: 0x851A,
     MAX_CUBE_MAP_TEXTURE_SIZE: 0x851C,
     // TEXTURE0 - 31 0x84C0 - 0x84DF A texture unit.
-    TEXTURE0: 0x84C0, // A texture unit.
-    ACTIVE_TEXTURE: 0x84E0, // The current active texture unit.
+    TEXTURE0:0x84C0, // A texture unit.
+    TEXTURE1:0x84C1,
+    TEXTURE2:0x84C2,
+    TEXTURE3:0x84C3,
+    TEXTURE4:0x84C4,
+    TEXTURE5:0x84C5,
+    TEXTURE6:0x84C6,
+    TEXTURE7:0x84C7,
+    TEXTURE8:0x84C8,
+    TEXTURE9:0x84C9,
+    TEXTURE10:0x84CA,
+    TEXTURE11:0x84CB,
+    TEXTURE12:0x84CC,
+    TEXTURE13:0x84CD,
+    TEXTURE14:0x84CE,
+    TEXTURE15:0x84CF,
+    TEXTURE16:0x84D0,
+    // The current active texture unit.
+    ACTIVE_TEXTURE: 0x84E0, 
     REPEAT: 0x2901,
     CLAMP_TO_EDGE: 0x812F,
     MIRRORED_REPEAT: 0x8370,
