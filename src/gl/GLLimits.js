@@ -111,19 +111,16 @@ class GLLimits {
      * 
      * @param {GLContext} glContext 
      */
-    constructor(glContext) {
+    constructor(glContext = { renderType: 'webgl' }) {
         this._glContext = glContext;
         this._type = glContext.renderType;
         this._indexs = [];
         this._map(_polyfill);
     }
     /**
-     * will be call while change or set WebGLRenderingContext
+     * 
+     * @param {*} mapObject 
      */
-    _include() {
-
-    }
-
     _map(mapObject) {
         const type = this._type;
         for (const key in mapObject) {
@@ -134,7 +131,17 @@ class GLLimits {
             }
         }
     }
-
+}
+/**
+ * 
+ */
+const glLimits = new GLLimits();
+/**
+ * get unique glimits instance
+ * @function
+ */
+GLLimits.getInstance = function () {
+    return glLimits;
 }
 
 module.exports = GLLimits;
