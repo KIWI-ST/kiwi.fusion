@@ -53,11 +53,12 @@ class GLExtension {
      */
     _include() {
         //map exist
-        const extension = this.extension;
+        const extension = this._extension;
         const gl = this._glContext.gl;
         for (var key in extension) {
             if (extension.hasOwnProperty(key)) {
-                const ext = extension[key].useExtension(gl, key);
+                let ext = extension[key];
+                ext = ext ? ext.useExtension(gl, key) : null;
                 this[key] = ext ? ext : this[key];
             }
         }

@@ -2500,11 +2500,20 @@ var GLVertexAttrib = function () {
     this.cached = [this.size, this.type, this.normalized, this.stride, this.offset].join(":");
   }
   /**
-   * enable attrib
+   * recache
    */
 
 
   createClass(GLVertexAttrib, [{
+    key: 'recache',
+    value: function recache() {
+      this.cached = [this.size, this.type, this.normalized, this.stride, this.offset].join(":");
+    }
+    /**
+     * enable attrib
+     */
+
+  }, {
     key: 'enable',
     value: function enable() {
       this.enable = true;
@@ -2775,36 +2784,9 @@ var Extension_1 = Extension;
  */
 
 /**
- * @class
- */
-
-var VertexAttrib = function () {
-    function VertexAttrib() {
-        classCallCheck(this, VertexAttrib);
-
-        this.enabled = false;
-        this.buffer = null;
-        this.size = 4;
-        this.type = GLConstants_1.FLOAT;
-        this.normalized = false;
-        this.stride = 16;
-        this.offset = 0;
-        this.cached = [this.size, this.type, this.normalized, this.stride, this.offset].join(":");
-    }
-
-    createClass(VertexAttrib, [{
-        key: 'recache',
-        value: function recache() {
-            this.cached = [this.size, this.type, this.normalized, this.stride, this.offset].join(":");
-        }
-    }]);
-    return VertexAttrib;
-}();
-/**
  * vao object
  * @class
  */
-
 
 var WebGLVertexArrayObjectOES = function () {
     function WebGLVertexArrayObjectOES(ext) {
@@ -2825,7 +2807,7 @@ var WebGLVertexArrayObjectOES = function () {
         value: function _initVertexAttrib() {
             var attribs = this.attribs;
             for (var n = 0, len = attribs.length; n < len; n++) {
-                attribs[n] = new VertexAttrib();
+                attribs[n] = new GLVertexAttrib_1();
             }
         }
     }]);
@@ -3229,11 +3211,12 @@ var GLExtension = function () {
         key: '_include',
         value: function _include() {
             //map exist
-            var extension = this.extension;
+            var extension = this._extension;
             var gl = this._glContext.gl;
             for (var key in extension) {
                 if (extension.hasOwnProperty(key)) {
-                    var ext = extension[key].useExtension(gl, key);
+                    var ext = extension[key];
+                    ext = ext ? ext.useExtension(gl, key) : null;
                     this[key] = ext ? ext : this[key];
                 }
             }

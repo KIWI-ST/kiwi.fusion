@@ -6,25 +6,8 @@
  */
 const Extension = require('./Extension'),
     GLConstants = require('./../GLConstants'),
+    GLVertexAttrib = require('./../GLVertexAttrib'),
     GLLimits = require('./../GLLimits');
-/**
- * @class
- */
-class VertexAttrib {
-    constructor() {
-        this.enabled = false;
-        this.buffer = null;
-        this.size = 4;
-        this.type = GLConstants.FLOAT;
-        this.normalized = false;
-        this.stride = 16;
-        this.offset = 0;
-        this.cached = [this.size, this.type, this.normalized, this.stride, this.offset].join(":");
-    }
-    recache(){
-        this.cached = [this.size, this.type, this.normalized, this.stride, this.offset].join(":");
-    }
-}
 /**
  * vao object
  * @class
@@ -45,7 +28,7 @@ class WebGLVertexArrayObjectOES {
     _initVertexAttrib() {
         const attribs = this.attribs;
         for (let n = 0, len = attribs.length; n < len; n++) {
-            attribs[n] = new VertexAttrib();
+            attribs[n] = new GLVertexAttrib();
         }
     }
 

@@ -44,6 +44,12 @@ class GLVertexAttrib {
         this.cached = [this.size, this.type, this.normalized, this.stride, this.offset].join(":");
     }
     /**
+     * recache
+     */
+    recache(){
+        this.cached = [this.size, this.type, this.normalized, this.stride, this.offset].join(":");
+    }
+    /**
      * enable attrib
      */
     enable() {
