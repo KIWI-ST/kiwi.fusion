@@ -19,6 +19,10 @@ class GLExtension {
      */
     constructor(glContext) {
         /**
+         * @type {Object}
+         */
+        this._useExtensions = {};
+        /**
          * quote of GLContext instance
          */
         this._glContext = glContext;
@@ -38,7 +42,7 @@ class GLExtension {
         /**
          * 
          */
-        this._initExtension();
+        // this._initExtension();
         /**
          * map webgl extension
          */
@@ -149,13 +153,13 @@ class GLExtension {
             extensions2['OES_texture_half_float_linear'] = extensions1['OES_texture_half_float_linear'] = new Extension('OES_texture_half_float_linear', glContext);
         }
         /**
+         * }{debug use OES_vertex_array_object extension
          * https://developer.mozilla.org/en-US/docs/Web/API/OES_vertex_array_object
+         * (browser.firefox && parseInt(browser.firefox) >= 25) || (browser.chrome && parseInt(browser.chrome) >= 47)
          */
-        if ((browser.firefox && parseInt(browser.firefox) >= 25) || (browser.chrome && parseInt(browser.chrome) >= 47)) {
+        if (true) {
             extensions1['OES_vertex_array_object'] = new OES_vertex_array_object('OES_vertex_array_object', glContext);
         }
-        //}{debug
-        extensions1['OES_vertex_array_object'] = new OES_vertex_array_object('OES_vertex_array_object', glContext);
         /**
          * https://developer.mozilla.org/en-US/docs/Web/API/WEBGL_color_buffer_float
          */

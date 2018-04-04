@@ -83,8 +83,8 @@ class OES_vertex_array_object extends Extension {
         /**
          * overwrite
          */
-        this._glContext.getParameter = function(pName){
-            if(pName===GLConstants.VERTEX_ARRAY_BINDING_OES){
+        this._glContext.getParameter = function (pName) {
+            if (pName === GLConstants.VERTEX_ARRAY_BINDING_OES) {
                 if (self.currentVertexArrayObject == self.defaultVertexArrayObject) {
                     return null;
                 } else {
@@ -96,7 +96,7 @@ class OES_vertex_array_object extends Extension {
         /**
          * 
          */
-        this._glContext.enableVertexAttribArray = function(pName){
+        this._glContext.enableVertexAttribArray = function (pName) {
             var vao = self.currentVertexArrayObject;
             vao.maxAttrib = Math.max(vao.maxAttrib, index);
             var attrib = vao.attribs[index];
@@ -119,10 +119,10 @@ class OES_vertex_array_object extends Extension {
          */
         this._glContext.bindBuffer = function bindBuffer(target, buffer) {
             switch (target) {
-                case gl.ARRAY_BUFFER:
+                case GLConstants.ARRAY_BUFFER:
                     self.currentArrayBuffer = buffer;
                     break;
-                case gl.ELEMENT_ARRAY_BUFFER:
+                case GLConstants.ELEMENT_ARRAY_BUFFER:
                     self.currentVertexArrayObject.elementArrayBuffer = buffer;
                     break;
             }
@@ -137,20 +137,20 @@ class OES_vertex_array_object extends Extension {
             var vao = self.currentVertexArrayObject;
             var attrib = vao.attribs[index];
             switch (pname) {
-                case gl.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
+                case GLConstants.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
                     return attrib.buffer;
-                case gl.VERTEX_ATTRIB_ARRAY_ENABLED:
+                case GLConstants.VERTEX_ATTRIB_ARRAY_ENABLED:
                     return attrib.enabled;
-                case gl.VERTEX_ATTRIB_ARRAY_SIZE:
+                case GLConstants.VERTEX_ATTRIB_ARRAY_SIZE:
                     return attrib.size;
-                case gl.VERTEX_ATTRIB_ARRAY_STRIDE:
+                case GLConstants.VERTEX_ATTRIB_ARRAY_STRIDE:
                     return attrib.stride;
-                case gl.VERTEX_ATTRIB_ARRAY_TYPE:
+                case GLConstants.VERTEX_ATTRIB_ARRAY_TYPE:
                     return attrib.type;
-                case gl.VERTEX_ATTRIB_ARRAY_NORMALIZED:
+                case GLConstants.VERTEX_ATTRIB_ARRAY_NORMALIZED:
                     return attrib.normalized;
                 default:
-                    return original.getVertexAttrib.apply(this, arguments);
+                    return self.original.getVertexAttrib.apply(this, arguments);
             }
         };
         /**
@@ -184,10 +184,10 @@ class OES_vertex_array_object extends Extension {
         /**
          * 
          */
-        gl.canvas.addEventListener('webglcontextrestored', function() {
-            log("OESVertexArrayObject emulation library context restored");
-            self.reset_();
-        }, true);
+        // gl.canvas.addEventListener('webglcontextrestored', function () {
+        //     log("OESVertexArrayObject emulation library context restored");
+        //     self.reset_();
+        // }, true);
         /**
          * reset all default vertex array object
          */
@@ -246,26 +246,52 @@ class OES_vertex_array_object extends Extension {
      * @param {WebGLVertexArrayObjectOES} arrayObject 
      */
     bindVertexArrayOES(arrayObject) {
-        //绑定已销毁的对象，提示错误
+        var gl = this.gl;
         if (arrayObject && !arrayObject.isAlive) {
-            throw new Error("bindVertexArrayOES: attempt to bind deleted arrayObject");
+            synthesizeGLError(gl.INVALID_OPERATION, "bindVertexArrayOES: attempt to bind deleted arrayObject");
             return;
         }
-        //
-        const oldVao = this.currentVertexArrayObject;
+        var original = this.original;
+        var oldVAO = this.currentVertexArrayObject;
         this.currentVertexArrayObject = arrayObject || this.defaultVertexArrayObject;
         this.currentVertexArrayObject.hasBeenBound = true;
-        const newVao = this.currentVertexArrayObject;
-        //
-        if (oldVao === newVao) {
+        var newVAO = this.currentVertexArrayObject;
+        if (oldVAO == newVAO) {
             return;
         }
-        //
-        if (!oldVao || newVao.elementArrayBuffer != oldVao.elementArrayBuffer) {
-
+        if (!oldVAO || newVAO.elementArrayBuffer != oldVAO.elementArrayBuffer) {
+            original.bindBuffer.call(gl, gl.ELEMENT_ARRAY_BUFFER, newVAO.elementArrayBuffer);
         }
+        var currentBinding = this.currentArrayBuffer;
+        var maxAttrib = Math.max(oldVAO ? oldVAO.maxAttrib : 0, newVAO.maxAttrib);
+        for (var n = 0; n <= maxAttrib; n++) {
+            var attrib = newVAO.attribs[n];
+            var oldAttrib = oldVAO ? oldVAO.attribs[n] : null;
+            if (!oldVAO || attrib.enabled != oldAttrib.enabled) {
+                if (attrib.enabled) {
+                    original.enableVertexAttribArray.call(gl, n);
+                } else {
+                    original.disableVertexAttribArray.call(gl, n);
+                }
+            }
+            if (attrib.enabled) {
+                var bufferChanged = false;
+                if (!oldVAO || attrib.buffer != oldAttrib.buffer) {
+                    if (currentBinding != attrib.buffer) {
+                        original.bindBuffer.call(gl, gl.ARRAY_BUFFER, attrib.buffer);
+                        currentBinding = attrib.buffer;
+                    }
+                    bufferChanged = true;
+                }
 
-
+                if (bufferChanged || attrib.cached != oldAttrib.cached) {
+                    original.vertexAttribPointer.call(gl, n, attrib.size, attrib.type, attrib.normalized, attrib.stride, attrib.offset);
+                }
+            }
+        }
+        if (this.currentArrayBuffer != currentBinding) {
+            original.bindBuffer.call(gl, gl.ARRAY_BUFFER, this.currentArrayBuffer);
+        }
     }
 
 }
