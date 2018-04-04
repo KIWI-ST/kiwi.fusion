@@ -21,6 +21,9 @@ class VertexAttrib {
         this.offset = 0;
         this.cached = [this.size, this.type, this.normalized, this.stride, this.offset].join(":");
     }
+    recache(){
+        this.cached = [this.size, this.type, this.normalized, this.stride, this.offset].join(":");
+    }
 }
 /**
  * vao object
@@ -96,12 +99,12 @@ class OES_vertex_array_object extends Extension {
         /**
          * 
          */
-        this._glContext.enableVertexAttribArray = function (pName) {
+        this._glContext.enableVertexAttribArray = function (index) {
             var vao = self.currentVertexArrayObject;
             vao.maxAttrib = Math.max(vao.maxAttrib, index);
             var attrib = vao.attribs[index];
             attrib.enabled = true;
-            return original.enableVertexAttribArray.apply(this, arguments);
+            return self.original.enableVertexAttribArray.apply(this, arguments);
         }
         /**
          * 
@@ -112,7 +115,7 @@ class OES_vertex_array_object extends Extension {
             vao.maxAttrib = Math.max(vao.maxAttrib, index);
             var attrib = vao.attribs[index];
             attrib.enabled = false;
-            return original.disableVertexAttribArray.apply(this, arguments);
+            return self.original.disableVertexAttribArray.apply(this, arguments);
         };
         /**
          * @param
@@ -173,7 +176,7 @@ class OES_vertex_array_object extends Extension {
             attrib.stride = stride;
             attrib.offset = offset;
             attrib.recache();
-            return original.vertexAttribPointer.apply(this, arguments);
+            return self.original.vertexAttribPointer.apply(this, arguments);
         };
         /**
          * 
@@ -246,7 +249,7 @@ class OES_vertex_array_object extends Extension {
      * @param {WebGLVertexArrayObjectOES} arrayObject 
      */
     bindVertexArrayOES(arrayObject) {
-        var gl = this.gl;
+        var gl = this._glContext;
         if (arrayObject && !arrayObject.isAlive) {
             synthesizeGLError(gl.INVALID_OPERATION, "bindVertexArrayOES: attempt to bind deleted arrayObject");
             return;

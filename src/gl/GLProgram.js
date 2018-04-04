@@ -27,14 +27,6 @@ class GLProgram extends Dispose {
          */
         this._glContext = glContext;
         /**
-         * 记录当前binding vertex array
-         */
-        this._buffer_array = {};
-        /**
-         * 
-         */
-        this._attribs = {};
-        /**
          * 映射attribute 和返回值
          */
         this._attributeCache = {};
@@ -42,14 +34,6 @@ class GLProgram extends Dispose {
          * 映射uniforms
          */
         this._uniformCache = {};
-        /**
-         * @type {GLbuffer}
-         */
-        this._currently_buffer = null;
-        /**
-         * @type {Number}
-         */
-        this._currently_position = null;
         /**
          * @type {GLShader}
          */
@@ -142,28 +126,6 @@ class GLProgram extends Dispose {
         this._uniformCache[pname] = this._uniformCache[pname] || uniformLocation;
         return this._uniformCache[pname];
     }
-    /**
-     * @param {GLuint} index 
-     */
-    enableVertexAttribArray(index) {
-        this._buffer_array[index] = this._attribs[index];
-    }
-    /**
-     * @param {GLuint} index 
-     */
-    disableVertexAttribArray(index) {
-        this._buffer_array[index] = null;
-    }
-    /**
-     * 
-     * @param {*} index 
-     * @param {*} glAttrib 
-     */
-    vertexAttribPointer(index, glAttrib) {
-        glAttrib.buffer = this._currently_buffer;
-        this._attribs[index] = glAttrib;
-    }
-
 }
 
 module.exports = GLProgram;

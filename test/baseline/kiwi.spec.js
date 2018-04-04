@@ -34,20 +34,15 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0, 0]), gl.STATIC_DRAW);
 gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
 gl.enableVertexAttribArray(0);
 
-
-
-
 const colors = new Float32Array([
     1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0
 ]);
 var colorBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
-gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 0, 0);
-gl.enableVertexAttribArray(1);
+gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
+gl.enableVertexAttribArray(0);
 
-const sss = gl.getVertexAttrib(0, gl.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING);
+const buffer1 = gl.getVertexAttrib(0, gl.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING);
 
-const sss1 = gl.getVertexAttrib(1, gl.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING);
-
-const sss3 = 0;
+const buffer2 = gl.getVertexAttrib(1, gl.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING);

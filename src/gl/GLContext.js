@@ -38,6 +38,9 @@ class GLContext extends Dispose {
      * @param {Object} [options] 
      */
     constructor(id, renderType, options = {}) {
+        /**
+         * 
+         */
         super(prefix);
         /**
          * @type {String}
@@ -59,6 +62,18 @@ class GLContext extends Dispose {
          * @type {WebGLRenderingContext}
          */
         this._gl = null;
+        /**
+         * @type {GLBuffer}
+         */
+        this._glBuffer = null;
+        /**
+         * index of vertex_buffer 
+         */
+        this._bound_buffer = {};
+        /**
+         * index of attribs
+         */
+        this._attribs = {};
         /**
          * map funciont
          */
@@ -128,7 +143,7 @@ class GLContext extends Dispose {
      */
     _setgl(gl) {
         this._gl = gl;
-        this._glLimits._include();
+        // this._glLimits._include();
         this._glExtension._include();
         actuator.apply(gl);
     }
@@ -161,11 +176,10 @@ class GLContext extends Dispose {
     bindBuffer(target, buffer) {
         //store currently bound buffer
         if (target === GLConstants.ARRAY_BUFFER) {
-            this._glProgram._currently_buffer = buffer;
+            this._glBuffer = buffer;
         }
-        const bufferId = buffer.id,
-            record = new Record('bindBuffer', target, buffer);
-        record.exactIndexByObject(1, bufferId);
+        const record = new Record('bindBuffer', target, buffer);
+        record.exactIndexByObject([1]);
         this._recorder.increase(record);
     }
     /**
@@ -178,19 +192,29 @@ class GLContext extends Dispose {
      * @param {*} offset 
      */
     vertexAttribPointer(index, size, type, normalized, stride, offset) {
-        const glProgram = this._glProgram,
-            glAttrib = new GLVertexAttrib({ size: size, index: index, type: type, stride: stride, offset: offset, normalized: normalized });
-        glProgram.vertexAttribPointer(index, glAttrib);
+        const glAttrib = new GLVertexAttrib({ buffer: this._glBuffer, size: size, index: index, type: type, stride: stride, offset: offset, normalized: normalized });
+        this._attribs[index] = glAttrib;
         const record = new Record('vertexAttribPointer', index, size, type, normalized, stride, offset);
         this._recorder.increase(record);
     }
     /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray
      * @param {GLuint} index 
      */
-    enableVertexAttribArray(index){
-        const glProgram = this._glProgram;
-        glProgram.enableVertexAttribArray(index);
+    enableVertexAttribArray(index) {
+        //active bound
+        this._bound_buffer[index] = this._attribs[index];
         const record = new Record('enableVertexAttribArray', index);
+        this._recorder.increase(record);
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/disableVertexAttribArray
+     * @param {GLunit} index 
+     */
+    disableVertexAttribArray(index) {
+        //turns the vertex attribute off at the given index position
+        this._bound_buffer[index] = this._attribs[index];
+        const record = new Record('disableVertexAttribArray', index);
         this._recorder.increase(record);
     }
     /**
@@ -382,11 +406,11 @@ class GLContext extends Dispose {
      * @param {GLenum} pname 
      */
     getVertexAttrib(index, pname) {
-        const glProgram = this._glProgram;
         if (pname === GLConstants.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING) {
-            const gVertexAttrib = glProgram._buffer_array[index]
+            const gVertexAttrib = this._bound_buffer[index] || {};
             return gVertexAttrib.buffer;
         }
+        return null;
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getActiveUniform

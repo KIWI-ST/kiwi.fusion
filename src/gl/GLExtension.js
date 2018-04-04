@@ -67,9 +67,6 @@ class GLExtension {
      * @param {String} extName 
      */
     getExtension(extName) {
-        //cached extension
-        this._extension = this._renderType === 'webgl' ? extensions1 : extensions2;
-        if (this._extension[extName]||this._extension[extName]===null) return this._extension[extName];
         const glContext = this._glContext,
             extensions1 = this._extension1,
             extensions2 = this._extension2;
@@ -313,6 +310,9 @@ class GLExtension {
                 extensions1[extName] = extensions2[extName] = null;
                 break;
         }
+        //cached extension
+        this._extension = this._renderType === 'webgl' ? extensions1 : extensions2;
+        if (this._extension[extName] || this._extension[extName] === null) return this._extension[extName];
     }
 }
 
