@@ -430,7 +430,7 @@ class GLContext extends Dispose {
      */
     getExtension(name) {
         const glExtension = this._glExtension;
-        return glExtension[name];
+        return glExtension.getExtension(name);
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getParameter
