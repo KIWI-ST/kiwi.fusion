@@ -168,13 +168,6 @@ class OES_vertex_array_object extends Extension {
             gl.instrumentExtension(this, "OES_vertex_array_object");
         }
         /**
-         * 
-         */
-        // gl.canvas.addEventListener('webglcontextrestored', function () {
-        //     log("OESVertexArrayObject emulation library context restored");
-        //     self.reset_();
-        // }, true);
-        /**
          * reset all default vertex array object
          */
         this._reset();
@@ -279,7 +272,6 @@ class OES_vertex_array_object extends Extension {
             original.bindBuffer.call(gl, gl.ARRAY_BUFFER, this.currentArrayBuffer);
         }
     }
-
 }
 
 module.exports = OES_vertex_array_object;

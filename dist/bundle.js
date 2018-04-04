@@ -2956,13 +2956,6 @@ var OES_vertex_array_object = function (_Extension) {
             gl.instrumentExtension(_this, "OES_vertex_array_object");
         }
         /**
-         * 
-         */
-        // gl.canvas.addEventListener('webglcontextrestored', function () {
-        //     log("OESVertexArrayObject emulation library context restored");
-        //     self.reset_();
-        // }, true);
-        /**
          * reset all default vertex array object
          */
         _this._reset();
