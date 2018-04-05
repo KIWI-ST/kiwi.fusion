@@ -13123,7 +13123,7 @@ var GLProgram_1 = GLProgram;
 /**
  * Cahce store
  */
-var CHACHE = {
+var CACHE = {
   /**
    * store program
    */
@@ -13223,7 +13223,7 @@ var Actuator = function () {
                   ptIndex = target.index,
                   ptName = target.id,
                   cacheName = target.prefix,
-                  refObject = CHACHE[cacheName][ptName];
+                  refObject = CACHE[cacheName][ptName];
               refObjects[ptIndex] = refObject;
             }
             record.replace(refObjects);
@@ -13233,7 +13233,7 @@ var Actuator = function () {
             // case of uniform returned is not string
             var returnId = isString_1(record.returnId) ? record.returnId : stamp_1(record.returnId),
                 returanIdPrefix = record.returanIdPrefix;
-            CHACHE[returanIdPrefix][returnId] = gl[opName].apply(gl, record.args);
+            CACHE[returanIdPrefix][returnId] = gl[opName].apply(gl, record.args);
           } else {
             gl[opName].apply(gl, record.args);
           }

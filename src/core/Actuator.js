@@ -8,7 +8,7 @@ const isString = require('./../utils/isString'),
 /**
  * Cahce store
  */
-const CHACHE = {
+const CACHE = {
     /**
      * store program
      */
@@ -113,7 +113,7 @@ class Actuator {
                             ptIndex = target.index,
                             ptName = target.id,
                             cacheName = target.prefix,
-                            refObject = CHACHE[cacheName][ptName];
+                            refObject = CACHE[cacheName][ptName];
                         refObjects[ptIndex] = refObject;
                     }
                     record.replace(refObjects);
@@ -123,7 +123,7 @@ class Actuator {
                     // case of uniform returned is not string
                     const returnId = isString(record.returnId) ? record.returnId : stamp(record.returnId),
                         returanIdPrefix = record.returanIdPrefix;
-                    CHACHE[returanIdPrefix][returnId] = gl[opName].apply(gl, record.args);
+                    CACHE[returanIdPrefix][returnId] = gl[opName].apply(gl, record.args);
                 }
                 else {
                     gl[opName].apply(gl, record.args);
