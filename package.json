@@ -1,6 +1,6 @@
 {
   "name": "kiwi.gl",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "a container for popular webgl liberary.",
   "main": "src/init.js",
   "repository": {
