@@ -13453,13 +13453,26 @@ var GLContext = function (_Dispose) {
          */
 
     }, {
-        key: 'bindBuffer',
+        key: 'useProgram',
 
+        /**
+         * @param {GLProgram} program 
+         */
+        value: function useProgram(program) {
+            var record = new Record_1('useProgram', program);
+            record.exactIndexByValue(0, program.id);
+            this._recorder.increase(record);
+            //store current programId and program
+            this._glProgram = program;
+        }
         /**
          * 
          * @param {GLenum} target 
          * @param {GLBuffer} buffer 
          */
+
+    }, {
+        key: 'bindBuffer',
         value: function bindBuffer(target, buffer) {
             //store currently bound buffer
             if (target === GLConstants_1.ARRAY_BUFFER) {
@@ -13795,17 +13808,34 @@ var GLContext = function (_Dispose) {
             }
         }
         /**
-         * @param {GLProgram} program 
+         * }{debug
+         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/checkFramebufferStatus
+         * @param {GLenum} target 
          */
 
     }, {
-        key: 'useProgram',
-        value: function useProgram(program) {
-            var record = new Record_1('useProgram', program);
-            record.exactIndexByValue(0, program.id);
-            this._recorder.increase(record);
-            //store current programId and program
-            this._glProgram = program;
+        key: 'checkFramebufferStatus',
+        value: function checkFramebufferStatus(target) {
+            return GLConstants_1.FRAMEBUFFER_COMPLETE;
+        }
+        /**
+         * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/getError
+         */
+
+    }, {
+        key: 'getError',
+        value: function getError() {
+            return GLConstants_1.NO_ERROR;
+        }
+        /**
+         * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/getContextAttributes
+         */
+
+    }, {
+        key: 'getContextAttributes',
+        value: function getContextAttributes() {
+            var contextAttributes = this._options;
+            return contextAttributes;
         }
         /**
          * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getExtension
@@ -13949,7 +13979,7 @@ var GLCanvas = function (_Dispose) {
      * store the 'getContext' options
      * @type {Object}
      */
-    _this._contextOptions = {};
+    _this._contextOptions = null;
     /**
      * real html canvas element
      * https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement

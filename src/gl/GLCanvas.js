@@ -55,7 +55,7 @@ class GLCanvas extends Dispose {
          * store the 'getContext' options
          * @type {Object}
          */
-        this._contextOptions = {};
+        this._contextOptions = null;
         /**
          * real html canvas element
          * https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement

@@ -169,6 +169,16 @@ class GLContext extends Dispose {
         return this._recorder;
     }
     /**
+     * @param {GLProgram} program 
+     */
+    useProgram(program) {
+        const record = new Record('useProgram', program);
+        record.exactIndexByValue(0, program.id);
+        this._recorder.increase(record);
+        //store current programId and program
+        this._glProgram = program;
+    }
+    /**
      * 
      * @param {GLenum} target 
      * @param {GLBuffer} buffer 
@@ -439,14 +449,25 @@ class GLContext extends Dispose {
         }
     }
     /**
-     * @param {GLProgram} program 
+     * }{debug
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/checkFramebufferStatus
+     * @param {GLenum} target 
      */
-    useProgram(program) {
-        const record = new Record('useProgram', program);
-        record.exactIndexByValue(0, program.id);
-        this._recorder.increase(record);
-        //store current programId and program
-        this._glProgram = program;
+    checkFramebufferStatus(target){
+        return GLConstants.FRAMEBUFFER_COMPLETE;
+    }
+    /**
+     * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/getError
+     */
+    getError(){
+        return GLConstants.NO_ERROR;
+    }
+    /**
+     * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/getContextAttributes
+     */
+    getContextAttributes(){
+        const contextAttributes = this._options;
+        return contextAttributes;
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getExtension
