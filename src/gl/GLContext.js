@@ -506,7 +506,8 @@ class GLContext extends Dispose {
         const record = new Record('drawArrays', mode, first, count),
             programId = this._glProgram.id;
         this._recorder.increase(record);
-        actuator.play(this._recorder.toInstruction(programId));
+        // actuator.play(this._recorder.toInstruction(programId));
+        actuator.play(this._recorder.toOperation());
     }
     /**
      * turning function
@@ -516,7 +517,8 @@ class GLContext extends Dispose {
         const record = new Record('drawElements', mode, count, type, offset),
             programId = this._glProgram.id;
         this._recorder.increase(record);
-        actuator.play(this._recorder.toInstruction(programId));
+        // actuator.play(this._recorder.toInstruction(programId));
+        actuator.play(this._recorder.toOperation());
     }
 }
 
