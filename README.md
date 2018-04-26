@@ -2,9 +2,9 @@
 [![Build Status](https://travis-ci.org/axmand/kiwi.gl.svg?branch=master)](https://travis-ci.org/axmand/kiwi.gl)
 [![npm version](https://badge.fury.io/js/kiwi.gl.svg)](https://badge.fury.io/js/kiwi.gl)
 <!-- [![codecov](https://codecov.io/gh/axmand/kiwi.gl/branch/master/graph/badge.svg)](https://codecov.io/gh/axmand/kiwi.gl) -->
->a virtual webgl running context which can mix thirdly webgl library gl commands togother,include three.js,qtek and so on.
+>a virtual webgl running context which can mix thirdly webgl library's gl commands togother,include [three.js](https://github.com/mrdoob/three.js),[claygl](https://github.com/pissang/claygl) and so on.
 ### warning ##
->dure to kiwi.glsl,kiwi.gl only support webgl 1.0
+>dure to [kiwi.glsl](https://github.com/axmand/kiwi.glsl),kiwi.gl only support webgl 1.0
 ### example ###
 [3D](http://139.129.7.130/kiwi.gl/example/kiwi.gl.3d.html)  
 [vao](http://139.129.7.130/kiwi.gl/example/kiwi.gl.vao.html)  
@@ -91,7 +91,7 @@ glCanvas2.linkToCanvas(document.getElementById('mapCanvas'));
 ![claygl-1](https://user-images.githubusercontent.com/5127112/36083571-bf0e5c34-0fee-11e8-9ebe-0c991440f216.png)
 > mixture
 ```javascript
-//if virtual canvas link to the same real htmlCanvasElement,these two scene will be painted on same canvas
+//these two scene will be painted on a canvas if virtual canvas linked to the same real htmlCanvasElement
 glCanvas1.linkToCanvas(document.getElementById('mapCanvas'));
 glCanvas2.linkToCanvas(document.getElementById('mapCanvas'));
 ```
