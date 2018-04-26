@@ -101,7 +101,7 @@ class GLProgram extends Dispose {
         let index = 0;
         //unifrom map
         uniforms.forEach(uniform => {
-            const uniformLocation = {};
+            const uniformLocation = { glProgram: this };
             stamp(uniformLocation, prefixUniform);
             uniformCache[uniform.name] = uniformLocation;
         });
@@ -121,7 +121,7 @@ class GLProgram extends Dispose {
      * @param {DOMString} pname 
      */
     getUnifromLocation(pname) {
-        const uniformLocation = {};
+        const uniformLocation = { glProgram: this };
         stamp(uniformLocation, prefixUniform);
         this._uniformCache[pname] = this._uniformCache[pname] || uniformLocation;
         return this._uniformCache[pname];

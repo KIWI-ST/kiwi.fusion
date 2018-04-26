@@ -8,6 +8,7 @@
  * -return 具有返回值的操作,特指需要返回代替索引的操作
  * -replace 需要使用新对象代替引用的操作
  * -ptIndex 替换参数的位置索引
+ * -change 判断当前操作的program环境
  */
 
 const merge = require('./../utils/merge');
@@ -464,28 +465,28 @@ const Encrypt_Uniforms_And_Attributes = {
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniformMatrix
      */
-    'uniformMatrix2fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniformMatrix3fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniformMatrix4fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
+    'uniformMatrix2fv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniformMatrix3fv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniformMatrix4fv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniform
      */
-    'uniform1f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform1fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform1i': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform1iv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform2f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform2fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform2i': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform2iv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform3f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform3fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform3i': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform3iv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform4f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform4fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform4i': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-    'uniform4iv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
+    'uniform1f': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform1fv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform1i': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform1iv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform2f': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform2fv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform2i': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform2iv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform3f': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform3fv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform3i': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform3iv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform4f': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform4fv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform4i': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+    'uniform4iv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttrib
      */

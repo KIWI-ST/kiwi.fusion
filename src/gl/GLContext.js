@@ -122,8 +122,8 @@ class GLContext extends Dispose {
                         }
                     }
                 }
-                //2.2 void and replace 
-                else if (!target.return && target.replace > 0) {
+                //2.2 void and replace ,no change program
+                else if (!target.return && target.replace > 0 && !target.change) {
                     if (!this[key] && !!target) {
                         this[key] = (...rest) => {
                             const record = new Record(key, ...rest),
@@ -133,7 +133,20 @@ class GLContext extends Dispose {
                         }
                     }
                 }
-                //2.3 return(make birdge to origin,should not to be implemented)
+                //2.3 void replace as 1 and need to change program
+                else if (!target.return && target.replace === 1 && target.change === 1) {
+                    if (!this[key] && !!target) {
+                        this[key] = (...rest) => {
+                            const record = new Record(key, ...rest),
+                                index = target.ptIndex,
+                                u = record.args[index[0]];
+                            if (u.glProgram !== this._glProgram) this.useProgram(u.glProgram);
+                            record.exactIndexByObject(index);
+                            recorder.increase(record);
+                        }
+                    }
+                }
+                //2.4 return(make birdge to origin,should not to be implemented)
             }
         }
     }
@@ -146,6 +159,12 @@ class GLContext extends Dispose {
         // this._glLimits._include();
         this._glExtension._include();
         actuator.apply(gl);
+    }
+    /**
+     * reset program to null
+     */
+    _reset() {
+        this._glProgram = null;
     }
     /**
      * get the version of webgl
@@ -453,19 +472,19 @@ class GLContext extends Dispose {
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/checkFramebufferStatus
      * @param {GLenum} target 
      */
-    checkFramebufferStatus(target){
+    checkFramebufferStatus(target) {
         return GLConstants.FRAMEBUFFER_COMPLETE;
     }
     /**
      * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/getError
      */
-    getError(){
+    getError() {
         return GLConstants.NO_ERROR;
     }
     /**
      * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/getContextAttributes
      */
-    getContextAttributes(){
+    getContextAttributes() {
         const contextAttributes = this._options;
         return contextAttributes;
     }
@@ -508,6 +527,7 @@ class GLContext extends Dispose {
         this._recorder.increase(record);
         // actuator.play(this._recorder.toInstruction(programId));
         actuator.play(this._recorder.toOperation());
+        this._reset();
     }
     /**
      * turning function
@@ -519,6 +539,7 @@ class GLContext extends Dispose {
         this._recorder.increase(record);
         // actuator.play(this._recorder.toInstruction(programId));
         actuator.play(this._recorder.toOperation());
+        this._reset();
     }
 }
 

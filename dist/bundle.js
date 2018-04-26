@@ -940,6 +940,7 @@ var kiwi = (function (exports) {
 	 * -return 具有返回值的操作,特指需要返回代替索引的操作
 	 * -replace 需要使用新对象代替引用的操作
 	 * -ptIndex 替换参数的位置索引
+	 * -change 判断当前操作的program环境
 	 */
 
 	var Encrypt_WebGLContext = {
@@ -1394,28 +1395,28 @@ var kiwi = (function (exports) {
 	  /**
 	   * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniformMatrix
 	   */
-	  'uniformMatrix2fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniformMatrix3fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniformMatrix4fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
+	  'uniformMatrix2fv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniformMatrix3fv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniformMatrix4fv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
 	  /**
 	   * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniform
 	   */
-	  'uniform1f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform1fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform1i': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform1iv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform2f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform2fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform2i': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform2iv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform3f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform3fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform3i': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform3iv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform4f': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform4fv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform4i': { code: 0, return: 0, replace: 1, ptIndex: [0] },
-	  'uniform4iv': { code: 0, return: 0, replace: 1, ptIndex: [0] },
+	  'uniform1f': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform1fv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform1i': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform1iv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform2f': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform2fv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform2i': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform2iv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform3f': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform3fv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform3i': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform3iv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform4f': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform4fv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform4i': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
+	  'uniform4iv': { code: 0, return: 0, replace: 1, ptIndex: [0], change: 1 },
 	  /**
 	   * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttrib
 	   */
@@ -12993,6 +12994,8 @@ var kiwi = (function (exports) {
 	  }, {
 	    key: '_updateKeyValue',
 	    value: function _updateKeyValue() {
+	      var _this2 = this;
+
 	      var uniforms = this._uniforms,
 	          attributes = this._attributes,
 	          uniformCache = this._uniformCache,
@@ -13001,7 +13004,7 @@ var kiwi = (function (exports) {
 	      var index = 0;
 	      //unifrom map
 	      uniforms.forEach(function (uniform) {
-	        var uniformLocation = {};
+	        var uniformLocation = { glProgram: _this2 };
 	        stamp_1(uniformLocation, prefixUniform);
 	        uniformCache[uniform.name] = uniformLocation;
 	      });
@@ -13027,7 +13030,7 @@ var kiwi = (function (exports) {
 	  }, {
 	    key: 'getUnifromLocation',
 	    value: function getUnifromLocation(pname) {
-	      var uniformLocation = {};
+	      var uniformLocation = { glProgram: this };
 	      stamp_1(uniformLocation, prefixUniform);
 	      this._uniformCache[pname] = this._uniformCache[pname] || uniformLocation;
 	      return this._uniformCache[pname];
@@ -13360,8 +13363,8 @@ var kiwi = (function (exports) {
 	                            };
 	                        }
 	                    }
-	                    //2.2 void and replace 
-	                    else if (!_target.return && _target.replace > 0) {
+	                    //2.2 void and replace ,no change program
+	                    else if (!_target.return && _target.replace > 0 && !_target.change) {
 	                            if (!_this2[_key] && !!_target) {
 	                                _this2[_key] = function () {
 	                                    for (var _len2 = arguments.length, rest = Array(_len2), _key3 = 0; _key3 < _len2; _key3++) {
@@ -13375,7 +13378,24 @@ var kiwi = (function (exports) {
 	                                };
 	                            }
 	                        }
-	                    //2.3 return(make birdge to origin,should not to be implemented)
+	                        //2.3 void replace as 1 and need to change program
+	                        else if (!_target.return && _target.replace === 1 && _target.change === 1) {
+	                                if (!_this2[_key] && !!_target) {
+	                                    _this2[_key] = function () {
+	                                        for (var _len3 = arguments.length, rest = Array(_len3), _key4 = 0; _key4 < _len3; _key4++) {
+	                                            rest[_key4] = arguments[_key4];
+	                                        }
+
+	                                        var record = new (Function.prototype.bind.apply(Record_1, [null].concat([_key], rest)))(),
+	                                            index = _target.ptIndex,
+	                                            u = record.args[index[0]];
+	                                        if (u.glProgram !== _this2._glProgram) _this2.useProgram(u.glProgram);
+	                                        record.exactIndexByObject(index);
+	                                        recorder.increase(record);
+	                                    };
+	                                }
+	                            }
+	                    //2.4 return(make birdge to origin,should not to be implemented)
 	                }
 	            };
 
@@ -13395,6 +13415,15 @@ var kiwi = (function (exports) {
 	            // this._glLimits._include();
 	            this._glExtension._include();
 	            Actuator_1.apply(gl);
+	        }
+	        /**
+	         * reset program to null
+	         */
+
+	    }, {
+	        key: '_reset',
+	        value: function _reset() {
+	            this._glProgram = null;
 	        }
 	        /**
 	         * get the version of webgl
@@ -13837,6 +13866,7 @@ var kiwi = (function (exports) {
 	            this._recorder.increase(record);
 	            // actuator.play(this._recorder.toInstruction(programId));
 	            Actuator_1.play(this._recorder.toOperation());
+	            this._reset();
 	        }
 	        /**
 	         * turning function
@@ -13851,6 +13881,7 @@ var kiwi = (function (exports) {
 	            this._recorder.increase(record);
 	            // actuator.play(this._recorder.toInstruction(programId));
 	            Actuator_1.play(this._recorder.toOperation());
+	            this._reset();
 	        }
 	    }, {
 	        key: 'renderType',
