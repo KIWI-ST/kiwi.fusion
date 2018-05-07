@@ -4,14 +4,16 @@
 <!-- [![codecov](https://codecov.io/gh/axmand/kiwi.gl/branch/master/graph/badge.svg)](https://codecov.io/gh/axmand/kiwi.gl) -->
 >a virtual webgl running context which can mix thirdly webgl library's gl commands togother,include [three.js](https://github.com/mrdoob/three.js),[claygl](https://github.com/pissang/claygl) and so on.
 ### denendency ###
->headless gl(windows)
+>headless gl  
+>windows:
 ```
 npm install --global --production windows-build-tools
-npm install -g gl
+
+npm install -global gl
 ```
->osx
+>osx:
 ```
-npm install -g gl
+npm install -global gl
 ```
 ### laboratory ###
 trying to use with tensorflow js [tfjs](https://js.tensorflow.org/)
@@ -29,10 +31,25 @@ trying to use with tensorflow js [tfjs](https://js.tensorflow.org/)
 npm install kiwi.gl 
 ```
 ### example ###
+> get htmlelement's webgl context
+```javascript
+//get htmlcanvaselement
+const canvas = document.getElementById('mapCanvas');
+//get webgl context
+const gl = canvas.getContext('webgl',{
+    alpha:false,
+    depth:true,
+    stencil:true,
+    antialias:false,
+    premultipliedAlpha:true,
+    preserveDrawingBuffer:false,
+    failIfMajorPerformanceCaveat:false
+});
+```
 > use kiwi.gl with threejs
 ```javascript
 // use virtual glCanvas instead of real canvas element
-const glCanvas1 = new kiwi.gl.GLCanvas('mapCanvas');
+const glCanvas1 = new kiwi.gl.GLCanvas(gl);
 // init 3d scene by threejs
 const camera = new THREE.PerspectiveCamera(70, 800 / 600, 0.01, 10);
 camera.position.z = 1;
@@ -43,9 +60,7 @@ mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 renderer = new THREE.WebGLRenderer({
     canvas: glCanvas1,
-    context: glCanvas1.getContext('webgl', {
-        antialias: true
-    })
+    context: glCanvas1.getContext()
 });
 renderer.setSize(800, 600);
 renderer.render(scene, camera);
@@ -56,57 +71,47 @@ function animate() {
     renderer.render(scene, camera);
 }
 animate();
-// link to real htmlcanvaselement
-glCanvas1.linkToCanvas(document.getElementById('mapCanvas'));
 ```
 ![threejs-1](https://user-images.githubusercontent.com/5127112/36083573-c4093c04-0fee-11e8-8d02-b1892672b739.png)
 > use kiwi.gl with claygl
 ```javascript
 // use virtual glCanvas instead of real canvas element
-const mapCanvas = document.getElementById('mapCanvas');
-//mock html element attributes and functions
-const mock = new kiwi.gl.HtmlMock(mapCanvas, ['getBoundingClientRect', 'nodeName', 'width', 'height']);
-const glCanvas2 = new kiwi.gl.GLCanvas('mapCanvas',{mock:mock});
-//init 3d scene by claygl
-clay.application.create(glCanvas2, {
-    event: true,
-    graphic: { shadow: true },
+const glCanvas2 = new kiwi.gl.GLCanvas(gl);
+// vertex shader source
+const vertexShader = `
+    attribute vec3 position: POSITION;
+    attribute vec3 normal: NORMAL;
+    uniform mat4 worldViewProjection : WORLDVIEWPROJECTION;
+    varying vec3 v_Normal;
+    
+    void main() {
+        gl_Position = worldViewProjection * vec4(position, 1.0);
+        v_Normal = normal;
+    }`;
+// fragment shader source
+const fragmentShader = `
+    varying vec3 v_Normal;
+    
+    void main() {
+        gl_FragColor = vec4(v_Normal, 1.0);
+    }`;
+
+var app = clay.application.create(glCanvas2, {
     init: function (app) {
-        this._camera = app.createCamera([0, 3, 8], [0, 1, 0]);
-        app.createDirectionalLight([-1, -1, -1], '#fff', 0.7);
-        app.createAmbientLight('#fff', 0.3);
-        app.createCube();
-        app.createSphere().position.set(2, 0, 0);
-        app.createPlane().position.set(-2, 0, 0);
-        app.createMesh(new clay.geometry.Cone()).position.set(4, 0, 0);
-        app.createMesh(new clay.geometry.Cylinder()).position.set(-4, 0, 0);
-        var roomCube = app.createCubeInside({
-            roughness: 1,
-            color: [0.3, 0.3, 0.3]
-            });
-            roomCube.silent = true;
-            roomCube.castShadow = false;
-            roomCube.scale.set(10, 10, 10);
-            roomCube.position.y = 9;
-            this._control = new clay.plugin.OrbitControl({
-                target: this._camera,
-                domElement: app.container
+        // Create a orthographic camera
+        this._camera = app.createCamera([0, 2, 5], [0, 0, 0]);
+        // Create a empty geometry and set the triangle vertices
+        this._cube = app.createCube({
+                shader: new clay.Shader(vertexShader, fragmentShader)
             });
         },
-        loop: function (app) {
-            this._control.update(app.frameTime);
+    loop: function (app) {
+            this._cube.rotation.rotateY(app.frameTime / 1000);
         }
-});
-// link to real htmlcanvaselement
-glCanvas2.linkToCanvas(document.getElementById('mapCanvas'));
+    });
 ```
 ![claygl-1](https://user-images.githubusercontent.com/5127112/36083571-bf0e5c34-0fee-11e8-9ebe-0c991440f216.png)
 > mixture
-```javascript
-//these two scene will be painted on a canvas if virtual canvas linked to the same real htmlCanvasElement
-glCanvas1.linkToCanvas(document.getElementById('mapCanvas'));
-glCanvas2.linkToCanvas(document.getElementById('mapCanvas'));
-```
 ![claygl-three-1](https://user-images.githubusercontent.com/5127112/36083586-f048e4d6-0fee-11e8-84e7-a826314b7a79.png)
 ### notice ####
-> The tests are not yet finished, and all comments are welcome
+> The tests are not finished yet, all comments welcome！

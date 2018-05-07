@@ -1,4 +1,6 @@
 /**
+ * remove current program in to gl.actuator.currentProgram
+ * @modify 2018/5/2
  * @author yellow
  */
 const Dispose = require('./../utils/Dispose'),
@@ -10,9 +12,7 @@ const Dispose = require('./../utils/Dispose'),
 /**
  * bridge object
  */
-const GLLimits = require('./GLLimits'),
-    GLExtension = require('./GLExtension'),
-    GLShader = require('./GLShader'),
+const GLShader = require('./GLShader'),
     GLBuffer = require('./GLBuffer'),
     GLFramebuffer = require('./GLFramebuffer'),
     GLRenderbuffer = require('./GLRenderbuffer'),
@@ -20,9 +20,9 @@ const GLLimits = require('./GLLimits'),
     GLTexture = require('./GLTexture'),
     GLProgram = require('./GLProgram');
 /**
- * singleton
+ * bridge extension
  */
-const actuator = require('./../core/Actuator');
+const OES_vertex_array_object = require('./Extensions/OES_vertex_array_object');
 /**
  * the prefix of GLContext
  */
@@ -33,13 +33,13 @@ const prefix = "WEBGLRENDERGINGCONTEXT";
 class GLContext extends Dispose {
     /**
      * 
-     * @param {String} id parentId,just as the glCanvas'id
+     * @param {WebGLRenderingContext} gl
      * @param {String} renderType support 'webgl' or 'webgl2'
      * @param {Object} [options] 
      */
-    constructor(id, renderType, options = {}) {
+    constructor(gl, renderType, options = {}) {
         /**
-         * 
+         * set element id
          */
         super(prefix);
         /**
@@ -55,13 +55,9 @@ class GLContext extends Dispose {
          */
         this._recorder = new Recorder(this);
         /**
-         * @type {GLProgram}
-         */
-        this._glProgram = null;
-        /**
          * @type {WebGLRenderingContext}
          */
-        this._gl = null;
+        this._gl = gl;
         /**
          * @type {GLBuffer}
          */
@@ -75,26 +71,13 @@ class GLContext extends Dispose {
          */
         this._attribs = {};
         /**
+         * @type {Object}
+         */
+        this._extensions = {};
+        /**
          * map funciont
          */
         this._mapConst();
-        /**
-         * initial of Extension and Limits
-         */
-        this._initExtLmt();
-    }
-    /**
-     * initial Extension and Limits
-     */
-    _initExtLmt() {
-        /**
-         * @type {GLLimits}
-         */
-        this._glLimits = new GLLimits(this);
-        /**
-         * @type {GLExtension}
-         */
-        this._glExtension = new GLExtension(this);
     }
     /**
      * map function and constants to Class
@@ -137,10 +120,11 @@ class GLContext extends Dispose {
                 else if (!target.return && target.replace === 1 && target.change === 1) {
                     if (!this[key] && !!target) {
                         this[key] = (...rest) => {
-                            const record = new Record(key, ...rest),
+                            const currentProgram = this.gl.actuator.currentProgram,
+                                record = new Record(key, ...rest),
                                 index = target.ptIndex,
                                 u = record.args[index[0]];
-                            if (u.glProgram !== this._glProgram) this.useProgram(u.glProgram);
+                            if (u.glProgram !== currentProgram) this.useProgram(u.glProgram);
                             record.exactIndexByObject(index);
                             recorder.increase(record);
                         }
@@ -149,22 +133,6 @@ class GLContext extends Dispose {
                 //2.4 return(make birdge to origin,should not to be implemented)
             }
         }
-    }
-    /*
-     * private ,only used in GLCanvas.link[Cnavas/GL] funcitons
-     * @param {WebGLRenderingContext} gl 
-     */
-    _setgl(gl) {
-        this._gl = gl;
-        // this._glLimits._include();
-        this._glExtension._include();
-        actuator.apply(gl);
-    }
-    /**
-     * reset program to null
-     */
-    _reset() {
-        this._glProgram = null;
     }
     /**
      * get the version of webgl
@@ -195,13 +163,25 @@ class GLContext extends Dispose {
         record.exactIndexByValue(0, program.id);
         this._recorder.increase(record);
         //store current programId and program
-        this._glProgram = program;
+        this.gl.actuator.currentProgram = program;
     }
     /**
-     * 
-     * @param {GLenum} target 
-     * @param {GLBuffer} buffer 
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/shaderSource
+     * @param {GLShader} shader 
+     * @param {String} source 
      */
+    shaderSource(shader, source) {
+        shader.source = source;
+        const returnId = shader.id,
+            record = new Record('shaderSource', shader, source);
+        record.exactIndexByValue(0, returnId);
+        this._recorder.increase(record);
+    }
+    /**
+    * 
+    * @param {GLenum} target 
+    * @param {GLBuffer} buffer 
+    */
     bindBuffer(target, buffer) {
         //store currently bound buffer
         if (target === GLConstants.ARRAY_BUFFER) {
@@ -227,9 +207,9 @@ class GLContext extends Dispose {
         this._recorder.increase(record);
     }
     /**
-     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray
-     * @param {GLuint} index 
-     */
+    * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray
+    * @param {GLuint} index 
+    */
     enableVertexAttribArray(index) {
         //active bound
         this._bound_buffer[index] = this._attribs[index];
@@ -247,29 +227,6 @@ class GLContext extends Dispose {
         this._recorder.increase(record);
     }
     /**
-     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createShader
-     * @param {String} type Either gl.VERTEX_SHADER or gl.FRAGMENT_SHADER 
-     */
-    createShader(type) {
-        const glShader = new GLShader(type, this),
-            record = new Record('createShader', type);
-        record.setReturnId(glShader.id);
-        this._recorder.increase(record);
-        return glShader;
-    }
-    /**
-     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/shaderSource
-     * @param {GLShader} shader 
-     * @param {String} source 
-     */
-    shaderSource(shader, source) {
-        shader.source = source;
-        const returnId = shader.id,
-            record = new Record('shaderSource', shader, source);
-        record.exactIndexByValue(0, returnId);
-        this._recorder.increase(record);
-    }
-    /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/compileShader
      * @param {GLShader} shader 
      */
@@ -279,6 +236,17 @@ class GLContext extends Dispose {
         record.exactIndexByValue(0, returnId);
         shader._isComplied = true;
         this._recorder.increase(record);
+    }
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createShader
+     * @param {String} type Either gl.VERTEX_SHADER or gl.FRAGMENT_SHADER 
+     */
+    createShader(type) {
+        const glShader = new GLShader(type, this),
+            record = new Record('createShader', type);
+        record.setReturnId(glShader.id);
+        this._recorder.increase(record);
+        return glShader;
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createProgram
@@ -468,14 +436,6 @@ class GLContext extends Dispose {
         }
     }
     /**
-     * }{debug
-     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/checkFramebufferStatus
-     * @param {GLenum} target 
-     */
-    checkFramebufferStatus(target) {
-        return GLConstants.FRAMEBUFFER_COMPLETE;
-    }
-    /**
      * https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/getError
      */
     getError() {
@@ -493,8 +453,13 @@ class GLContext extends Dispose {
      * @param {String} name 
      */
     getExtension(name) {
-        const glExtension = this._glExtension;
-        return glExtension.getExtension(name);
+        if (name === 'OES_vertex_array_object') {
+            this._extensions['OES_vertex_array_object'] = this._extensions['OES_vertex_array_object'] || new OES_vertex_array_object('OES_vertex_array_object', this);
+            return this._extensions['OES_vertex_array_object'];
+        } else {
+            const gl = this._gl;
+            return gl.getExtension(name);
+        }
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getParameter
@@ -502,8 +467,8 @@ class GLContext extends Dispose {
      */
     getParameter(pname) {
         //parameter search from limits
-        const glLimits = this._glLimits;
-        return glLimits[pname];
+        const gl = this._gl;
+        return gl.getParameter(pname);
     }
     /**
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clear
@@ -518,28 +483,34 @@ class GLContext extends Dispose {
         }
     }
     /**
+     * }{debug
+     * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/checkFramebufferStatus
+     * @param {GLenum} target 
+     */
+    checkFramebufferStatus(target) {
+        return GLConstants.FRAMEBUFFER_COMPLETE;
+    }
+    /**
      * turning function
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawArrays
      */
     drawArrays(mode, first, count) {
-        const record = new Record('drawArrays', mode, first, count),
-            programId = this._glProgram.id;
+        const actuator = this.gl.actuator,
+            record = new Record('drawArrays', mode, first, count),
+            programId = this.gl.actuator.currentProgram.id;
         this._recorder.increase(record);
-        // actuator.play(this._recorder.toInstruction(programId));
         actuator.play(this._recorder.toOperation());
-        this._reset();
     }
     /**
      * turning function
      * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawElements
      */
     drawElements(mode, count, type, offset) {
-        const record = new Record('drawElements', mode, count, type, offset),
-            programId = this._glProgram.id;
+        const actuator = this.gl.actuator,
+            record = new Record('drawElements', mode, count, type, offset),
+            programId = this.gl.actuator.currentProgram.id;
         this._recorder.increase(record);
-        // actuator.play(this._recorder.toInstruction(programId));
         actuator.play(this._recorder.toOperation());
-        this._reset();
     }
 }
 

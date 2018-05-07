@@ -1,6 +1,6 @@
 {
   "name": "kiwi.gl",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "a container for popular webgl liberary.",
   "main": "src/init.js",
   "repository": {
@@ -34,14 +34,11 @@
     "gl": "^4.0.4",
     "karma": "^2.0.2",
     "mocha": "^5.1.1",
-    "rollup": "^0.57.1",
+    "rollup": "^0.58.2",
     "rollup-plugin-babel": "^3.0.4",
     "rollup-plugin-commonjs": "^8.3.0",
     "rollup-plugin-multidest": "^1.0.0",
     "rollup-plugin-node-resolve": "^3.3.0",
-    "three": "^0.91.0"
-  },
-  "dependencies": {
-    "kiwi.glsl": "^0.1.6"
+    "three": "^0.92.0"
   }
 }

@@ -4,10 +4,8 @@
  * https://github.com/KhronosGroup/WebGL/blob/master/sdk/demos/google/resources/OESVertexArrayObject.js
  * 
  */
-const Extension = require('./Extension'),
-    GLConstants = require('./../GLConstants'),
-    GLVertexAttrib = require('./../GLVertexAttrib'),
-    GLLimits = require('./../GLLimits');
+const GLConstants = require('./../GLConstants'),
+    GLVertexAttrib = require('./../GLVertexAttrib');
 /**
  * vao object
  * @class
@@ -18,7 +16,7 @@ class WebGLVertexArrayObjectOES {
         this.isAlive = true;
         this.hasBeenBound = false;
         this._ext = ext;
-        this._maxVertexAttribs = GLLimits.getInstance()[GLConstants.MAX_VERTEX_ATTRIBS];
+        this._maxVertexAttribs = ext._glContext._gl.getParameter(GLConstants.MAX_VERTEX_ATTRIBS);
         this.elementArrayBuffer = null;
         this.attribs = new Array(this._maxVertexAttribs);
         this._initVertexAttrib();
@@ -36,7 +34,7 @@ class WebGLVertexArrayObjectOES {
 /**
  * @class
  */
-class OES_vertex_array_object extends Extension {
+class OES_vertex_array_object {
     /**
      * 
      * @param {String} extName 
@@ -44,9 +42,13 @@ class OES_vertex_array_object extends Extension {
      */
     constructor(extName, glContext) {
         /**
-         * 
+         * @type {String}
          */
-        super(extName, glContext);
+        this._name = extName;
+        /**
+         * @type {GLContext}
+         */
+        this._glContext = glContext;
         /**
          * self object
          */
