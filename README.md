@@ -4,7 +4,6 @@
 <!-- [![codecov](https://codecov.io/gh/axmand/kiwi.gl/branch/master/graph/badge.svg)](https://codecov.io/gh/axmand/kiwi.gl) -->
 >a virtual webgl running context which can mix thirdly webgl library's gl commands togother,include [three.js](https://github.com/mrdoob/three.js),[claygl](https://github.com/pissang/claygl) and so on.
 ### denendency ###
->headless gl  
 >windows:
 ```
 npm install --global --production windows-build-tools
@@ -15,10 +14,6 @@ npm install -global gl
 ```
 npm install -global gl
 ```
-### laboratory ###
-trying to use with tensorflow js [tfjs](https://js.tensorflow.org/)
-### warning ##
->dure to [kiwi.glsl](https://github.com/axmand/kiwi.glsl),kiwi.gl only support webgl 1.0
 ### example ###
 [3D](http://139.129.7.130/kiwi.gl/example/kiwi.gl.3d.html)  
 [vao](http://139.129.7.130/kiwi.gl/example/kiwi.gl.vao.html)  
