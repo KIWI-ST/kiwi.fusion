@@ -67,7 +67,7 @@ function animate() {
 }
 animate();
 ```
-![threejs-1](https://user-images.githubusercontent.com/5127112/36083573-c4093c04-0fee-11e8-8d02-b1892672b739.png)
+![threejs-1](https://user-images.githubusercontent.com/5127112/39559112-6da252c6-4ec6-11e8-9c01-61c7a34d4f17.png)
 > use kiwi.gl with claygl
 ```javascript
 // use virtual glCanvas instead of real canvas element
@@ -96,17 +96,15 @@ var app = clay.application.create(glCanvas2, {
         // Create a orthographic camera
         this._camera = app.createCamera([0, 2, 5], [0, 0, 0]);
         // Create a empty geometry and set the triangle vertices
-        this._cube = app.createCube({
-                shader: new clay.Shader(vertexShader, fragmentShader)
-            });
-        },
+        this._cube = app.createCube({shader: new clay.Shader(vertexShader, fragmentShader)});
+    },
     loop: function (app) {
-            this._cube.rotation.rotateY(app.frameTime / 1000);
-        }
-    });
+        this._cube.rotation.rotateY(app.frameTime / 1000);
+    }
+});
 ```
-![claygl-1](https://user-images.githubusercontent.com/5127112/36083571-bf0e5c34-0fee-11e8-9ebe-0c991440f216.png)
+![claygl-1](https://user-images.githubusercontent.com/5127112/39559113-6dd81604-4ec6-11e8-9ae2-8cf514e3a06e.png)
 > mixture
-![claygl-three-1](https://user-images.githubusercontent.com/5127112/36083586-f048e4d6-0fee-11e8-84e7-a826314b7a79.png)
+![claygl-three-1](https://user-images.githubusercontent.com/5127112/39559114-6e0f5bdc-4ec6-11e8-81ef-6d636a8c945c.png)
 ### notice ####
 > The tests are not finished yet, all comments welcome！
