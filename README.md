@@ -3,17 +3,6 @@
 [![npm version](https://badge.fury.io/js/kiwi.gl.svg)](https://badge.fury.io/js/kiwi.gl)
 <!-- [![codecov](https://codecov.io/gh/axmand/kiwi.gl/branch/master/graph/badge.svg)](https://codecov.io/gh/axmand/kiwi.gl) -->
 >a virtual webgl running context which can mix thirdly webgl library's gl commands togother,include [three.js](https://github.com/mrdoob/three.js),[claygl](https://github.com/pissang/claygl) and so on.
-### denendency ###
->windows:
-```
-npm install --global --production windows-build-tools
-
-npm install -global gl
-```
->osx:
-```
-npm install -global gl
-```
 ### example ###
 [3D](http://139.129.7.130/kiwi.gl/example/kiwi.gl.3d.html)  
 [vao](http://139.129.7.130/kiwi.gl/example/kiwi.gl.vao.html)  
@@ -21,11 +10,15 @@ npm install -global gl
 [three](http://139.129.7.130/kiwi.gl/example/kiwi.gl.three.html)  
 [claygl](http://139.129.7.130/kiwi.gl/example/kiwi.gl.clay.html)  
 [three&claygl](http://139.129.7.130/kiwi.gl/example/kiwi.gl.three.claygl.html)
-### install ###
+### Install ###
 ```javascript
 npm install kiwi.gl 
 ```
-### example ###
+> or
+```
+npm install --save-dev kiwi.gl
+```
+### Examples ###
 > get htmlelement's webgl context
 ```javascript
 //get htmlcanvaselement
@@ -40,6 +33,17 @@ const gl = canvas.getContext('webgl',{
     preserveDrawingBuffer:false,
     failIfMajorPerformanceCaveat:false
 });
+```
+### Debug ###
+>windows:
+```
+npm install --global --production windows-build-tools
+
+npm install -global gl
+```
+>osx:
+```
+npm install -global gl
 ```
 > use kiwi.gl with threejs
 ```javascript
