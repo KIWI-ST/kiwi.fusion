@@ -35,13 +35,14 @@ const gl = canvas.getContext('webgl',{
 });
 ```
 ### Debug ###
+>kiwi.gl counld be debugged with VSCODE and NODE. </br>
 >windows:
 ```
 npm install --global --production windows-build-tools
 
 npm install -global gl
 ```
->osx:
+osx:
 ```
 npm install -global gl
 ```
